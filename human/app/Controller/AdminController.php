@@ -1,9 +1,7 @@
 <?php
-
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
-	
 /**
- * Static content controller.
+ * Static content controller. Test
  *
  * This file will render views from views/pages/
  *
