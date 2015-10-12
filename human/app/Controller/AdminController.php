@@ -38,7 +38,7 @@ class AdminController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category');
 
 /**
  * Displays a view
@@ -269,9 +269,9 @@ class AdminController extends AppController {
 	
 	public function categories() 
 	{
-		$dynamic_pages_data = $this->Dynamic_page->find('all', array('order' => array('id' => 'DESC')));
+		$categories_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
 		
-		$this->set('dynamic_pages_data', $dynamic_pages_data);
+		$this->set('categories_data', $categories_data);
 		
 		if ($this->request->is('post')) {
 			
@@ -286,25 +286,114 @@ class AdminController extends AppController {
 	{
 		if ($this->request->is('post')) {
 			
-			$this->request->data['Dynamic_page']['page_content'] = $this->request->data['editor1'];
+			$name = $this->request->data['Category']['catimg']['name'];
+			$tmp_name = $this->request->data['Category']['catimg']['tmp_name'];
+			$type = $this->request->data['Category']['catimg']['type'];
+			$type_data = explode('/', $type);
+			$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+			if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+			{
+				//Uploadation code for images
+				if(move_uploaded_file($tmp_name, WWW_ROOT . 'img/category/'.$name))
+				{ 
+					$url="../webroot/img/category/".$name;
+					$thumbnail_url="../webroot/img/category/thumb/small_images/".$name;							
+					$this->make_thumb($url,$thumbnail_url,200);
+					
+					$url="../webroot/img/category/".$name;
+					$thumbnail_url="../webroot/img/category/thumb/large_images/".$name;							
+					$this->make_thumb($url,$thumbnail_url,1500);
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+					$this->redirect('add_category');	
+				}
+			}
+			else
+			{
+				$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+				$this->redirect('add_category');	
+			}
 			
-			if($this->Dynamic_page->save($this->request->data))
-			$this->redirect('dynamic_pages');	
+			$this->request->data['Category']['catimg'] = $this->request->data['Category']['catimg']['name'];
+			
+			$this->request->data['Category']['parent_id'] = 0;
+			
+			if($this->Category->save($this->request->data))
+			$this->redirect('categories');	
 		}
 	}
 	
+	//Make Thumb function of the uploaded images
+	function make_thumb($src, $dest, $desired_width) {
+                        
+		if(substr(strtolower(strrchr($src, '.')), 1) == 'png')
+		$source_image = imagecreatefrompng($src);
+		
+		else
+		$source_image = imagecreatefromjpeg($src);
+		
+		$width = imagesx($source_image);
+		$height = imagesy($source_image);
+		
+		$desired_height = floor($height * ($desired_width / $width));	//Height calculations
+		//$desired_width = floor($width * ($desired_height / $height));	//Width calculations
+		
+		$virtual_image = imagecreatetruecolor($desired_width, $desired_height);
+		
+		imagecopyresized($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
+		
+		imagejpeg($virtual_image, $dest);
+    }
+	
 	public function category_edit($id) 
 	{
-		$dynamic_page_data = $this->Dynamic_page->find('first', array('conditions'=>array('Dynamic_page.id'=>$id)));
+		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
 		
-		$this->set('dynamic_page_data', $dynamic_page_data['Dynamic_page']);
+		$this->set('category_data', $category_data['Category']);
 				
 		if ($this->request->is('post')) {
 			
-			$this->request->data['Dynamic_page']['page_content'] = $this->request->data['editor1'];
+			if($this->request->data['Category']['catimg']['name'] != '')
+			{
+				$name = $this->request->data['Category']['catimg']['name'];
+				$tmp_name = $this->request->data['Category']['catimg']['tmp_name'];
+				$type = $this->request->data['Category']['catimg']['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT . 'img/category/'.$name))
+					{ 
+						$url="../webroot/img/category/".$name;
+						$thumbnail_url="../webroot/img/category/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,200);
+						
+						$url="../webroot/img/category/".$name;
+						$thumbnail_url="../webroot/img/category/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,1500);
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_category');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_category');	
+				}
+				
+				$this->request->data['Category']['catimg'] = $this->request->data['Category']['catimg']['name'];
+			}
+			else
+			unset($this->request->data['Category']['catimg']);
 			
-			if($this->Dynamic_page->save($this->request->data))
-			$this->redirect('dynamic_pages');	
+			if($this->Category->save($this->request->data))
+			$this->redirect('categories');	
 		}
 	}
 	
@@ -320,18 +409,94 @@ class AdminController extends AppController {
 	
 	public function category_status_change($id) 
 	{
-		$dynamic_page_data = $this->Dynamic_page->find('first', array('conditions'=>array('Dynamic_page.id'=>$id)));
+		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
 		
-		if($dynamic_page_data['Dynamic_page']['status']==1)
-		$dynamic_page_data['Dynamic_page']['status'] = 0;
+		if($category_data['Category']['del_status']==1)
+		$category_data['Category']['del_status'] = 0;
 		else
-		$dynamic_page_data['Dynamic_page']['status'] = 1;
+		$category_data['Category']['del_status'] = 1;
 		
-		if($this->Dynamic_page->save($dynamic_page_data))
-		$this->redirect('dynamic_pages');			
+		if($this->Category->save($category_data))
+		$this->redirect('categories');			
 	}
-
 	
+	
+	public function sub_category() 
+	{		
+		$id = $_REQUEST['main_category_id'];
+			
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
+		
+		foreach($category_data as $data)
+		{
+			$category = $data['Category'];
+			
+			$sub_cat_data[$category['id']] = $category['catname'];
+		}
+		
+		$this->set('sub_cat_data', $sub_cat_data);
+	}
+	
+	public function add_sub_category() 
+	{
+		$main_categories = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
+		
+		foreach($main_categories as $data)
+		{
+			$category = $data['Category'];
+			
+			$main_cat_data[$category['id']] = $category['catname'];
+		}
+		
+		$this->set('main_cat_data', $main_cat_data);
+		
+		if ($this->request->is('post')) {
+			
+			echo "Request_data<pre>";
+			print_r($this->request->data);
+			echo "<pre>";
+			
+			die();
+			
+			$name = $this->request->data['Category']['catimg']['name'];
+			$tmp_name = $this->request->data['Category']['catimg']['tmp_name'];
+			$type = $this->request->data['Category']['catimg']['type'];
+			$type_data = explode('/', $type);
+			$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+			if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+			{
+				//Uploadation code for images
+				if(move_uploaded_file($tmp_name, WWW_ROOT . 'img/category/'.$name))
+				{ 
+					$url="../webroot/img/category/".$name;
+					$thumbnail_url="../webroot/img/category/thumb/small_images/".$name;							
+					$this->make_thumb($url,$thumbnail_url,200);
+					
+					$url="../webroot/img/category/".$name;
+					$thumbnail_url="../webroot/img/category/thumb/large_images/".$name;							
+					$this->make_thumb($url,$thumbnail_url,1500);
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+					$this->redirect('add_category');	
+				}
+			}
+			else
+			{
+				$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+				$this->redirect('add_category');	
+			}
+			
+			$this->request->data['Category']['catimg'] = $this->request->data['Category']['catimg']['name'];
+			
+			$this->request->data['Category']['parent_id'] = 0;
+			
+			if($this->Category->save($this->request->data))
+			$this->redirect('categories');	
+		}
+	}
+		
 	
 	
 }
