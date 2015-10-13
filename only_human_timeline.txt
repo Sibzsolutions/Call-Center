@@ -1,0 +1,181 @@
+New project.
+
+Only Human Document.
+
+Admin side
+
+Login/Register functionality
+
+All the setup of the cakephp and auth component and database with only human.
+4 hours 
+
+
+Site Setting 
+
+Display Forms and after submitting the form,  saved into the database.
+2 hours
+
+
+User Management:
+
+Edit/Delete/Add
+5 hours
+
+Sort functionality
+2 hours
+
+Sort functionality
+Details of the booked order:-
+3 hours
+
+
+Manage Categories:
+
+Add/edit/delete - Without the sub category
+6 hours - 
+
+
+Manage Products:
+
+Add/Edit/Delete
+10 hours
+
+Manage Orders:
+
+Display
+3 hour
+
+Search 
+2 hour
+
+Order details
+3 hour
+
+Status (Confirm, Shipped, Completed, Cancellled)
+3 hours
+
+
+
+Manage Reviews:
+
+1. Reviews displayed page/can be approved or unapproved:
+   2 hour
+
+2. Customer inform Email in case of rejection of review:
+   (Reason and then, email to user).
+   2 hours
+
+3. Search of review for a particular customer:
+   2 hours
+
+
+CMS:-
+5 hours( with SEO section)
+
+
+
+
+Client side
+
+Front page(Index):-
+
+linked the pages 
+
+menus
+
+and all the other activities related to the index page.
+
+4 hours
+
+
+
+Categories Page
+
+Pages of the category & subcategory
+6 hours
+
+
+Products:
+
+Design:-
+5-6 hours
+
+page:-
+2 hours
+
+With attributes:-
+2-3 hours
+
+Reviews/Testimonials
+3 hours
+
+
+
+Shopping Cart:
+
+Add to cart
+7 hours
+
+Wish list
+6 hours
+
+Out of stock:
+7 hours
+
+
+
+My Account:
+
+Orders:-
+4 hours
+
+login and registration page:-
+3 hours
+
+Change password:-
+2 hours
+
+Order details:-
+3 hours
+
+
+
+Review:
+
+6 hours - with approved process from the admin side
+
+
+Contact: 
+
+Forms and Email functionality
+4 hours
+
+
+Tell a Friend:
+3 hours 
+
+
+About Us:
+1 hour
+
+
+FAQ:
+1 hour
+
+Filter
+10-12 Hours
+
+Pagination pages (Admin side and User side).
+All other additional time
+Design issues at the time
+Changes
+
+
+Additional Hours
+10-12 hours
+
+
+
+Login/Register functionality
+User Management:
+Site Setting 

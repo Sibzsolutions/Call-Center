@@ -282,8 +282,126 @@ class AdminController extends AppController {
 		}
 	}
 	
+	public function adisplayParent($id) {
+		
+		//, $session_id
+		//$cat = array();
+		$i = 0;
+		//$sql = "SELECT * FROM ads_01_cat WHERE id = '$id'";
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
+				
+		if(count($category_data)>0)
+		{
+			while(count($category_data))
+			{
+				echo "<pre>";
+				print_r($category_data);
+				echo "<pre>";
+				
+				//$content = '--> <a href="cat_list.php?session_id='.$session_id.'&id='.$row['id'].'">'.$row['name'].'</a>';
+				
+				$cat = array_fill($i, 1, $category_data);
+				
+				echo "Cat<pre>";
+				print_r($cat);
+				echo "<pre>";
+				
+				//$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$category_data[$i]['Category']['id'])));
+				$this->displayParent($category_data[$i]['Category']['id']);  //, $session_id
+				$i++;
+			}
+		}
+		if(isset($car))
+		{
+			echo "cat<pre>";
+			print_r($cat);
+			echo "<pre>";
+		}
+		
+		
+		
+		$cat = array_reverse($cat);
+		$count_cat = count($cat);
+		 
+		for($i=0; $i<=$count; $i++) 
+		{
+			echo $cat[$i];		
+		}
+	}  
+	
+	function displayParent($id, $session_id) {
+		
+		$i = 0;
+		$cat;
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.id'=>$id)));
+		
+		//if($result = mysql_query($sql))
+		if($category_data)
+		{
+			foreach($category_data as $data)
+			{
+				$content[$data['Category']['id']] = $data['Category']['catname'];
+				
+				$cat[] = $data; //array_fill($i, 1, $content);
+				
+				$this->displayParent($data['Category']['parentid'], 1);
+			}
+			
+		}
+		
+		return $cat;
+		
+		/*
+		$cat = array_reverse($cat);
+		$count_cat = count($cat);
+		 
+		for($i=0; $i<=$count; $i++) {
+		echo $cat[$i];
+		}
+		*/
+	}  
+	
 	public function add_category() 
 	{
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
+		
+		$i=1;
+		foreach($category_data as $data)
+		{
+			$first_data = $this->displayParent($data['Category']['id'], $i);
+			
+			$data[] = $first_data;
+			
+			echo "Data<pre>";
+			print_r($data);
+			echo "<pre>";
+			
+			die();
+			
+			$cat_data_first = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$data['Category']['id'])));
+			
+			echo "cat_data_first<pre>";
+			print_r($cat_data_first);
+			echo "<pre>";
+			
+			die();
+			
+			$category = $data['Category'];
+			
+			$sub_cat_data[$category['id']] = $category['catname'];
+			
+			$i++;
+		}
+		
+		echo "Sub_cat_data<pre>";
+		print_r($sub_cat_data);
+		echo "<pre>";
+		
+		die();
+		
 		if ($this->request->is('post')) {
 			
 			$name = $this->request->data['Category']['catimg']['name'];

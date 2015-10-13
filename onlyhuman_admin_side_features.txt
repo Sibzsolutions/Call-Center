@@ -1,0 +1,34 @@
+Only Human Document.
+
+Admin side Features:- 
+
+Login/Register functionality
+All the setup of the cakephp and auth component and database with only human.
+
+Site Setting 
+Display Forms and after submitting the form,  saved into the database.
+
+User Management:
+Edit/Delete/Add
+Sort functionality
+Details of the booked order:-
+
+CMS
+
+Manage Categories:
+Add/edit/delete - Without the sub category
+
+Manage Products:
+Add/Edit/Delete
+
+Manage Orders:
+Display
+Search 
+Order details
+Status (Confirm, Shipped, Completed, Cancellled)
+
+Manage Reviews:
+1. Reviews displayed page/can be approved or unapproved:
+2. Customer inform Email in case of rejection of review:
+   (Reason and then, email to user).
+3. Search of review for a particular customer:
