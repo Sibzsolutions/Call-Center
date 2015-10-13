@@ -369,13 +369,7 @@ class AdminController extends AppController {
 	
 	public function add_category() 
 	{
-		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
-		
-		echo "Category_data<pre>";
-		print_r($category_data);
-		echo "<pre>";
-		
 		
 		$i=1;
 		foreach($category_data as $key=>$data)
@@ -389,12 +383,6 @@ class AdminController extends AppController {
 			
 			$i++;
 		}
-		
-		echo "Category_data<pre>";
-		print_r($category_data);
-		echo "<pre>";
-		
-		die();
 		
 		if ($this->request->is('post')) {
 			
@@ -690,6 +678,78 @@ class AdminController extends AppController {
 			}
 			$this->redirect('add_products');	
 		}
+	}
+	
+	
+	public function product_edit($id) 
+	{
+		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
+		
+		$this->set('product_data', $product_data['Produc_master']);
+				
+		if ($this->request->is('post')) {
+						
+			$this->Produc_master->save($this->request->data);
+			
+			$last_inserted_id = $this->request->data['Produc_master']['id'];
+			
+			//if(count($this->request->data['Produc_master']['produc_images'])>0)
+			//$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
+			
+			foreach($this->request->data['Produc_master']['produc_images'] as $data)
+			{
+				$name = $data['name'];
+				$tmp_name = $data['tmp_name'];
+				$type = $data['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
+					{ 
+						$url="../webroot/img/product/".$name;
+						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,200);
+						
+						$url="../webroot/img/product/".$name;
+						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,1500);
+						
+						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
+						$product_image_data['Produc_image']['imagepath'] = $data['name'];
+						$product_image_data['Produc_image']['del_status'] = 0;						
+						
+						$this->Produc_image->create();
+						$this->Produc_image->save($product_image_data);					
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_product');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_product');	
+				}
+			}
+			$this->redirect('add_products');					
+		}
+	}
+	
+	public function product_status_change($id) 
+	{
+		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
+		
+		if($product_data['Produc_master']['del_status']==1)
+		$product_data['Produc_master']['del_status'] = 0;
+		else
+		$product_data['Produc_master']['del_status'] = 1;
+		
+		if($this->Produc_master->save($product_data))
+		$this->redirect('products');			
 	}
 	
 		

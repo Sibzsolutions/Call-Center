@@ -20,7 +20,7 @@
                 </div><!-- /.box-header -->
                 <div class="box-header">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_category' ?>">Add Product</a>
+                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_products'; ?>">Add Product</a>
                                 
                 </div><!-- /.box-header -->
                 <div class="box-body">
@@ -47,31 +47,36 @@
                       <?php
                       foreach($products_data as $product)
                       {
-						  $product = $product['Product'];
+						  $product = $product['Produc_master'];
                         ?>
                         <tr>
                         <td><?php echo $product['id']; ?></td>
-                        <td><?php echo $product['catname']; ?></td>
-                        <td><?php echo $product['catdesc']; ?></td>
-                        <td>
-                        <img src="<?php echo $this->webroot.'img/category/thumb/small_images/'.$product['catimg']; ?>"/>
-                        </td>
-                        <td><?php echo $product['parentid']; ?></td>
+                        <td><?php echo $product['prodname']; ?></td>
+                        <td><?php echo $product['prodscdes']; ?></td>
+                        <td><?php echo $product['proddesc']; ?></td>
+                        <td><?php echo $product['prodprice']; ?></td>
+                        <td><?php echo $product['clearance']; ?></td>
+                        <td><?php echo $product['date_added']; ?></td>
                         <td><?php echo $product['url_alias']; ?></td>
-                        <td><?php echo $product['catmtitle']; ?></td>
-                        <td><?php echo $product['catmkeywords']; ?></td>
-                        <td><?php echo $product['catmdesc']; ?></td>
+                        <td><?php echo $product['prodmtitle']; ?></td>
+                        <td><?php echo $product['prodmkeywords']; ?></td>
+                        <td><?php echo $product['prodmdesc']; ?></td>                        
+                        
+                        <!--<td>
+                        <img src="<?php //echo $this->webroot.'img/category/thumb/small_images/'.$product['catimg']; ?>"/>
+                        </td>-->
+                        
                         <td>
 						<?php 
-			
-							if($product['catcanonical']!='')
-							echo $product['catcanonical']; 
+							
+							if($product['prodcanonical']!='')
+							echo $product['prodcanonical']; 
 							else
 							echo "N/A";
 						?>
                         </td>
-                        <td><?php if($category_data['del_status'] == 1) echo "Active"; else echo "Inactive"; ?></td>
-                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/category_edit/'.$category_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/category_status_change/'.$category_data['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td><?php if($product['del_status'] == 1) echo "Active"; else echo "Active"; ?></td>
+                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/product_edit/'.$product['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/product_status_change/'.$product['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
                         <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'admin/user_delete/'.$category_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
                         </td>
