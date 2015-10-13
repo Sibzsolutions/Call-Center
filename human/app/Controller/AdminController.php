@@ -38,7 +38,7 @@ class AdminController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image');
 
 /**
  * Displays a view
@@ -84,7 +84,7 @@ class AdminController extends AppController {
 		 //$site_setting = $this->Site_setting->find('first');
 		 //$this->set('site_settings',$site_setting);					 
 	}
-
+	
 	function register() 
 	{
 		$this->layout='';
@@ -335,7 +335,7 @@ class AdminController extends AppController {
 		$i = 0;
 		$cat;
 		
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.id'=>$id)));
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
 		
 		//if($result = mysql_query($sql))
 		if($category_data)
@@ -344,14 +344,18 @@ class AdminController extends AppController {
 			{
 				$content[$data['Category']['id']] = $data['Category']['catname'];
 				
-				$cat[] = $data; //array_fill($i, 1, $content);
+				$cat[] = $data['Category']; //array_fill($i, 1, $content);
 				
-				$this->displayParent($data['Category']['parentid'], 1);
+				$this->displayParent($data['Category']['id'], 1);
 			}
 			
 		}
-		
+		if(isset($cat))
 		return $cat;
+		else
+		return false;
+		
+		unset($cat);
 		
 		/*
 		$cat = array_reverse($cat);
@@ -368,36 +372,26 @@ class AdminController extends AppController {
 		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
 		
+		echo "Category_data<pre>";
+		print_r($category_data);
+		echo "<pre>";
+		
+		
 		$i=1;
-		foreach($category_data as $data)
+		foreach($category_data as $key=>$data)
 		{
 			$first_data = $this->displayParent($data['Category']['id'], $i);
 			
-			$data[] = $first_data;
+			if(isset($first_data))
+			$category_data[$key]['sub_category'] = $first_data;
 			
-			echo "Data<pre>";
-			print_r($data);
-			echo "<pre>";
-			
-			die();
-			
-			$cat_data_first = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$data['Category']['id'])));
-			
-			echo "cat_data_first<pre>";
-			print_r($cat_data_first);
-			echo "<pre>";
-			
-			die();
-			
-			$category = $data['Category'];
-			
-			$sub_cat_data[$category['id']] = $category['catname'];
+			unset($first_data);
 			
 			$i++;
 		}
 		
-		echo "Sub_cat_data<pre>";
-		print_r($sub_cat_data);
+		echo "Category_data<pre>";
+		print_r($category_data);
 		echo "<pre>";
 		
 		die();
@@ -616,5 +610,88 @@ class AdminController extends AppController {
 	}
 		
 	
+	public function products() 
+	{
+		$products_data = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		$this->set('products_data', $products_data);
+		
+		if ($this->request->is('post')) {
+			
+			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
+			
+			$this->Product->save($this->request->data);
+			$this->redirect('products');
+		}
+	}
+	
+	public function add_products() 
+	{
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
+		
+		$i=1;
+		foreach($category_data as $key=>$data)
+		{
+			$first_data = $this->displayParent($data['Category']['id'], $i);
+			
+			if(isset($first_data))
+			$category_data[$key]['sub_category'] = $first_data;
+			
+			unset($first_data);
+			
+			$i++;
+		}
+		
+		if ($this->request->is('post')) {
+			
+			$this->Produc_master->save($this->request->data);
+			
+			$last_inserted_id = $this->Produc_master->getLastInsertId();
+			
+			foreach($this->request->data['Produc_master']['catimg'] as $data)
+			{
+				$name = $data['name'];
+				$tmp_name = $data['tmp_name'];
+				$type = $data['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
+					{ 
+						$url="../webroot/img/product/".$name;
+						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,200);
+						
+						$url="../webroot/img/product/".$name;
+						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,1500);
+						
+						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
+						$product_image_data['Produc_image']['imagepath'] = $data['name'];
+						$product_image_data['Produc_image']['del_status'] = 0;						
+						
+						$this->Produc_image->create();
+						$this->Produc_image->save($product_image_data);					
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_category');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_category');	
+				}
+			}
+			$this->redirect('add_products');	
+		}
+	}
+	
+		
 	
 }
