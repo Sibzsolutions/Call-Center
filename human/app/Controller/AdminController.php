@@ -419,16 +419,15 @@ class AdminController extends AppController {
 			 $i++;
 			 
 			 $shashi_data_one[] = $data_one;
-			 
-			 return $shashi_data_one;
 		}
 		
-		//if(isset($shashi_data_one))
-		//return $shashi_data_one;		
+		if(isset($shashi_data_one))
+		return $shashi_data_one;		
 	}
 
 	public function add_category() 
 	{
+		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
 		
 		$i=1;
@@ -438,6 +437,12 @@ class AdminController extends AppController {
 			
 			echo "first_data<pre>";
 			print_r($first_data);
+			echo "<pre>";
+			
+			$array = array_column($first_data[1]);
+			
+			echo "array<pre>";
+			print_r($array);
 			echo "<pre>";
 			
 			die();

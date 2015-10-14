@@ -424,7 +424,7 @@ class AdminController extends AppController {
 			 $data_one = $this->category_tree($data['id']);
 			 echo '</option>';
 			 $i++;
-			 if ($i > 0) echo '</ul>';
+			 if ($i > 0) echo '</select>';
 			 
 			 if(isset($data_one))
 			 $cat_data[$data['catname']]['sub_type'] = $data_one;
@@ -438,7 +438,6 @@ class AdminController extends AppController {
 
 	public function add_category() 
 	{
-		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
 		
 		$i=1;
@@ -446,7 +445,7 @@ class AdminController extends AppController {
 		{
 			$first_data = $data;
 			
-			echo '<ul>';
+			echo '<select multiple="multiple">';
 			echo '<option>' . $data['Category']['catname'];
 			echo '</option>';
 			
