@@ -1,4 +1,46 @@
-<?php ?>
+<?php 
+	
+	//$this->category_tree();
+	
+	//die();
+	
+	echo "cat_data<pre>";
+	print_r($cat_data);
+	echo "<pre>";
+	
+	die();
+	
+	foreach($cat_data as $data){
+		
+		echo "data<pre>";
+		print_r($data);
+		echo "<pre>";
+		
+		die();
+	}
+	
+?>
+
+<select>
+	
+	<?php 
+		
+		foreach($cat_data as $data){
+		
+		echo "data<pre>";
+		print_r($data);
+		echo "<pre>";
+		
+		die();
+		
+		?>
+    	<option value="<?php echo $data['Category']['id']; ?>"><?php echo $data['Category']['cat_name']; ?></option>    
+        <?php
+	}
+	?>
+        
+</select>
+
   <?=$this->Form->create('Category', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
     <div class="form-group">

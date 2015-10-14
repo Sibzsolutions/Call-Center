@@ -411,59 +411,32 @@ class AdminController extends AppController {
 			 $i = 0;
 			 if($i == 0) 
 			 {
-			 	//$cat_data[$data['catname']] = $data;
-			 	$shashi_data_one[] = $data;
+			 	 $cat_data[$data['catname']] = $data;
 			 }
-			 
 			 $data_one = $this->category_tree($data['id']);
 			 $i++;
 			 
-			 $shashi_data_one[] = $data_one;
-			 
-			 return $shashi_data_one;
+			 if(isset($data_one))
+			 $cat_data[$data['catname']]['sub_type'] = $data_one;
+			 else
+			 $cat_data[$data['catname']]['sub_type'] = "N/A";
 		}
 		
-		//if(isset($shashi_data_one))
-		//return $shashi_data_one;		
+		if(isset($cat_data))
+		return $cat_data;
 	}
 
 	public function add_category() 
 	{
+		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
 		
 		$i=1;
 		foreach($category_data as $key=>$data)
 		{
-			$first_data = $this->category_tree($data['Category']['id']);
+			$first_data = $data;
 			
-			echo "first_data<pre>";
-			print_r($first_data);
-			echo "<pre>";
-			
-			die();
-			
-			foreach($first_data as $data_cat)
-			{
-				if(isset($data_cat['id']))
-				{
-					$one_final[] = $data_cat;	
-				}
-				else
-				{
-					foreach($data_cat as $one_cat)
-					{
-						$one_final[] = $one_cat;	
-					}
-				}
-				
-				$cat_last[] = $data_cat;
-			}
-			
-			echo "one_final<pre>";
-			print_r($one_final);
-			echo "<pre>";
-			
-			die();
+			$first_data['Category']['sub_type'] = $this->category_tree($data['Category']['id']);
 			
 			$new_data[] = $first_data;
 		}
