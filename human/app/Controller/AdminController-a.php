@@ -38,7 +38,7 @@ class AdminController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image');
 
 /**
  * Displays a view
@@ -264,6 +264,9 @@ class AdminController extends AppController {
 		$this->redirect('dynamic_pages');			
 	}
 	
+
+	
+	
 	public function categories() 
 	{
 		$categories_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
@@ -278,54 +281,244 @@ class AdminController extends AppController {
 			$this->redirect('users');
 		}
 	}
-
-	function product_tree($catid, $selected_id){
+	
+	public function adisplayParent($id) {
 		
-		$products_data = $this->Produc_master->find('all', array('order'=>array('id'=>'desc')));
+		//, $session_id
+		$cat = array();
+		$i = 0;
+		//$sql = "SELECT * FROM ads_01_cat WHERE id = '$id'";
 		
-		foreach($products_data as $product)
-		echo '<option value="'.$product['Produc_master']['id'].'">'.$product['Produc_master']['prodname'].'</option>';
-	}
-
-	function category_tree($catid, $selected_id){
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
+				
+		if(count($category_data)>0)
+		{
+			while(count($category_data))
+			{
+				echo "<pre>";
+				print_r($category_data);
+				echo "<pre>";
+				
+				//$content = '--> <a href="cat_list.php?session_id='.$session_id.'&id='.$row['id'].'">'.$row['name'].'</a>';
+				
+				$cat = array_fill($i, 1, $category_data);
+				
+				echo "Cat<pre>";
+				print_r($cat);
+				echo "<pre>";
+				
+				//$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$category_data[$i]['Category']['id'])));
+				$this->displayParent($category_data[$i]['Category']['id']);  //, $session_id
+				$i++;
+			}
+		}
+		if(isset($car))
+		{
+			echo "cat<pre>";
+			print_r($cat);
+			echo "<pre>";
+		}
+		
+		$cat = array_reverse($cat);
+		$count_cat = count($cat);
+		 
+		for($i=0; $i<=$count; $i++) 
+		{
+			echo $cat[$i];		
+		}
+	}  
+	
+	
+	
+	function displayParent($id) {
+		
+		/*
+		$i = 0;
+		//$cat = array();
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
+		
+		echo "display_Parent<pre>";
+		print_r($category_data);
+		echo "<pre>";
+		
+		//if($result = mysql_query($sql))
+		if(!empty($category_data))
+		{
+			foreach($category_data as $data)
+			{
+				$content[$data['Category']['id']] = $data['Category']['catname'];
+				
+				$cat = array_fill($i, 1, $content);
+				//$cat[$data['Category']['id']][] = $data['Category']; //array_fill($i, 1, $content);
+				
+				$i++;
+				
+				$shashi_data[] = $cat;
+				
+				$mayur_data[][] = $shashi_data;
+				
+				unset($cat);
+				unset($content);
+				
+				$this->displayParent($data['Category']['id']);
+			}
+		}
+		if(isset($mayur_data))
+		{
+			echo "mayur_data<pre>";
+			print_r($mayur_data);
+			echo "<pre>";
+			
+			die();
+		}
+		
+		if(isset($cat))
+		return $cat;
+		else
+		return false;
+		
+		unset($cat);
+		
+		/*
+		$cat = array_reverse($cat);
+		$count_cat = count($cat);
+		 
+		for($i=0; $i<=$count; $i++) {
+		echo $cat[$i];
+		}
+		*/
+	}  
+	
+	
+		//connect to mysql and select db
+		//$conn = mysqli_connect('localhost', 'rootuser', 'rootpwd','corephp');
+		
+		//if( !empty($conn->connect_errno)) die("Error " . mysqli_error($conn));
+		
+		//call the recursive function to print category listing
+		//category_tree(0);
+		
+		//Recursive php function
+	public function category_tree($catid){
 		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid)));
+		
+		 /*
+		 if($category_data)
+		 {
+		   foreach($category_data as $ch)
+		   {
+			   echo "ch<pre>";
+			   print_r($ch);
+			   echo "<pre>";
+			   
+			   die();
+			   
+			  $arr[$ch['Category']['id']][ 'category' ] = $ch['Category']['catname'];
+			  $arr[$ch['Category']['id']][ 'childs' ] = $this->catagory_tree($ch['Category']['id'] , $arr );
+		   }
+		 }
+		
+		return $arr;
+		
+		*/
 		
 		foreach($category_data as $data)
 		{
 			 $data = $data['Category'];
-			 if(isset($selected_id))
-			 {
-				 if($selected_id == $data['id'])
-				 echo '<option selected="selected" value="'.$data['id'].'">'.$data['catname'].'</option>';
-				 else
-				 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
-			 }
-			 else
-			 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
+			 			 
+			 //$cat_data[$data['catname']] = $data;
+			 $shashi_data_one[] = $data;
 			 
-			 $this->category_tree($data['id'], $selected_id);
+			 $data_one = $this->category_tree($data['id']);
+			 $i++;
+			 
+			 $cat_data_one[] = $data_one;
 		}
+		
+		
+		if(isset($cat_data_one))
+		{
+			return $cat_data_one;		
+		}
+		
 	}
 
-	public function add_category() 
+
+	function add_category(){
+
+		$array  =  array();
+		$all = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
+		
+		//$all    = $this->db->get('category' , array('parent'=>0) ); 
+		// this query gets all the parent categories ( select * where parent = 0 )
+	
+		foreach($all as $a )
+		{
+			$array[$a['Category']['id']]['category'] =  $a['Category']['catname'] ;
+			$array[$a['Category']['id']]['childs']   = $this->category_tree( $a['Category']['id'] );
+		}
+		
+		echo '<pre>';print_r($array); echo '</pre>';	
+	}
+
+	public function aadd_category() 
 	{
-		/*
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
 		
 		$i=1;
 		foreach($category_data as $key=>$data)
 		{
-			$first_cat_data = $data;
+			$first_data = $this->category_tree($data['Category']['id']);
 			
-			$first_cat_data['Category']['sub_type'] = $this->category_tree($data['Category']['id']);
+			echo "first_data<pre>";
+			print_r($first_data);
+			echo "<pre>";
 			
-			$new_data[] = $first_cat_data;
+			die();
+			
+			$array = array_column($first_data[1]);
+			
+			echo "array<pre>";
+			print_r($array);
+			echo "<pre>";
+			
+			die();
+			
+			foreach($first_data as $data_cat)
+			{
+				if(isset($data_cat['id']))
+				{
+					$one_final[] = $data_cat;	
+				}
+				else
+				{
+					foreach($data_cat as $one_cat)
+					{
+						$one_final[] = $one_cat;	
+					}
+				}
+				
+				$cat_last[] = $data_cat;
+			}
+			
+			echo "one_final<pre>";
+			print_r($one_final);
+			echo "<pre>";
+			
+			die();
+			
+			$new_data[] = $first_data;
 		}
 		
-		die(); 
+		echo "new_data<pre>";
+		print_r($new_data);
+		echo "<pre>";
 		
-		*/
+		die();
+		
+		$this->set('cat_data', $new_data);		
 		
 		if ($this->request->is('post')) {
 			
@@ -540,6 +733,7 @@ class AdminController extends AppController {
 		}
 	}
 		
+	
 	public function products() 
 	{
 		$products_data = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
@@ -557,7 +751,6 @@ class AdminController extends AppController {
 	
 	public function add_products() 
 	{
-		/*
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
 		
 		$i=1;
@@ -572,7 +765,6 @@ class AdminController extends AppController {
 			
 			$i++;
 		}
-		*/
 		
 		if ($this->request->is('post')) {
 			
@@ -620,7 +812,7 @@ class AdminController extends AppController {
 					$this->redirect('add_category');	
 				}
 			}
-			$this->redirect('products');	
+			$this->redirect('add_products');	
 		}
 	}
 	
@@ -695,215 +887,6 @@ class AdminController extends AppController {
 		if($this->Produc_master->save($product_data))
 		$this->redirect('products');			
 	}
-	
-		public function saved_imgalt() 
-	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['imgalt'] = $_REQUEST['saved_imgalt_text'];
-		
-		if($this->Produc_image->save($data))
-		echo "Yes";
-		else
-		echo "No";
-		
-		die();
-	}
-	
-	public function is_default_image() 
-	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['is_default'] = $_REQUEST['is_default'];
-		
-		if($this->Produc_image->save($data))
-		echo "Yes";
-		else
-		echo "No";
-		
-		die();
-	}
-	
-	public function change_order_image() 
-	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['order'] = $_REQUEST['change_order_number'];
-		
-		if($this->Produc_image->save($data))
-		echo "Yes";
-		else
-		echo "No";
-		
-		die();
-	}
-	
-	public function change_status_image() 
-	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['del_status'] = $_REQUEST['type_data'];
-		
-		if($this->Produc_image->save($data))
-		echo "Yes";
-		else
-		echo "No";
-		
-		die();
-	}
-	
-	public function product_images($id) 
-	{
-		$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$id), 'order' => array('id' => 'DESC')));
-		$count_data = count($product_images);
-		
-		for($i=1;$i<=$count_data;$i++)
-		$total_order_number[$i] = $i;
-		
-		$this->set('total_order_number', $total_order_number);
-		
-		$this->set('product_images', $product_images);
-		
-		if ($this->request->is('post')) {
-			
-			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
-			
-			$this->Product->save($this->request->data);
-			$this->redirect('products');
-		}
-	}
-	
-	public function offers() 
-	{
-		$products_data = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
-		
-		$this->set('products_data', $products_data);
-		
-		if ($this->request->is('post')) 
-		{
-			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
-			
-			$this->Product->save($this->request->data);
-			$this->redirect('products');
-		}
-	}
-
-	public function add_offer() 
-	{
-		if ($this->request->is('post')) {
-			
-			echo "Requested_data<pre>";
-			print_r($this->request->data);
-			echo "<pre>";
-			
-			$i=0;
-			$count_data = count($this->request->data['Offer_master']['catid']);
-			$count_data = ($count_data-1);
-			
-			foreach($this->request->data['Offer_master']['catid'] as $key=>$cat_data)
-			{
-				if($count_data == 0)
-				$cate = $cat_data;
-				else
-				{
-					if($i==0)
-					$cate = $cat_data.',';
-					else
-					{
-						if($key == $count_data)
-						$cate = $cate.$cat_data;
-						else
-						$cate = $cate.$cat_data.',';
-					}
-				}
-				
-				$i++;
-			}
-			$offercat = $cate;
-			
-			$i=0;
-			$count_data = count($this->request->data['Offer_master']['productid']);
-			$count_data = ($count_data-1);
-			
-			foreach($this->request->data['Offer_master']['productid'] as $key=>$cat_data)
-			{
-				if($count_data == 0)
-				$cate = $cat_data;
-				else
-				{
-					if($i==0)
-					$cate = $cat_data.',';
-					else
-					{
-						if($key == $count_data)
-						$cate = $cate.$cat_data;
-						else
-						$cate = $cate.$cat_data.',';
-					}
-				}
-				
-				$i++;
-			}
-			$offerprod = $cate;
-			
-			$this->request->data['Offer_master']['offerprod'] = $offerprod;
-			$this->request->data['Offer_master']['offercat'] = $offercat;
-			
-			if($this->Offer_master->save($this->request->data))
-			$this->redirect('offers');
-			else
-			{
-				echo "Shashikant";
-				die();
-			}
-			
-			
-			
-			
-			$last_inserted_id = $this->Produc_master->getLastInsertId();
-			
-			foreach($this->request->data['Produc_master']['catimg'] as $data)
-			{
-				$name = $data['name'];
-				$tmp_name = $data['tmp_name'];
-				$type = $data['type'];
-				$type_data = explode('/', $type);
-				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
-				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
-				{
-					
-					//Uploadation code for images
-					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
-					{ 
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,200);
-						
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,1500);
-						
-						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
-						$product_image_data['Produc_image']['imagepath'] = $data['name'];
-						$product_image_data['Produc_image']['del_status'] = 0;						
-						
-						$this->Produc_image->create();
-						$this->Produc_image->save($product_image_data);					
-					}
-					else
-					{
-						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
-						$this->redirect('add_category');	
-					}
-				}
-				else
-				{
-					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
-					$this->redirect('add_category');	
-				}
-			}
-			$this->redirect('products');	
-		}
-	}
-	
-		
-	
 	
 		
 	

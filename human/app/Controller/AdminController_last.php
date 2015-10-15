@@ -31,8 +31,6 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  */
 class AdminController extends AppController {
 
-	
-
 /**
  * This controller does not use a model
  *
@@ -282,133 +280,10 @@ class AdminController extends AppController {
 		}
 	}
 	
-	public function adisplayParent($id) {
-		
-		//, $session_id
-		$cat = array();
-		$i = 0;
-		//$sql = "SELECT * FROM ads_01_cat WHERE id = '$id'";
-		
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
-				
-		if(count($category_data)>0)
-		{
-			while(count($category_data))
-			{
-				echo "<pre>";
-				print_r($category_data);
-				echo "<pre>";
-				
-				//$content = '--> <a href="cat_list.php?session_id='.$session_id.'&id='.$row['id'].'">'.$row['name'].'</a>';
-				
-				$cat = array_fill($i, 1, $category_data);
-				
-				echo "Cat<pre>";
-				print_r($cat);
-				echo "<pre>";
-				
-				//$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$category_data[$i]['Category']['id'])));
-				$this->displayParent($category_data[$i]['Category']['id']);  //, $session_id
-				$i++;
-			}
-		}
-		if(isset($car))
-		{
-			echo "cat<pre>";
-			print_r($cat);
-			echo "<pre>";
-		}
-		
-		$cat = array_reverse($cat);
-		$count_cat = count($cat);
-		 
-		for($i=0; $i<=$count; $i++) 
-		{
-			echo $cat[$i];		
-		}
-	}  
-	
-	
-	
-	function displayParent($id) {
-		
-		/*
-		$i = 0;
-		//$cat = array();
-		
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
-		
-		echo "display_Parent<pre>";
-		print_r($category_data);
-		echo "<pre>";
-		
-		//if($result = mysql_query($sql))
-		if(!empty($category_data))
-		{
-			foreach($category_data as $data)
-			{
-				$content[$data['Category']['id']] = $data['Category']['catname'];
-				
-				$cat = array_fill($i, 1, $content);
-				//$cat[$data['Category']['id']][] = $data['Category']; //array_fill($i, 1, $content);
-				
-				$i++;
-				
-				$shashi_data[] = $cat;
-				
-				$mayur_data[][] = $shashi_data;
-				
-				unset($cat);
-				unset($content);
-				
-				$this->displayParent($data['Category']['id']);
-			}
-		}
-		if(isset($mayur_data))
-		{
-			echo "mayur_data<pre>";
-			print_r($mayur_data);
-			echo "<pre>";
-			
-			die();
-		}
-		
-		if(isset($cat))
-		return $cat;
-		else
-		return false;
-		
-		unset($cat);
-		
-		/*
-		$cat = array_reverse($cat);
-		$count_cat = count($cat);
-		 
-		for($i=0; $i<=$count; $i++) {
-		echo $cat[$i];
-		}
-		*/
-	}  
-	
-	
-		//connect to mysql and select db
-		//$conn = mysqli_connect('localhost', 'rootuser', 'rootpwd','corephp');
-		
-		//if( !empty($conn->connect_errno)) die("Error " . mysqli_error($conn));
-		
-		//call the recursive function to print category listing
-		//category_tree(0);
-		
-		//Recursive php function
+	//Recursive php function
 	public function category_tree($catid){
 		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid)));
-		
-		//$sql = "select * from category where parent_id ='".$catid."'";
-		//$result = $conn->query($sql);
-		//while($row = mysqli_fetch_object($result)):
-		
-		//while($category_data):
 		
 		foreach($category_data as $data)
 		{
@@ -417,41 +292,28 @@ class AdminController extends AppController {
 			 $i = 0;
 			 if($i == 0) 
 			 {
-			 	 echo '<option>';
-			 	 $cat_data[$data['catname']] = $data;
+			 	$cat_arr[] = $data;
 			 }
-			 echo '<option>' . $data['catname'];
-			 $data_one = $this->category_tree($data['id']);
-			 echo '</option>';
-			 $i++;
-			 if ($i > 0) echo '</select>';
 			 
-			 if(isset($data_one))
-			 $cat_data[$data['catname']]['sub_type'] = $data_one;
-			 else
-			 $cat_data[$data['catname']]['sub_type'] = "N/A";
+			 $data_rec = $this->category_tree($data['id']);
+			 $i++;
+			 
+			 $cat_arr[] = $data_rec;
 		}
 		
-		if(isset($cat_data))
-		return $cat_data;
+		if(isset($cat_arr))
+		return $cat_arr;		
 	}
 
 	public function add_category() 
 	{
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
 		
-		$i=1;
 		foreach($category_data as $key=>$data)
 		{
-			$first_data = $data;
+			$first_cat_data = $this->category_tree($data['Category']['id']);
 			
-			echo '<select multiple="multiple">';
-			echo '<option>' . $data['Category']['catname'];
-			echo '</option>';
-			
-			$first_data['Category']['sub_type'] = $this->category_tree($data['Category']['id'], $data['Category']['catname']);
-			
-			$new_data[] = $first_data;
+			$new_data[] = $first_cat_data;
 		}
 		
 		echo "new_data<pre>";

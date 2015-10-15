@@ -19,9 +19,7 @@
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
                 <div class="box-header">
-                
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_products'; ?>">Add Product</a>
-                                
+                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_offer'; ?>">Add Offer</a>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <table id="example1" class="table table-bordered table-striped">

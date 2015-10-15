@@ -1,59 +1,37 @@
 <?php 
-	
-	//$this->category_tree();
-	
-	//die();
-	
-	echo "cat_data<pre>";
-	print_r($cat_data);
-	echo "<pre>";
-	
-	die();
-	
-	foreach($cat_data as $data){
-		
-		echo "data<pre>";
-		print_r($data);
-		echo "<pre>";
-		
-		die();
-	}
-	
+	App::import('Controller', 'Admins');
+	$Admin = new AdminController;
+	//$department_id = 4 ; // put here department ID as per your need
 ?>
-
-<select>
-	
-	<?php 
-		
-		foreach($cat_data as $data){
-		
-		echo "data<pre>";
-		print_r($data);
-		echo "<pre>";
-		
-		die();
-		
-		?>
-    	<option value="<?php echo $data['Category']['id']; ?>"><?php echo $data['Category']['cat_name']; ?></option>    
-        <?php
-	}
-	?>
-        
-</select>
 
   <?=$this->Form->create('Category', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
+    
+    <div class="form-group">
+    <label>Parent Category</label>
+    <select name="data[Category][parentid]" class="form-control select2" style="width: 100%;">
+    <?php
+		
+		$Admin -> category_tree(0);	
+		echo '</select>';
+		//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
+		
+	?>
+    </div><!-- /.form-group -->
+	
     <div class="form-group">
       <label for="exampleInputEmail1">Category Name</label>
       <?=$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));?>
     </div>
+    
     <div class="form-group">
       <label for="exampleInputEmail1">Category Description</label>
       <?=$this->Form->input('catdesc',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title'));?>
     </div>
+    
     <div class="form-group">
       <label for="exampleInputEmail1">Category Images</label>
-      <?=$this->Form->input('catimg',array('type'=>'file','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Keywords', 'multiple'));//, 'name'=>'data[Category][catimg][]?>
+      <?=$this->Form->input('catimg',array('type'=>'file','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Keywords', 'multiple'));//, 'name'=>'data[Category][catimg][]?>
     </div>
     
     <div class="form-group">

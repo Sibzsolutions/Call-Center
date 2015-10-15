@@ -1,10 +1,30 @@
-<?php ?>
+<?php 
+	App::import('Controller', 'Admins');
+	$Admin = new AdminController;
+	//$department_id = 4 ; // put here department ID as per your need
+?>
+
   <?=$this->Form->create('Category', array("role"=>"form", 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
+    
     <div class="form-group">
       <label for="exampleInputEmail1">Category Id</label>
       <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Id', 'value'=>$category_data['id']));?>
     </div>
+    
+    <div class="form-group">
+    <label>Parent Category</label>
+    
+    <select name="data[Category][parentid]" class="form-control select2" style="width: 100%;">
+    <?php
+		
+		$Admin -> category_tree(0, $category_data['parentid']);	
+		echo '</select>';
+		//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
+		
+	?>
+    </div>
+    
     <div class="form-group">
       <label for="exampleInputEmail1">Name</label>
       <?=$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter First Name', 'value'=>$category_data['catname']));?>
