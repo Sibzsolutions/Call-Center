@@ -38,7 +38,7 @@ class AdminController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value');
 
 /**
  * Displays a view
@@ -290,13 +290,28 @@ class AdminController extends AppController {
 			$this->redirect('users');
 		}
 	}
-
+	
 	function product_tree($catid, $selected_id){
 		
 		$products_data = $this->Produc_master->find('all', array('order'=>array('id'=>'desc')));
 		
 		foreach($products_data as $product)
 		echo '<option value="'.$product['Produc_master']['id'].'">'.$product['Produc_master']['prodname'].'</option>';
+	}
+	
+	function attribute_tree($catid, $selected_id){
+		
+		$attributes_data = $this->Attribute_master->find('all', array('order'=>array('id'=>'desc')));
+				
+		foreach($attributes_data as $attribute)
+		{
+			if($selected_id == $attribute['Attribute_master']['id'])
+			{
+				echo '<option selected="selected" value="'.$attribute['Attribute_master']['id'].'">'.$attribute['Attribute_master']['attname'].'</option>';	
+			}
+			else
+			echo '<option value="'.$attribute['Attribute_master']['id'].'">'.$attribute['Attribute_master']['attname'].'</option>';
+		}
 	}
 
 	function category_tree($catid, $selected_id){
@@ -698,7 +713,7 @@ class AdminController extends AppController {
 		$this->redirect('products');			
 	}
 	
-		public function saved_imgalt() 
+	public function saved_imgalt() 
 	{
 		$data['Produc_image']['id'] = $_REQUEST['image_id'];
 		$data['Produc_image']['imgalt'] = $_REQUEST['saved_imgalt_text'];
@@ -840,13 +855,6 @@ class AdminController extends AppController {
 		}
 	}
 	
-	public function offer_edit_one($id) 
-	{
-		$offer_data = $this->Offer_master->find('first', array('conditions'=>array('Offer_master.id'=>$id)));
-		
-		$this->set('offer_data', $offer_data['Offer_master']);
-	}
-	
 	public function offer_edit($id) 
 	{
 		$offer_data = $this->Offer_master->find('first', array('conditions'=>array('Offer_master.id'=>$id)));
@@ -854,63 +862,85 @@ class AdminController extends AppController {
 		$this->set('offer_data', $offer_data['Offer_master']);
 				
 		if ($this->request->is('post')) {
-						
-			$this->Produc_master->save($this->request->data);
 			
-			$last_inserted_id = $this->request->data['Produc_master']['id'];
+			$i=0;
+			$count_data = count($this->request->data['Offer_master']['catid']);
+			$count_data = ($count_data-1);
 			
-			//if(count($this->request->data['Produc_master']['produc_images'])>0)
-			//$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
-			
-			foreach($this->request->data['Produc_master']['produc_images'] as $data)
+			foreach($this->request->data['Offer_master']['catid'] as $key=>$cat_data)
 			{
-				$name = $data['name'];
-				$tmp_name = $data['tmp_name'];
-				$type = $data['type'];
-				$type_data = explode('/', $type);
-				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
-				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
-				{
-					//Uploadation code for images
-					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
-					{ 
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,200);
-						
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,1500);
-						
-						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
-						$product_image_data['Produc_image']['imagepath'] = $data['name'];
-						$product_image_data['Produc_image']['del_status'] = 0;						
-						
-						$this->Produc_image->create();
-						$this->Produc_image->save($product_image_data);					
-					}
-					else
-					{
-						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
-						$this->redirect('add_product');	
-					}
-				}
+				if($count_data == 0)
+				$cate = $cat_data;
 				else
 				{
-					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
-					$this->redirect('add_product');	
+					if($i==0)
+					$cate = $cat_data.',';
+					else
+					{
+						if($key == $count_data)
+						$cate = $cate.$cat_data;
+						else
+						$cate = $cate.$cat_data.',';
+					}
 				}
+			
+				$i++;
 			}
-			$this->redirect('add_products');					
+			
+			$offercat = $cate;
+			
+			$i=0;
+			$count_data = count($this->request->data['Offer_master']['productid']);
+			$count_data = ($count_data-1);
+			
+			foreach($this->request->data['Offer_master']['productid'] as $key=>$cat_data)
+			{
+				if($count_data == 0)
+				$cate = $cat_data;
+				else
+				{
+					if($i==0)
+					$cate = $cat_data.',';
+					else
+					{
+						if($key == $count_data)
+						$cate = $cate.$cat_data;
+						else
+						$cate = $cate.$cat_data.',';
+					}
+				}
+				
+				$i++;
+			}
+			
+			$offerprod = $cate;
+			
+			$this->request->data['Offer_master']['offerprod'] = $offerprod;
+			$this->request->data['Offer_master']['offercat'] = $offercat;
+			
+			if($this->Offer_master->save($this->request->data))
+			$this->redirect('offers');
 		}
 	}
 	
+	public function offer_status_change($id) 
+	{
+		$offer_data = $this->Offer_master->find('first', array('conditions'=>array('Offer_master.id'=>$id)));
+		
+		if($offer_data['Offer_master']['del_status']==1)
+		$offer_data['Offer_master']['del_status'] = 0;
+		else
+		$offer_data['Offer_master']['del_status'] = 1;
+		
+		if($this->Offer_master->save($offer_data))
+		$this->redirect('offers');			
+	}
 	
 	public function attributes() 
 	{
-		$products_data = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
 		
-		$this->set('products_data', $products_data);
+		$this->set('attributes_data', $attribute_data);
 		
 		if ($this->request->is('post')) {
 			
@@ -923,129 +953,53 @@ class AdminController extends AppController {
 	
 	public function add_attribute() 
 	{
-		/*
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
-		
-		$i=1;
-		foreach($category_data as $key=>$data)
-		{
-			$first_data = $this->displayParent($data['Category']['id'], $i);
+		if($this->request->is('post')) {
 			
-			if(isset($first_data))
-			$category_data[$key]['sub_category'] = $first_data;
+			$this->Attribute_master->save($this->request->data);
 			
-			unset($first_data);
+			$att_values['Attribute_category']['attid'] = $this->Attribute_master->getLastInsertID();
 			
-			$i++;
-		}
-		*/
-		
-		if ($this->request->is('post')) {
+			$att_values['Attribute_category']['catid'] = $this->request->data['Attribute_master']['catid'];
 			
-			$this->Produc_master->save($this->request->data);
+			$att_values['Attribute_category']['is_main'] = $this->request->data['Attribute_master']['is_main'];
 			
-			$last_inserted_id = $this->Produc_master->getLastInsertId();
+			$att_values['Attribute_category']['del_status'] = $this->request->data['Attribute_master']['del_status'];
 			
-			foreach($this->request->data['Produc_master']['catimg'] as $data)
-			{
-				$name = $data['name'];
-				$tmp_name = $data['tmp_name'];
-				$type = $data['type'];
-				$type_data = explode('/', $type);
-				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
-				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
-				{
-					
-					//Uploadation code for images
-					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
-					{ 
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,200);
-						
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,1500);
-						
-						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
-						$product_image_data['Produc_image']['imagepath'] = $data['name'];
-						$product_image_data['Produc_image']['del_status'] = 0;						
-						
-						$this->Produc_image->create();
-						$this->Produc_image->save($product_image_data);					
-					}
-					else
-					{
-						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
-						$this->redirect('add_category');	
-					}
-				}
-				else
-				{
-					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
-					$this->redirect('add_category');	
-				}
-			}
-			$this->redirect('products');	
+			if($this->Attribute_category->save($att_values))
+			$this->redirect('attributes');	
 		}
 	}
 	
-	
 	public function attribute_edit($id) 
 	{
-		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
+		$attribute_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$id)));
 		
-		$this->set('product_data', $product_data['Produc_master']);
+		$attribute_cat_data = $this->Attribute_category->find('first', array('conditions'=>array('Attribute_category.attid'=>$id)));
+		
+		$attribute_data['Attribute_category'] = $attribute_cat_data['Attribute_category'];
+		
+		$this->set('attribute_data', $attribute_data);
 				
 		if ($this->request->is('post')) {
 						
-			$this->Produc_master->save($this->request->data);
+			$this->Attribute_master->save($this->request->data);
 			
-			$last_inserted_id = $this->request->data['Produc_master']['id'];
+			$last_inserted_id = $this->request->data['Attribute_master']['id'];
 			
-			//if(count($this->request->data['Produc_master']['produc_images'])>0)
-			//$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
+			$attribute_cat_data = $this->Attribute_category->find('first', array('conditions'=>array('Attribute_category.attid'=>$last_inserted_id)));
 			
-			foreach($this->request->data['Produc_master']['produc_images'] as $data)
-			{
-				$name = $data['name'];
-				$tmp_name = $data['tmp_name'];
-				$type = $data['type'];
-				$type_data = explode('/', $type);
-				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
-				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
-				{
-					//Uploadation code for images
-					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
-					{ 
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,200);
-						
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,1500);
-						
-						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
-						$product_image_data['Produc_image']['imagepath'] = $data['name'];
-						$product_image_data['Produc_image']['del_status'] = 0;						
-						
-						$this->Produc_image->create();
-						$this->Produc_image->save($product_image_data);					
-					}
-					else
-					{
-						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
-						$this->redirect('add_product');	
-					}
-				}
-				else
-				{
-					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
-					$this->redirect('add_product');	
-				}
-			}
-			$this->redirect('add_products');					
+			$att_values['Attribute_category']['id'] = $attribute_cat_data['Attribute_category']['id'];
+			
+			$att_values['Attribute_category']['attid'] = $last_inserted_id;
+			
+			$att_values['Attribute_category']['catid'] = $this->request->data['Attribute_master']['catid'];
+			
+			$att_values['Attribute_category']['is_main'] = $this->request->data['Attribute_master']['is_main'];
+			
+			$att_values['Attribute_category']['del_status'] = $this->request->data['Attribute_master']['del_status'];
+			
+			if($this->Attribute_category->save($att_values))
+			$this->redirect('attributes');	
 		}
 	}
 	
@@ -1063,7 +1017,115 @@ class AdminController extends AppController {
 	}
 			
 	
+	function offer_product_tree($catid, $selected_id){
+		
+		$id_data = explode(',', $selected_id);		
+		
+		$products_data = $this->Produc_master->find('all', array('order'=>array('id'=>'desc')));
+		
+		foreach($products_data as $product)
+		{
+			$product = $product['Produc_master'];
+			$i= 0;
+			foreach($id_data as $id_one)
+			 {
+				if($id_one == $product['id'])
+				{
+					echo '<option selected="selected" value="'.$product['id'].'">'.$product['prodname'].'</option>';
+					$i++;
+				}
+			 }
+			 
+			 if($i==0)
+			 echo '<option value="'.$product['id'].'">'.$product['prodname'].'</option>';
+		}
+	}
+
+	function offer_category_tree($catid, $selected_id){
+		
+		$id_data = explode(',', $selected_id);		
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid)));
+		
+		foreach($category_data as $data)
+		{
+			$data = $data['Category'];
+			
+			 $i=0;
+			 foreach($id_data as $id_one)
+			 {
+				if($id_one == $data['id'])
+				{
+					echo '<option selected="selected" value="'.$data['id'].'">'.$data['catname'].'</option>';				 
+					$i++;
+				}
+			 }
+			 
+			 if($i==0)
+			 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
+			 
+			 $this->offer_category_tree($data['id'], $selected_id);
+		}
+	}
+
 	
+	public function attribute_values() 
+	{
+		$attribute_value_data = $this->Attribute_value->find('all', array('order' => array('id' => 'DESC')));
+		
+		$this->set('attribute_values_data', $attribute_value_data);
+		
+		if ($this->request->is('post')) {
+			
+			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
+			
+			$this->Product->save($this->request->data);
+			$this->redirect('products');
+		}
+	}
+	
+	public function add_attribute_value() 
+	{
+		if($this->request->is('post')) {
+			
+			$this->Attribute_value->save($this->request->data);
+			
+			$this->redirect('attribute_values');	
+		}
+	}
+
+	public function attribute_value_edit($id) 
+	{
+		$attribute_value_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$id)));
+		
+		$attribute_master_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$attribute_value_data['Attribute_value']['attid'])));
+		
+		$attribute_value_data['Attribute_master'] = $attribute_master_data['Attribute_master'];
+		
+		$this->set('attribute_value_data', $attribute_value_data);
+				
+		if ($this->request->is('post')) {
+			
+			$this->Attribute_value->save($this->request->data);
+			
+			$this->redirect('attribute_values/'.$id);	
+			
+			die();	
+		}
+	}		
+	
+	public function attribute_value_status_change($id) 
+	{
+		$attribute_value_data = $this->Attribute_value->find('first', array('conditions'=>array('attribute_value.id'=>$id)));
+		
+		if($attribute_value_data['Attribute_value']['del_status']==1)
+		$attribute_value_data['Attribute_value']['del_status'] = 0;
+		else
+		$attribute_value_data['Attribute_value']['del_status'] = 1;
+		
+		if($this->Attribute_value->save($attribute_value_data))
+		$this->redirect('attribute_values/'.$id);			
+	}	
 		
 	
 }

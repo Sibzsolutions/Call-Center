@@ -1,15 +1,14 @@
-<?php 
-	
-	echo "offer_data<pre>";
-	print_r($offer_data);
-	echo "<pre>";
-	
+<?php 	
 	App::import('Controller', 'Admins');
 	$Admin = new AdminController;
-
 ?>
   <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
+    
+	<div class="form-group">
+      <label for="exampleInputEmail1">Offer Id</label>
+	  <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer Id', 'value'=>$offer_data['id']));?>
+    </div>
     
     <div class="form-group">
       <label for="exampleInputEmail1">Offer Name</label>
@@ -22,10 +21,9 @@
     <option value="0">All</option>
 	<?php
     
-	$Admin -> category_tree(0);	
+	$Admin -> offer_category_tree(0, $offer_data['offercat']);	
     echo '</select>';
-    //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
-    
+    //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		    
 	?>
     </div>
     
@@ -35,7 +33,7 @@
     <option value="0">All</option>
 	<?php
     
-    $Admin -> product_tree(0);	
+    $Admin -> offer_product_tree(0, $offer_data['offerprod']);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     ?>

@@ -20,7 +20,7 @@
                 </div><!-- /.box-header -->
                 <div class="box-header">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_attribute'; ?>">Add Attribute</a>
+                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_attribute_value'; ?>">Add Attribute Value</a>
                                 
                 </div><!-- /.box-header -->
                 <div class="box-body">
@@ -28,24 +28,25 @@
                     <thead>
                       <tr>
                         <th>Id</th>
-                        <th>Attribute Name</th>
-                        <th>Attribute Description</th>
+                        <th>Attribute ID</th>
+                        <th>Attribute Value name</th>
                         <th>Status</th>                        
                         <th>Action</th>                        
                       </tr>
                     </thead>
                     <tbody>
                     <?php
-                      foreach($attributes_data as $attribute)
+                      
+					  foreach($attribute_values_data as $attribute)
                       {
-						$attribute = $attribute['Attribute_master'];
+						$attribute_value = $attribute['Attribute_value'];
                         ?>
                         <tr>
-                        <td><?php echo $attribute['id']; ?></td>
-                        <td><?php echo $attribute['attname']; ?></td>
-                        <td><?php echo $attribute['attdesc']; ?></td>
-                        <td><?php if($attribute['del_status'] == 1) echo "Active"; else echo "Active"; ?></td>
-                        <td>&nbsp;&nbsp;&nbsp;<a title="Attribute Values" href="<?php echo $this->webroot.'admin/attribute_values/'.$attribute['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/attribute_edit/'.$attribute['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/attribute_status_change/'.$attribute['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td><?php echo $attribute_value['id']; ?></td>
+                        <td><?php echo $attribute_value['attid']; ?></td>
+                        <td><?php echo $attribute_value['attvalue']; ?></td>
+                        <td><?php if($attribute_value['del_status'] == 1) echo "Active"; else echo "Active"; ?></td>
+                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/attribute_value_edit/'.$attribute_value['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/attribute_value_status_change/'.$attribute_value['id']; ?>"><i class="fa fa-exchange"></i></a>
                         </td>
                         </tr>
                       

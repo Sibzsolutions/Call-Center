@@ -1,10 +1,11 @@
 <?php 
+	
 	App::import('Controller', 'Admins');
 	$Admin = new AdminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
-<!-- form start -->
-  <?=$this->Form->create('Produc_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
+  <!-- form start -->
+  <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
     
     <div class="form-group">
@@ -17,8 +18,7 @@
     <select multiple="multiple" name="data[Offer_master][catid][]" class="form-control select2" style="width: 100%;">
     <option value="0">All</option>
 	<?php
-    
-	$Admin -> category_tree(0);	
+    $Admin -> offer_category_tree(0, $offer_data['offercat']);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     
@@ -27,12 +27,12 @@
     
     <div class="form-group">
     <label>Offer Products</label>
-    <select multiple="multiple" name="data[Offer_master][productid][]" class="form-control select2" style="width: 100%;">
-    <option value="0">All</option>
+    <!--<select multiple="multiple" name="data[Offer_master][productid][]" class="form-control select2" style="width: 100%;">
+    <option value="0">All</option>-->
 	<?php
     
-    $Admin -> product_tree(0);	
-    echo '</select>';
+    $Admin -> offer_product_tree(0, $offer_data['prod']);	
+    //echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     ?>
     </div>
@@ -84,6 +84,7 @@
       <label for="exampleInputEmail1">Status</label>
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
+    
   </div>
   
   <div class="box-body">

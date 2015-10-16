@@ -1,21 +1,22 @@
 <?php 
+
+	
 	App::import('Controller', 'Admins');
 	$Admin = new AdminController;
-	//$department_id = 4 ; // put here department ID as per your need
 ?>
 <!-- form start -->
-  <?=$this->Form->create('Produc_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
+  <?=$this->Form->create('Attribute_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
   
-    <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['id']));?>
+    <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$attribute_data['Attribute_master']['id']));?>
     
     <div class="form-group">
     <label>Parent Category</label>
     
-    <select name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
+    <select name="data[Attribute_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
-        $Admin -> category_tree(0, $product_data['catid']);	
+        $Admin -> category_tree(0, $attribute_data['Attribute_category']['catid']);	
         echo '</select>';
         //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
         
@@ -23,56 +24,20 @@
     </div>
     
     <div class="form-group">
-      <label for="exampleInputEmail1">Product Name</label>
-      <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['prodname']));?>
+      <label for="exampleInputEmail1">Attribute Name</label>
+      <?=$this->Form->input('attname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$attribute_data['Attribute_master']['attname']));?>
     </div>        
     <div class="form-group">
-      <label for="exampleInputEmail1">Product Short Description</label>
-      <?=$this->Form->input('prodscdes',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$product_data['prodscdes']));?>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Product Long Description</label>
-      <?=$this->Form->input('proddesc',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$product_data['proddesc']));?>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Product Price</label>
-      <?=$this->Form->input('prodprice',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$product_data['prodprice']));?>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Clearance</label>
-      <?=$this->Form->input('clearance',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance', 'value'=>$product_data['clearance']));?>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Images</label>
-      <?=$this->Form->input('produc_images',array('type'=>'file','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Images', 'multiple', 'name'=>'data[Produc_master][produc_images][]'));?>
+      <label for="exampleInputEmail1">Attribute Description</label>
+      <?=$this->Form->input('attdesc',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$attribute_data['Attribute_master']['attdesc']));?>
     </div>
      <div class="form-group">
-      <label for="exampleInputEmail1">Url Alias</label>
-      <?=$this->Form->input('urlalias',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Url Alias', 'value'=>$product_data['url_alias']));?>
+      <label for="exampleInputEmail1">Is Main</label>
+      <?=$this->Form->input('is_main',array('type'=>'select', 'options'=>array(1=>'Yes', 0=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Meta Title</label>
-      <?=$this->Form->input('prodmtitle',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Title', 'value'=>$product_data['prodmtitle']));?>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Meta Keywords</label>
-      <?=$this->Form->input('prodmkeywords',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Kaywords', 'value'=>$product_data['prodmkeywords']));?>
-    </div>                
-    <div class="form-group">
-      <label for="exampleInputEmail1">Meta Description</label>
-      <?=$this->Form->input('prodmdesc',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Decription', 'value'=>$product_data['prodmdesc']));?>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Canonnical Url</label>
-      <?=$this->Form->input('prodcanonical',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Canonnical Url', 'value'=>$product_data['prodmkeywords']));?>
-    </div>
-    <!--<div class="form-group">
-    <label for="exampleInputEmail1">Page Content</label>
-    <?php //echo $this->Form->input('page_content',array('type'=>'textarea', 'id'=>'editor1', 'name'=>'editor1', 'rows'=>'10', 'cols'=>'80', 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Content'));?>
-    </div>-->
-    <div class="form-group">
+	<div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$attribute_data['Attribute_master']['del_status']));?>
     </div>
   </div><!-- /.box-body -->
   <div class="box-footer">
