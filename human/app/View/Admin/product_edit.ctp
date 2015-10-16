@@ -3,6 +3,27 @@
 	$Admin = new AdminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
+<script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
+<script>
+                        
+	$(document).ready(function(){
+		
+		$('#shashi_select').change(function(){
+		
+		var cat_type_data = $('#shashi_select').val();
+		
+		$.post("<?=$this->webroot?>Admin/product_attribute_change", {
+												 cat_id : cat_type_data },
+		
+												 function(result){
+ 			 
+				$('#shashi_one').html(result);			 
+			});
+		});
+	});
+
+</script>
+
 <!-- form start -->
   <?=$this->Form->create('Produc_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body">
@@ -12,7 +33,7 @@
     <div class="form-group">
     <label>Parent Category</label>
     
-    <select name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
+    <select id="shashi_select"  name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
         $Admin -> category_tree(0, $product_data['catid']);	
@@ -25,7 +46,84 @@
     <div class="form-group">
       <label for="exampleInputEmail1">Product Name</label>
       <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['prodname']));?>
-    </div>        
+    </div>
+    
+    <div id="shashi_one">
+	<?php
+	
+	foreach($attribute_data as $data)
+	{
+	  ?>
+	  <div class="form-group">
+	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
+	  
+	  <select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">
+	  <?php
+	  foreach($data['Attribute_value'] as $data_att)
+	  {
+		  ?>
+		  <option value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
+		  <?php
+	  }
+	  ?>
+	  </select>
+	  </div>
+    	
+	  <?php
+    }
+    
+	?>
+    </div>
+    
+    <?php
+	/*
+	foreach($attribute_data as $data)
+	{
+	  ?>
+	  <div class="form-group">
+      <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
+	  <select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">
+      <?php
+	  foreach($data['Attribute_value'] as $data_att)
+	  {
+		  $i=0;
+		  foreach($product_att_data as $att)
+		  {
+			  if($att == $data_att['Attribute_value']['id'])
+			  {
+				  ?>
+          	  	  <option selected="selected" value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>              
+			  
+			  	  <?php
+				  $i++;
+				  break;
+			  }
+		  }
+		  if($i==0)
+		  {		  
+			  ?>
+			  <option value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
+			  <?php
+		  }
+	  }
+	  ?>
+      </select>
+      </div>    	
+	<?php
+    }
+	*/
+    ?>
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Add Cost</label>
+      <?=$this->Form->input('add_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Additional Cost'));?>
+    </div>
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Less Cost</label>
+      <?=$this->Form->input('less_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Less Cost'));?>
+    </div>
+            
     <div class="form-group">
       <label for="exampleInputEmail1">Product Short Description</label>
       <?=$this->Form->input('prodscdes',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$product_data['prodscdes']));?>

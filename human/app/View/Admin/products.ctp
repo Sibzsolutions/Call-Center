@@ -1,4 +1,4 @@
-<?php ?>
+bute<?php ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
 <!-- Bootstrap 3.3.5 -->
 <link rel="stylesheet" href="<?php echo $this->webroot.'bootstrap/css/bootstrap.min.css';?>">
@@ -76,7 +76,7 @@
 						?>
                         </td>
                         <td><?php if($product['del_status'] == 1) echo "Active"; else echo "Active"; ?></td>
-                        <td style="width: 100%;">&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/product_images/'.$product['id']; ?>"><i class="fa fa-file-picture-o"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/product_edit/'.$product['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/product_status_change/'.$product['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td style="width: 100%;">&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/product_attributes/'.$product['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/product_images/'.$product['id']; ?>"><i class="fa fa-file-picture-o"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/product_edit/'.$product['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/product_status_change/'.$product['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
                         <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'admin/user_delete/'.$category_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
                         </td>

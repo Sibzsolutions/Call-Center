@@ -38,7 +38,7 @@ class AdminController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute');
 
 /**
  * Displays a view
@@ -573,8 +573,75 @@ class AdminController extends AppController {
 		}
 	}
 	
+	public function product_attribute_change() 
+	{
+		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
+		
+		foreach($cat_attribute_data as $cat)
+		$attid[] = $cat['Attribute_category']['id'];
+		
+		if(isset($attid))
+		{
+			$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
+			
+			foreach($attributes_data as $master_data)
+			$master_attid[] = $master_data['Attribute_master']['id'];
+			
+			$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
+			
+			foreach($attribute_data as $key=>$data)
+			{
+				$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+				
+				$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+			}
+			
+			$this->set('attribute_data', $attribute_data);		
+		}
+	}
+	
+	public function product_attributes($id) 
+	{
+		/*
+		category - Mobile phone 
+		Id = 4
+		
+		Find attributes for the selected categorie
+		-attid
+		
+		Find attributes
+		-attributes id
+		
+		
+		
+		
+		*/
+		
+		$product_attribute_data = $this->Produc_attribute->find('all', array('order' => array('id' => 'DESC'), 'conditions' => array('Produc_attribute.prodid' => $id)));
+		
+		$this->set('product_attribute_data', $product_attribute_data);
+		
+		if ($this->request->is('post')) {
+			
+			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
+			
+			$this->Product->save($this->request->data);
+			$this->redirect('products');
+		}
+	}
+	
 	public function add_products() 
 	{
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));//, 'conditions' => array('del_status' => 1)
+		foreach($attribute_data as $key=>$data)
+		{
+			$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+			
+			$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+		}
+		
+		$this->set('attribute_data', $attribute_data);
+		
 		/*
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0)));
 		
@@ -597,6 +664,17 @@ class AdminController extends AppController {
 			$this->Produc_master->save($this->request->data);
 			
 			$last_inserted_id = $this->Produc_master->getLastInsertId();
+			
+			foreach($this->request->data['Produc_master']['attribute'] as $data)
+			{
+				$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
+				$product_att['Produc_attribute']['attvid'] = $data;
+				$product_att['Produc_attribute']['add_cost'] = $this->request->data['Produc_master']['add_cost'];
+				$product_att['Produc_attribute']['less_cost'] = $this->request->data['Produc_master']['less_cost'];
+				
+				$this->Produc_attribute->create();
+				$this->Produc_attribute->save($product_att);
+			}
 			
 			foreach($this->request->data['Produc_master']['catimg'] as $data)
 			{
@@ -646,13 +724,46 @@ class AdminController extends AppController {
 	{
 		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
 		
+		$product_attribute = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid'=>$id)));
+		
+		foreach($product_attribute as $attribute)
+		{
+			$product[] = $attribute['Produc_attribute']['attvid'];
+		}
+				
+		$this->set('product_att_data', $product);
+		
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($attribute_data as $key=>$data)
+		{
+			$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+			
+			$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+		}
+		
+		$this->set('attribute_data', $attribute_data);
+		
 		$this->set('product_data', $product_data['Produc_master']);
 				
 		if ($this->request->is('post')) {
-						
+			
 			$this->Produc_master->save($this->request->data);
 			
 			$last_inserted_id = $this->request->data['Produc_master']['id'];
+			
+			$this->Produc_attribute->deleteAll(array('Produc_attribute.prodid' => $last_inserted_id));
+			
+			foreach($this->request->data['Produc_master']['attribute'] as $data)
+			{
+				$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
+				$product_att['Produc_attribute']['attvid'] = $data;
+				$product_att['Produc_attribute']['add_cost'] = $this->request->data['Produc_master']['add_cost'];
+				$product_att['Produc_attribute']['less_cost'] = $this->request->data['Produc_master']['less_cost'];
+				
+				$this->Produc_attribute->create();
+				$this->Produc_attribute->save($product_att);
+			}
 			
 			//if(count($this->request->data['Produc_master']['produc_images'])>0)
 			//$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
