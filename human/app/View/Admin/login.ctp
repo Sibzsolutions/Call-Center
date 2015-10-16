@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
 <html>
   <head>
     <meta charset="utf-8">
@@ -25,6 +25,7 @@
     <![endif]-->
   </head>
   <body class="hold-transition login-page">
+    
     <div class="login-box">
       <div class="login-logo">
         <a href="../../index2.html"><b>Admin</b>LTE</a>
@@ -50,8 +51,7 @@
                 </label>
               </div>
             </div><!-- /.col -->
-            <div class="col-xs-4">
-              
+            <div class="col-xs-4">              
               <?=$this->Form->button('Sign In',array('class'=>'btn btn-primary btn-block btn-flat'))?>
             </div><!-- /.col -->
           </div>
@@ -69,6 +69,12 @@
       </div><!-- /.login-box-body -->
     </div><!-- /.login-box -->
 
+  	<!-- jQuery 2.1.4 -->
+    <script src="<?php echo $this->webroot.'plugins/jQuery/jQuery-2.1.4.min.js';?>"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="<?php echo $this->webroot.'bootstrap/js/bootstrap.min.js';?>"></script>
+    <!-- iCheck -->
+    <script src="<?php echo $this->webroot.'plugins/iCheck/icheck.min.js';?>"></script>
     <script>
       $(function () {
         $('input').iCheck({
@@ -78,5 +84,5 @@
         });
       });
     </script>
-  </body>
+    </body>
 </html>

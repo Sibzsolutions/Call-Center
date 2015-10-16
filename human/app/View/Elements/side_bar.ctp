@@ -42,6 +42,14 @@
         </li>
         
         <li class="treeview">
+          <a href="<?php echo $this->webroot.'Admin/attributes'; ?>">
+            <i class="fa fa-pie-chart"></i>
+            <span>Attribute Management</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>              
+        </li>
+        
+        <li class="treeview">
           <a href="<?php echo $this->webroot.'Admin/offers'; ?>">
             <i class="fa fa-pie-chart"></i>
             <span>Offer Management</span>

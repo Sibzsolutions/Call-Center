@@ -22,12 +22,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<?php //echo $this->Html->charset(); ?>
-	<title>
+	<?php //echo $this->Html->charset(); 
+	
+	if(isset($dynamic_page_data['Dynamic_page']) !='')
+	{
+		if(($dynamic_page_data['Dynamic_page']['name'] == 'index') || (!(isset($dynamic_page_data['Dynamic_page']['name']))))
+		{
+			?>
+			<title><?php echo $site_setting['Site_setting']['defaulttitle']; ?></title>
+			<meta name="keywords" content="<?php echo $site_setting['Site_setting']['defaultkeywords']; ?>" />
+			<meta name="description" content="<?php echo $site_setting['Site_setting']['defaultdesc']; ?>" />	
+            <?php //echo $site_setting['Site_setting']['script']; ?>
+			<?php			
+		}
+		else
+		{
+			?>
+			<title><?php echo $dynamic_page_data['Dynamic_page']['meta_title']; ?></title>
+			<meta name="keywords" content="<?php echo $dynamic_page_data['Dynamic_page']['meta_keywords']; ?>" />
+			<meta name="description" content="<?php echo $dynamic_page_data['Dynamic_page']['meta_description']; ?>" />	
+			<?php
+			if($dynamic_page_data['Dynamic_page']['script'] != 'No script is here')
+			echo $dynamic_page_data['Dynamic_page']['script'];
+		}
+	}
+	else
+	{
+		?>
+			<title><?php echo $site_setting['Site_setting']['defaulttitle']; ?></title>
+			<meta name="keywords" content="<?php echo $site_setting['Site_setting']['defaultkeywords']; ?>" />
+			<meta name="description" content="<?php echo $site_setting['Site_setting']['defaultdesc']; ?>" />	
+            <?php //echo $site_setting['Site_setting']['script']; 
+	}
+
+	?>
+	<!--<title>
 		<?php //echo $cakeDescription ?>:
 		<?php //echo $title_for_layout; ?>
-        <?php echo "Only Human"; ?>:
-	</title>
+        <?php //echo "Only Human"; ?>:
+	</title>-->
 	
 	
 	<!-- Tell the browser to be responsive to screen width -->
