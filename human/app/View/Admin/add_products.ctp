@@ -56,7 +56,9 @@
     </div>
     
     <div id="att_one">
+	
 	<?php
+	
 	foreach($attribute_data as $data)
 	{
 	  ?>
@@ -68,34 +70,22 @@
 	  foreach($data['Attribute_value'] as $data_att)
 	  {
 		  ?>
-          <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute]["<?php echo $data_att['Attribute_value']['attvalue']?>"][]"/>
+          <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
           <?php echo $data_att['Attribute_value']['attvalue']; ?>
           
-          <input type="text"  name="data[Produc_master][attribute]["<?php echo $data_att['Attribute_value']['attvalue']?>"][]"/>
+          <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]"/>
+          
+          <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"/>
           
           <br />
-		  <!--<option value="<?php //echo $data_att['Attribute_value']['id']; ?>"><?php //echo $data_att['Attribute_value']['attvalue'][]; ?></option>-->
+		  
 		  <?php
 	  }
 	  ?>
-	  </select>
-      
-      
-      
 	  </div>
 	  <?php
     }
 	?>
-    </div>
-    
-    <div class="form-group">
-      <label for="exampleInputEmail1">Add Cost</label>
-      <?=$this->Form->input('add_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Additional Cost'));?>
-    </div>
-    
-    <div class="form-group">
-      <label for="exampleInputEmail1">Less Cost</label>
-      <?=$this->Form->input('less_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Less Cost'));?>
     </div>
     
     <div class="form-group">

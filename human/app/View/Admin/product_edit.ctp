@@ -8,16 +8,16 @@
                         
 	$(document).ready(function(){
 		
-		$('#shashi_select').change(function(){
+		$('#att_select').change(function(){
 		
-		var cat_type_data = $('#shashi_select').val();
+		var cat_type_data = $('#att_select').val();
 		
 		$.post("<?=$this->webroot?>Admin/product_attribute_change", {
 												 cat_id : cat_type_data },
 		
 												 function(result){
  			 
-				$('#shashi_one').html(result);			 
+				$('#att_one').html(result);			 
 			});
 		});
 	});
@@ -33,13 +33,11 @@
     <div class="form-group">
     <label>Parent Category</label>
     
-    <select id="shashi_select"  name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
+    <select id="att_select"  name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
         $Admin -> category_tree(0, $product_data['catid']);	
         echo '</select>';
-        //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
-        
     ?>
     </div>
     
@@ -48,91 +46,68 @@
       <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['prodname']));?>
     </div>
     
-    <div id="shashi_one">
+    <div id="att_one">
+	
 	<?php
+	  
 	foreach($attribute_data as $data)
 	{
 	  ?>
 	  <div class="form-group">
 	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
-	  <select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">
-	  <?php
-	  foreach($data['Attribute_value'] as $data_att)
-	  {
-		  $i=0;
-		  foreach($product_att_data as $data_select)
-	  	  {
-			  if($data_select == $data_att['Attribute_value']['id'])
-			  {
-				  $i++;
-				  ?>
-				  <option selected="selected" value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
-				  <?php  
-				  break;
-			  }
-	  	  }		  
-		  if($i==0)
-		  {
-		  ?>
-		  <option value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
-		  <?php
-		  }
-	  }
-	  ?>
-	  </select>
-	  </div>    	
-	  <?php
-    }
-    ?>
-    </div>
-    
-    <?php
-	/*
-	foreach($attribute_data as $data)
-	{
-	  ?>
-	  <div class="form-group">
-      <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
-	  <select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">
+	  
       <?php
+	  	  
 	  foreach($data['Attribute_value'] as $data_att)
 	  {
 		  $i=0;
-		  foreach($product_att_data as $att)
+		  foreach($product_att_data as $product_select)
 		  {
-			  if($att == $data_att['Attribute_value']['id'])
-			  {
-				  ?>
-          	  	  <option selected="selected" value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>              
-			  
-			  	  <?php
-				  $i++;
-				  break;
-			  }
-		  }
-		  if($i==0)
-		  {		  
+			if($product_select['id'] == $data_att['Attribute_value']['id'])  
+			{
 			  ?>
-			  <option value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
+                
+              <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
+              
+			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
+              
+              <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php echo $product_select['add_cost'] ?>"/>
+              
+              <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php echo $product_select['less_cost'] ?>"/>
+              
+              <br />
+  			  
+              <?php
+			  
+			  $i++;
+			  
+			  break;
+			  
+			}
+		  }
+		  
+		  if($i==0)
+		  {
+			  ?>
+			  <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
+			  
+			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
+			  
+			  <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]"/>
+			  
+			  <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"/>
+			  
+			  <br />
+			  
 			  <?php
 		  }
 	  }
 	  ?>
-      </select>
-      </div>    	
-	<?php
+
+      </div>
+	  <?php
     }
-	*/
-    ?>
-    
-    <div class="form-group">
-      <label for="exampleInputEmail1">Add Cost</label>
-      <?=$this->Form->input('add_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Additional Cost'));?>
-    </div>
-    
-    <div class="form-group">
-      <label for="exampleInputEmail1">Less Cost</label>
-      <?=$this->Form->input('less_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Less Cost'));?>
+	?>
     </div>
             
     <div class="form-group">

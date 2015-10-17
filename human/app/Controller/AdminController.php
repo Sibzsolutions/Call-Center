@@ -606,30 +606,35 @@ class AdminController extends AppController {
 		}
 	}
 	
-	public function product_attribute_change() 
+	public function product_attribute_change()//$id 
 	{
+		//$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $id)));
+		
 		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
 		
-		foreach($cat_attribute_data as $cat)
-		$attid[] = $cat['Attribute_category']['attid'];
-		
-		if(isset($attid))
+		if($cat_attribute_data != '')
 		{
-			$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
+			foreach($cat_attribute_data as $cat)
+			$attid[] = $cat['Attribute_category']['attid'];
 			
-			foreach($attributes_data as $master_data)
-			$master_attid[] = $master_data['Attribute_master']['id'];
-			
-			$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
-			
-			foreach($attribute_data as $key=>$data)
+			if(isset($attid))
 			{
-				$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+				$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
 				
-				$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+				foreach($attributes_data as $master_data)
+				$master_attid[] = $master_data['Attribute_master']['id'];
+				
+				$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
+				
+				foreach($attribute_data as $key=>$data)
+				{
+					$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+					
+					$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+				}
+				
+				$this->set('attribute_data', $attribute_data);		
 			}
-			
-			$this->set('attribute_data', $attribute_data);		
 		}
 	}
 	
@@ -703,26 +708,25 @@ class AdminController extends AppController {
 		
 		if ($this->request->is('post')) {
 			
-			echo "Requested_data<pre>";
-			print_r($this->request->data);
-			echo "<pre>";
-			
-			die();
-			
-			
 			$this->Produc_master->save($this->request->data);
 			
 			$last_inserted_id = $this->Produc_master->getLastInsertId();
 			
-			foreach($this->request->data['Produc_master']['attribute'] as $data)
+			foreach($this->request->data['Produc_master']['attribute'] as $data_second)
 			{
-				$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
-				$product_att['Produc_attribute']['attvid'] = $data;
-				$product_att['Produc_attribute']['add_cost'] = $this->request->data['Produc_master']['add_cost'];
-				$product_att['Produc_attribute']['less_cost'] = $this->request->data['Produc_master']['less_cost'];
-				
-				$this->Produc_attribute->create();
-				$this->Produc_attribute->save($product_att);
+				if(isset($data_second['id']))
+				{
+					if($data_second['id'] !='')
+					{
+						$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
+						$product_att['Produc_attribute']['attvid'] = $data_second['id'];
+						$product_att['Produc_attribute']['add_cost'] = $data_second['add_cost'];
+						$product_att['Produc_attribute']['less_cost'] = $data_second['less_cost'];
+						
+						$this->Produc_attribute->create();
+						$this->Produc_attribute->save($product_att);
+					}
+				}
 			}
 			
 			foreach($this->request->data['Produc_master']['catimg'] as $data)
@@ -777,17 +781,14 @@ class AdminController extends AppController {
 		
 		foreach($product_attribute as $attribute)
 		{
-			$product[] = $attribute['Produc_attribute']['attvid'];
+			$product['id'] = $attribute['Produc_attribute']['attvid'];
+			$product['add_cost'] = $attribute['Produc_attribute']['add_cost'];
+			$product['less_cost'] = $attribute['Produc_attribute']['less_cost'];			
 			
+			$prd_att[] = $product;
 		}
 		
-		echo "product<pre>";
-		print_r($product);
-		echo "<pre>";
-		
-		die();
-		
-		$this->set('product_att_data', $product);
+		$this->set('product_att_data', $prd_att);
 		
 		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
 		
@@ -810,59 +811,69 @@ class AdminController extends AppController {
 			
 			$this->Produc_attribute->deleteAll(array('Produc_attribute.prodid' => $last_inserted_id));
 			
-			foreach($this->request->data['Produc_master']['attribute'] as $data)
+			
+			foreach($this->request->data['Produc_master']['attribute'] as $data_second)
 			{
-				$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
-				$product_att['Produc_attribute']['attvid'] = $data;
-				$product_att['Produc_attribute']['add_cost'] = $this->request->data['Produc_master']['add_cost'];
-				$product_att['Produc_attribute']['less_cost'] = $this->request->data['Produc_master']['less_cost'];
-				
-				$this->Produc_attribute->create();
-				$this->Produc_attribute->save($product_att);
+				if(isset($data_second['id']))
+				{
+					if($data_second['id'] !='')
+					{
+						$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
+						$product_att['Produc_attribute']['attvid'] = $data_second['id'];
+						$product_att['Produc_attribute']['add_cost'] = $data_second['add_cost'];
+						$product_att['Produc_attribute']['less_cost'] = $data_second['less_cost'];
+						
+						$this->Produc_attribute->create();
+						$this->Produc_attribute->save($product_att);
+					}
+				}
 			}
 			
-			//if(count($this->request->data['Produc_master']['produc_images'])>0)
-			//$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
-			
-			foreach($this->request->data['Produc_master']['produc_images'] as $data)
+			if($this->request->data['Produc_master']['produc_images'][0]['name'] != '')			
 			{
-				$name = $data['name'];
-				$tmp_name = $data['tmp_name'];
-				$type = $data['type'];
-				$type_data = explode('/', $type);
-				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
-				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
+			
+				foreach($this->request->data['Produc_master']['produc_images'] as $data)
 				{
-					//Uploadation code for images
-					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
-					{ 
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,200);
-						
-						$url="../webroot/img/product/".$name;
-						$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
-						$this->make_thumb($url,$thumbnail_url,1500);
-						
-						$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
-						$product_image_data['Produc_image']['imagepath'] = $data['name'];
-						$product_image_data['Produc_image']['del_status'] = 0;						
-						
-						$this->Produc_image->create();
-						$this->Produc_image->save($product_image_data);					
+					$name = $data['name'];
+					$tmp_name = $data['tmp_name'];
+					$type = $data['type'];
+					$type_data = explode('/', $type);
+					$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+					if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+					{
+						//Uploadation code for images
+						if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
+						{ 
+							$url="../webroot/img/product/".$name;
+							$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
+							$this->make_thumb($url,$thumbnail_url,200);
+							
+							$url="../webroot/img/product/".$name;
+							$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
+							$this->make_thumb($url,$thumbnail_url,1500);
+							
+							$product_image_data['Produc_image']['prodid'] = $last_inserted_id;
+							$product_image_data['Produc_image']['imagepath'] = $data['name'];
+							$product_image_data['Produc_image']['del_status'] = 0;						
+							
+							$this->Produc_image->create();
+							$this->Produc_image->save($product_image_data);					
+						}
+						else
+						{
+							$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+							$this->redirect('add_product');	
+						}
 					}
 					else
 					{
-						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
 						$this->redirect('add_product');	
 					}
 				}
-				else
-				{
-					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
-					$this->redirect('add_product');	
-				}
 			}
+			
 			$this->redirect('products');					
 		}
 	}
