@@ -9,16 +9,26 @@
                         
 	$(document).ready(function(){
 		
-		$('#shashi_select').change(function(){
+		$('#saved_btn').click(function(){
+			
+			var cat_type_data = $('#att_select').val();
+			
+			if(cat_type_data == 'N/A')
+			{
+				$('#required').html("Please Choose the category");
+				return false;			 			
+			}
+		});
 		
-		var cat_type_data = $('#shashi_select').val();
+		$('#att_select').change(function(){
+		
+		var cat_type_data = $('#att_select').val();
 		
 		$.post("<?=$this->webroot?>Admin/product_attribute_change", {
 												 cat_id : cat_type_data },
 		
-												 function(result){
- 			 
-				$('#shashi_one').html(result);			 
+												 function(result){ 			 
+				$('#att_one').html(result);			 
 			});
 		});
 	});
@@ -28,8 +38,9 @@
   <div class="box-body">
     <div class="form-group">
     <label>Parent Category</label>
-    <select  id="shashi_select" name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
-    <?php
+    <select  id="att_select" name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
+    <option value="N/A">Choose Parent Category</option>
+	<?php
     
     $Admin -> category_tree(0, 0);	
     echo '</select>';
@@ -37,38 +48,45 @@
         
     ?>
     </div>
+    <div id="required">
+    </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Product Name</label>
       <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Product Name'));?>
     </div>
     
-    <div id="shashi_one">
+    <div id="att_one">
 	<?php
-	
 	foreach($attribute_data as $data)
 	{
 	  ?>
 	  <div class="form-group">
 	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
 	  
-	  <select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">
+      <!--<select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">-->
 	  <?php
 	  foreach($data['Attribute_value'] as $data_att)
 	  {
 		  ?>
-		  <option value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
+          <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute]["<?php echo $data_att['Attribute_value']['attvalue']?>"][]"/>
+          <?php echo $data_att['Attribute_value']['attvalue']; ?>
+          
+          <input type="text"  name="data[Produc_master][attribute]["<?php echo $data_att['Attribute_value']['attvalue']?>"][]"/>
+          
+          <br />
+		  <!--<option value="<?php //echo $data_att['Attribute_value']['id']; ?>"><?php //echo $data_att['Attribute_value']['attvalue'][]; ?></option>-->
 		  <?php
 	  }
 	  ?>
 	  </select>
+      
+      
+      
 	  </div>
-    	
 	  <?php
     }
-    
 	?>
     </div>
-    
     
     <div class="form-group">
       <label for="exampleInputEmail1">Add Cost</label>
@@ -79,8 +97,6 @@
       <label for="exampleInputEmail1">Less Cost</label>
       <?=$this->Form->input('less_cost',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Less Cost'));?>
     </div>
-    
-    
     
     <div class="form-group">
       <label for="exampleInputEmail1">Product Short Description</label>
@@ -100,11 +116,12 @@
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Clearance</label>
-      <?=$this->Form->input('clearance',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance'));?>
+            <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+      <?php //echo $this->Form->input('clearance',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance'));?>
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Url Alias</label>
-      <?=$this->Form->input('urlalias',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Url Alias'));?>
+      <?=$this->Form->input('url_alias',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Url Alias'));?>
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Meta Title</label>
@@ -128,10 +145,10 @@
     </div>-->
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+    <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

@@ -22,7 +22,7 @@
                 
                 <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_category' ?>">Add Category</a>
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_sub_category' ?>">Add Sub Category</a>
+                <!--<a class="btn btn-primary" href="<?php //echo $this->webroot.'admin/add_sub_category' ?>">Add Sub Category</a>-->
                 
                 </div><!-- /.box-header -->
                 <div class="box-body">

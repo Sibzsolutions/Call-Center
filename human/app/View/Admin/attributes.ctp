@@ -44,7 +44,7 @@
                         <td><?php echo $attribute['id']; ?></td>
                         <td><?php echo $attribute['attname']; ?></td>
                         <td><?php echo $attribute['attdesc']; ?></td>
-                        <td><?php if($attribute['del_status'] == 1) echo "Active"; else echo "Active"; ?></td>
+                        <td><?php if($attribute['del_status'] == 0) echo "Active"; else echo "Deactive"; ?></td>
                         <td>&nbsp;&nbsp;&nbsp;<a title="Attribute Values" href="<?php echo $this->webroot.'admin/attribute_values/'.$attribute['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/attribute_edit/'.$attribute['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/attribute_status_change/'.$attribute['id']; ?>"><i class="fa fa-exchange"></i></a>
                         </td>
                         </tr>

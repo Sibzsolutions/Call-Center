@@ -124,7 +124,7 @@
                         <td align="center">
 						<?php //echo $this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control', 'id'=>'del_status_'.$product_image['id'].'', 'required'=>'required','label'=>'','div'=>false));
 						
-						$data_arr = array(1=>'Active', 0=>'Inactive');
+						$data_arr = array(0=>'Active', 1=>'Inactive');
 
 						?>
                         <select class="form-control select2" style="width: 100%;" id="del_status_<?php echo $product_image['id']; ?>">

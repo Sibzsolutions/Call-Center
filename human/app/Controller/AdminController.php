@@ -148,6 +148,9 @@ class AdminController extends AppController {
 	
 	public function site_setting() 
 	{
+		$site_setting = $this->Site_setting->find('first');
+		$this->set('site_setting',$site_setting);
+		
 		if ($this->request->is('post')) {
 					
 			$this->Site_setting->save($this->request->data);
@@ -178,29 +181,17 @@ class AdminController extends AppController {
 	
 	public function user_status_change($id) 
 	{
-		$user['User']['id'] = $id;
-		$user['User']['inactive'] = '0';
+		$user_data = $this->User->find('first', array('conditions'=>array('User.id'=>$id)));
 		
-		if($this->User->save($user))
-		$this->redirect('users');		
-	}
-	
-	public function user_delete($id) 
-	{
-		$user_data = $this->User->find('first', array('conditions'=>array('User.usrid'=>$id)));
-		
+		if($user_data['User']['del_status'] == 1)
+		$user_data['User']['del_status'] = 0;
+		else
 		$user_data['User']['del_status'] = 1;
 		
-		$this->User->save($user_data);
-		
-		$this->redirect('users');
-		
-		if ($this->request->is('post')) {
-			
-			$this->User->save($this->request->data);
-		}
+		if($this->User->save($user_data))
+		$this->redirect('users');		
 	}
-	
+
 	public function add_user() 
 	{
 		if ($this->request->is('post')) {
@@ -337,6 +328,15 @@ class AdminController extends AppController {
 
 	public function add_category() 
 	{
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($attribute_data as $data)
+		{
+			 $att_data[$data['Attribute_master']['id']] = $data['Attribute_master']['attname'];
+		}
+		
+		$this->set('att_data', $att_data);
+		
 		/*
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>0),'order' => array('id' => 'DESC')));
 		$i=1;
@@ -388,6 +388,22 @@ class AdminController extends AppController {
 			$this->request->data['Category']['parent_id'] = 0;
 			
 			if($this->Category->save($this->request->data))
+			
+			if($this->request->data['Category']['att'] !='')
+			{
+				$cat_id = $this->Category->getLastInsertId();
+				
+				foreach($this->request->data['Category']['att'] as $data)
+				{
+					$att_cat['attid'] = $data;
+					$att_cat['catid'] = $cat_id;
+					$att_cat['del_status'] = 0;
+					
+					$this->Attribute_category->create();
+					$this->Attribute_category->save($att_cat);
+				}
+			}
+			
 			$this->redirect('categories');	
 		}
 	}
@@ -416,6 +432,15 @@ class AdminController extends AppController {
 	
 	public function category_edit($id) 
 	{
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($attribute_data as $data)
+		{
+			 $att_data[$data['Attribute_master']['id']] = $data['Attribute_master']['attname'];
+		}
+		
+		$this->set('att_data', $att_data);
+		
 		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
 		
 		$this->set('category_data', $category_data['Category']);
@@ -459,19 +484,27 @@ class AdminController extends AppController {
 			else
 			unset($this->request->data['Category']['catimg']);
 			
-			if($this->Category->save($this->request->data))
+			$this->Category->save($this->request->data);
+			
+			if($this->request->data['Category']['att'] !='')
+			{
+				$cat_id = $this->request->data['Category']['id'];
+				
+				$this->Attribute_category->deleteAll(array('Attribute_category.catid' => $cat_id));
+				
+				foreach($this->request->data['Category']['att'] as $data)
+				{
+					$att_cat['attid'] = $data;
+					$att_cat['catid'] = $cat_id;
+					$att_cat['del_status'] = 0;
+					
+					$this->Attribute_category->create();
+					$this->Attribute_category->save($att_cat);
+				}
+			}
+			
 			$this->redirect('categories');	
 		}
-	}
-	
-	public function category_delete($id) 
-	{
-		$dynamic_page_data = $this->Dynamic_page->find('first', array('conditions'=>array('Dynamic_page.id'=>$id)));
-		
-		$dynamic_page_data['Dynamic_page']['status'] = 0;
-		
-		if($this->Dynamic_page->save($dynamic_page_data))
-		$this->redirect('dynamic_pages');	
 	}
 	
 	public function category_status_change($id) 
@@ -578,7 +611,7 @@ class AdminController extends AppController {
 		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
 		
 		foreach($cat_attribute_data as $cat)
-		$attid[] = $cat['Attribute_category']['id'];
+		$attid[] = $cat['Attribute_category']['attid'];
 		
 		if(isset($attid))
 		{
@@ -632,13 +665,22 @@ class AdminController extends AppController {
 	
 	public function add_products() 
 	{
-		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));//, 'conditions' => array('del_status' => 1)
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
+		
 		foreach($attribute_data as $key=>$data)
 		{
 			$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
 			
 			$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
 		}
+		
+		/*
+		echo "Attribute_data<pre>";
+		print_r($attribute_data);
+		echo "<pre>";
+		
+		die();
+		*/
 		
 		$this->set('attribute_data', $attribute_data);
 		
@@ -660,6 +702,13 @@ class AdminController extends AppController {
 		*/
 		
 		if ($this->request->is('post')) {
+			
+			echo "Requested_data<pre>";
+			print_r($this->request->data);
+			echo "<pre>";
+			
+			die();
+			
 			
 			$this->Produc_master->save($this->request->data);
 			
@@ -729,8 +778,15 @@ class AdminController extends AppController {
 		foreach($product_attribute as $attribute)
 		{
 			$product[] = $attribute['Produc_attribute']['attvid'];
+			
 		}
-				
+		
+		echo "product<pre>";
+		print_r($product);
+		echo "<pre>";
+		
+		die();
+		
 		$this->set('product_att_data', $product);
 		
 		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
@@ -807,7 +863,7 @@ class AdminController extends AppController {
 					$this->redirect('add_product');	
 				}
 			}
-			$this->redirect('add_products');					
+			$this->redirect('products');					
 		}
 	}
 	
@@ -816,12 +872,13 @@ class AdminController extends AppController {
 		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
 		
 		if($product_data['Produc_master']['del_status']==1)
-		$product_data['Produc_master']['del_status'] = 0;
+		$product_data['Produc_master']['del_status'] = 0;	
+		
 		else
 		$product_data['Produc_master']['del_status'] = 1;
 		
 		if($this->Produc_master->save($product_data))
-		$this->redirect('products');			
+		$this->redirect('products');					
 	}
 	
 	public function saved_imgalt() 
@@ -840,7 +897,7 @@ class AdminController extends AppController {
 	public function is_default_image() 
 	{
 		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['is_default'] = $_REQUEST['is_default'];
+		$data['Produc_image']['isdefault'] = $_REQUEST['is_default'];
 		
 		if($this->Produc_image->save($data))
 		echo "Yes";
@@ -1116,17 +1173,16 @@ class AdminController extends AppController {
 	
 	public function attribute_status_change($id) 
 	{
-		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
+		$attribute_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$id)));
 		
-		if($product_data['Produc_master']['del_status']==1)
-		$product_data['Produc_master']['del_status'] = 0;
+		if($attribute_data['Attribute_master']['del_status']==1)
+		$attribute_data['Attribute_master']['del_status'] = 0;
 		else
-		$product_data['Produc_master']['del_status'] = 1;
+		$attribute_data['Attribute_master']['del_status'] = 1;
 		
-		if($this->Produc_master->save($product_data))
-		$this->redirect('products');			
+		if($this->Attribute_master->save($attribute_data))
+		$this->redirect('attributes');			
 	}
-			
 	
 	function offer_product_tree($catid, $selected_id){
 		
@@ -1178,11 +1234,12 @@ class AdminController extends AppController {
 			 $this->offer_category_tree($data['id'], $selected_id);
 		}
 	}
-
 	
-	public function attribute_values() 
+	public function attribute_values($id) 
 	{
-		$attribute_value_data = $this->Attribute_value->find('all', array('order' => array('id' => 'DESC')));
+		$this->set('id', $id);
+		
+		$attribute_value_data = $this->Attribute_value->find('all', array('order' => array('id' => 'DESC'), 'conditions' => array('Attribute_value.attid' => $id)));
 		
 		$this->set('attribute_values_data', $attribute_value_data);
 		
@@ -1195,13 +1252,15 @@ class AdminController extends AppController {
 		}
 	}
 	
-	public function add_attribute_value() 
+	public function add_attribute_value($id) 
 	{
+		$this->set('id', $id);
+		
 		if($this->request->is('post')) {
 			
 			$this->Attribute_value->save($this->request->data);
 			
-			$this->redirect('attribute_values');	
+			$this->redirect('attribute_values/'.$id);	
 		}
 	}
 
@@ -1225,7 +1284,7 @@ class AdminController extends AppController {
 		}
 	}		
 	
-	public function attribute_value_status_change($id) 
+	public function attribute_value_status_change($id, $redirect_id) 
 	{
 		$attribute_value_data = $this->Attribute_value->find('first', array('conditions'=>array('attribute_value.id'=>$id)));
 		
@@ -1235,7 +1294,7 @@ class AdminController extends AppController {
 		$attribute_value_data['Attribute_value']['del_status'] = 1;
 		
 		if($this->Attribute_value->save($attribute_value_data))
-		$this->redirect('attribute_values/'.$id);			
+		$this->redirect('attribute_values/'.$redirect_id);			
 	}	
 		
 	

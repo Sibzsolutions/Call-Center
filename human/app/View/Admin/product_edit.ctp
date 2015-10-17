@@ -50,29 +50,40 @@
     
     <div id="shashi_one">
 	<?php
-	
 	foreach($attribute_data as $data)
 	{
 	  ?>
 	  <div class="form-group">
 	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
-	  
 	  <select multiple="multiple" class="form-control" name="data[Produc_master][attribute][]">
 	  <?php
 	  foreach($data['Attribute_value'] as $data_att)
 	  {
+		  $i=0;
+		  foreach($product_att_data as $data_select)
+	  	  {
+			  if($data_select == $data_att['Attribute_value']['id'])
+			  {
+				  $i++;
+				  ?>
+				  <option selected="selected" value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
+				  <?php  
+				  break;
+			  }
+	  	  }		  
+		  if($i==0)
+		  {
 		  ?>
 		  <option value="<?php echo $data_att['Attribute_value']['id']; ?>"><?php echo $data_att['Attribute_value']['attvalue']; ?></option>
 		  <?php
+		  }
 	  }
 	  ?>
 	  </select>
-	  </div>
-    	
+	  </div>    	
 	  <?php
     }
-    
-	?>
+    ?>
     </div>
     
     <?php
@@ -170,7 +181,7 @@
     </div>-->
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
     </div>
   </div><!-- /.box-body -->
   <div class="box-footer">

@@ -39,7 +39,7 @@
     
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false ,'default'=>$dynamic_page_data['status']));?>
+      <?=$this->Form->input('status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false ,'default'=>$dynamic_page_data['status']));?>
     </div>
     
     <!--<div class="form-group">

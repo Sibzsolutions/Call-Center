@@ -21,12 +21,17 @@
 	
     <div class="form-group">
       <label for="exampleInputEmail1">Category Name</label>
-      <?=$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));?>
+      <?=$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Category Name'));?>
     </div>
     
     <div class="form-group">
       <label for="exampleInputEmail1">Category Description</label>
-      <?=$this->Form->input('catdesc',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title'));?>
+      <?=$this->Form->input('catdesc',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Category Description'));?>
+    </div>
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Attributes</label>
+      <?=$this->Form->input('status',array('type'=>'select', 'options'=>$att_data, 'class'=>'form-control', 'label'=>'','div'=>false, 'multiple'=>'multiple', 'name'=>'data[Category][att]'));?>
     </div>
     
     <div class="form-group">
@@ -41,16 +46,16 @@
     
     <div class="form-group">
       <label for="exampleInputEmail1">Meta Title</label>
-      <?=$this->Form->input('catmtitle',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Title'));?>
+      <?=$this->Form->input('catmtitle',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Title'));?>
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Meta Keywords</label>
-      <?=$this->Form->input('catmkeywords',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Kaywords'));?>
+      <?=$this->Form->input('catmkeywords',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Kaywords'));?>
     </div>
     
     <div class="form-group">
       <label for="exampleInputEmail1">Meta Description</label>
-      <?=$this->Form->input('catmdesc',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Decription'));?>
+      <?=$this->Form->input('catmdesc',array('type'=>'textarea','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Decription'));?>
     </div>
     
     <div class="form-group">
@@ -65,7 +70,7 @@
     
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+      <?=$this->Form->input('status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
   </div><!-- /.box-body -->
 

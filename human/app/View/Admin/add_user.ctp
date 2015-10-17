@@ -21,6 +21,12 @@
       <label for="exampleInputEmail1">User Type</label>
       <?=$this->Form->input('usrtype',array('type'=>'select', 'options'=>array(0=>'User', 1=>'Modrator', 2=>'Superadministrator'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Status</label>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Deactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    </div>
+    
   </div><!-- /.box-body -->
 
   <div class="box-footer">

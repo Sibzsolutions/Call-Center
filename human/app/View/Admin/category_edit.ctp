@@ -33,6 +33,12 @@
       <label for="exampleInputEmail1">Description</label>
       <?=$this->Form->input('catdesc',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Name', 'value'=>$category_data['catdesc']));?>
     </div>
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Attributes</label>
+      <?=$this->Form->input('status',array('type'=>'select', 'options'=>$att_data, 'class'=>'form-control','label'=>'','div'=>false, 'multiple'=>'multiple', 'name'=>'data[Category][att]'));?>
+    </div>
+    
     <div class="form-group">
       <label for="exampleInputEmail1">Images</label>
       <?=$this->Form->input('catimg',array('type'=>'file','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Email', 'value'=>$category_data['catimg']));
@@ -45,17 +51,17 @@
     </div>
       <div class="form-group">
       <label for="exampleInputEmail1">Meta Title</label>
-      <?=$this->Form->input('catmtitle',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['catmtitle']));?>
+      <?=$this->Form->input('catmtitle',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['catmtitle']));?>
     </div>
     
     <div class="form-group">
       <label for="exampleInputEmail1">Meta Keywords</label>
-      <?=$this->Form->input('catmkeywords',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['catmkeywords']));?>
+      <?=$this->Form->input('catmkeywords',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['catmkeywords']));?>
     </div>
     
     <div class="form-group">
       <label for="exampleInputEmail1">Meta Description</label>
-      <?=$this->Form->input('catmdesc',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['catmdesc']));?>
+      <?=$this->Form->input('catmdesc',array('type'=>'textarea','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['catmdesc']));?>
     </div>
     
     <div class="form-group">
@@ -65,7 +71,7 @@
     
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
     
     <!--<div class="form-group">
