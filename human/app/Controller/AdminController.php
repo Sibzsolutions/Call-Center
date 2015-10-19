@@ -271,6 +271,16 @@ class AdminController extends AppController {
 	{
 		$categories_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
 		
+		foreach($categories_data as $key=>$data)
+		{
+			$categories_first = $this->Category->find('first', array('conditions' => array('Category.id' => $data['Category']['parentid'])));
+			
+			if(isset($categories_first['Category']['catname']))
+			$categories_data[$key]['Category']['parent_name'] = $categories_first['Category']['catname'];
+			else
+			$categories_data[$key]['Category']['parent_name'] = "N/A";
+		}
+		
 		$this->set('categories_data', $categories_data);
 		
 		if ($this->request->is('post')) {
@@ -442,6 +452,16 @@ class AdminController extends AppController {
 		$this->set('att_data', $att_data);
 		
 		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
+		
+		$attribute_data_cat = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $category_data['Category']['id'])));
+		
+		foreach($attribute_data_cat as $cat)
+		{
+			$cat_id['attid'][] = $cat['Attribute_category']['attid'];
+		}
+		
+		if(isset($cat_id))
+		$this->set('cat_id', $cat_id);
 		
 		$this->set('category_data', $category_data['Category']);
 				
@@ -679,14 +699,6 @@ class AdminController extends AppController {
 			$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
 		}
 		
-		/*
-		echo "Attribute_data<pre>";
-		print_r($attribute_data);
-		echo "<pre>";
-		
-		die();
-		*/
-		
 		$this->set('attribute_data', $attribute_data);
 		
 		/*
@@ -722,6 +734,7 @@ class AdminController extends AppController {
 						$product_att['Produc_attribute']['attvid'] = $data_second['id'];
 						$product_att['Produc_attribute']['add_cost'] = $data_second['add_cost'];
 						$product_att['Produc_attribute']['less_cost'] = $data_second['less_cost'];
+						$product_att['Produc_attribute']['del_status'] = $data_second['del_status'];
 						
 						$this->Produc_attribute->create();
 						$this->Produc_attribute->save($product_att);
@@ -784,6 +797,7 @@ class AdminController extends AppController {
 			$product['id'] = $attribute['Produc_attribute']['attvid'];
 			$product['add_cost'] = $attribute['Produc_attribute']['add_cost'];
 			$product['less_cost'] = $attribute['Produc_attribute']['less_cost'];			
+			$product['del_status'] = $attribute['Produc_attribute']['del_status'];			
 			
 			$prd_att[] = $product;
 		}
@@ -947,6 +961,16 @@ class AdminController extends AppController {
 	public function product_images($id) 
 	{
 		$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$id), 'order' => array('id' => 'DESC')));
+		
+		foreach($product_images as $key=>$product)
+		{
+			$product_data = $product['Produc_image'];
+			
+			$product_master_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_data['prodid'])));
+			$product_images[$key]['Produc_image']['prodname'] = $product_master_data['Produc_master']['prodname'];
+			
+		}
+		
 		$count_data = count($product_images);
 		
 		for($i=1;$i<=$count_data;$i++)
@@ -968,6 +992,77 @@ class AdminController extends AppController {
 	public function offers() 
 	{
 		$offers_data = $this->Offer_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($offers_data as $offer_key=>$data)
+		{
+			$offercat_data = explode(',', $data['Offer_master']['offercat']);
+			
+			$count_data = count($offercat_data);
+			
+			$offerprod_data = explode(',', $data['Offer_master']['offerprod']);
+			
+			$count_data_prod = count($offerprod_data);
+			
+			for($i=0;$i<$count_data;$i++)
+			{
+				$category_name = $this->Category->find('first', array('conditions' => array('Category.id' => $offercat_data[$i])));
+				
+				if($i==0)
+				{
+					if(isset($category_name['Category']['catname']))
+					$category_txt[] = $category_name['Category']['catname'];
+					else
+					$category_txt[] = 'N/A';
+				}
+				elseif($i==($count_data-1))
+				{
+					if(isset($category_name['Category']['catname']))
+					$category_txt[] = $category_name['Category']['catname'];
+					else
+					$category_txt[] = 'N/A';
+				}
+				else
+				{
+					if(isset($category_name['Category']['catname']))
+					$category_txt[] = $category_name['Category']['catname'].',';
+					else
+					$category_txt[] = 'N/A';
+				}
+			}
+			
+			$offers_data[$offer_key]['Offer_master']['category_txt'] = $category_txt;
+			
+			for($i=0;$i<$count_data_prod;$i++)
+			{
+				if(isset($offercat_data[$i]))
+				$product_name = $this->Produc_master->find('first', array('conditions' => array('Produc_master.id' => $offercat_data[$i])));
+				
+				
+				if($i==0)
+				{
+					if(isset($product_name['Produc_master']['prodname']))
+					$product_txt[] = $product_name['Produc_master']['prodname'];
+					else
+					$product_txt[] = 'N/A';
+				}
+				elseif($i==($count_data_prod-1))
+				{
+					if(isset($product_name['Produc_master']['prodname']))
+					$product_txt[] = $product_name['Produc_master']['prodname'];
+					else
+					$product_txt[] = 'N/A';
+				}
+				else
+				{
+					if(isset($product_name['Produc_master']['prodname']))
+					$product_txt[] = $product_name['Produc_master']['prodname'].',';
+					else
+					$product_txt[] = 'N/A';
+				}
+			}
+			
+			$offers_data[$offer_key]['Offer_master']['product_txt'] = $product_txt;
+		}
 		
 		$this->set('offers_data', $offers_data);
 	}
@@ -1251,6 +1346,13 @@ class AdminController extends AppController {
 		$this->set('id', $id);
 		
 		$attribute_value_data = $this->Attribute_value->find('all', array('order' => array('id' => 'DESC'), 'conditions' => array('Attribute_value.attid' => $id)));
+		
+		foreach($attribute_value_data as $key=>$att_data)
+		{
+			$attribute_master_data = $this->Attribute_master->find('first', array('conditions' => array('Attribute_master.id' => $att_data['Attribute_value']['attid'])));
+			
+			$attribute_value_data[$key]['Attribute_value']['attname'] = $attribute_master_data['Attribute_master']['attname'];			
+		}
 		
 		$this->set('attribute_values_data', $attribute_value_data);
 		

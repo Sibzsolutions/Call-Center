@@ -28,7 +28,7 @@
                     <thead>
                       <tr>
                         <th>Image Id</th>
-                        <th>Product Id</th>
+                        <th>Product Name</th>
                         <th>Image Path</th>
                         <th>Image Alter</th>
                         <th>Is Default</th>
@@ -44,7 +44,7 @@
                       ?>
                         <tr>
                         <td><?php echo $product_image['id']; ?></td>
-                        <td><?php echo $product_image['prodid']; ?></td>
+                        <td><?php echo $product_image['prodname']; ?></td>
                         <td>
                         <img src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product_image['imagepath']; ?>" />
 						</td>

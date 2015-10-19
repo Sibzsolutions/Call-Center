@@ -42,19 +42,34 @@
                       <?php
                       foreach($offers_data as $offer)
                       {
-						  $offer = $offer['Offer_master'];
+						$offer = $offer['Offer_master'];
                         ?>
                         <tr>
                         <td><?php echo $offer['id']; ?></td>
                         <td><?php echo $offer['offername']; ?></td>
-                        <td><?php echo $offer['offercat']; ?></td>
-                        <td><?php echo $offer['offerprod']; ?></td>
+                        <td>
+						<?php 
+							
+						//echo $offer['offercat']; 
+						foreach($offer['category_txt'] as $offer_arr)
+						echo $offer_arr;
+
+						?>
+                        </td>
+                        <td>
+						<?php 
+							
+						//echo $offer['offerprod']; 
+						foreach($offer['product_txt'] as $product_arr)
+						echo $product_arr;							
+						
+						?>
+                        </td>
                         <td><?php echo $offer['offerdesc']; ?></td>
                         <td><?php echo $offer['discount']; ?></td>
                         <td><?php if($offer['freeshipping'] == 1) echo "Yes"; else echo "No"; ?></td>
                         <td><?php echo $offer['offerstartdt']; ?></td>
                         <td><?php echo $offer['offerenddt']; ?></td>
-                        
                         <td><?php if($offer['del_status'] == 0) echo "Active"; else echo "Deactive"; ?></td>
                         <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/offer_edit/'.$offer['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/offer_status_change/'.$offer['id']; ?>"><i class="fa fa-exchange"></i></a>
                         

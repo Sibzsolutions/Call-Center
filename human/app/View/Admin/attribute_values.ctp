@@ -28,7 +28,7 @@
                     <thead>
                       <tr>
                         <th>Id</th>
-                        <th>Attribute ID</th>
+                        <th>Attribute Name</th>
                         <th>Attribute Value name</th>
                         <th>Status</th>                        
                         <th>Action</th>                        
@@ -43,7 +43,7 @@
                         ?>
                         <tr>
                         <td><?php echo $attribute_value['id']; ?></td>
-                        <td><?php echo $attribute_value['attid']; ?></td>
+                        <td><?php echo $attribute_value['attname']; ?></td>
                         <td><?php echo $attribute_value['attvalue']; ?></td>
                         <td><?php if($attribute_value['del_status'] == 0) echo "Active"; else echo "Deactive"; ?></td>
                         <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/attribute_value_edit/'.$attribute_value['id'].'/'.$id; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/attribute_value_status_change/'.$attribute_value['id'].'/'.$id; ?>"><i class="fa fa-exchange"></i></a>

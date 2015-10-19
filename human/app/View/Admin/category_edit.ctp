@@ -18,9 +18,9 @@
     <select name="data[Category][parentid]" class="form-control select2" style="width: 100%;">
     <?php
 		
-		$Admin -> category_tree(0, $category_data['parentid']);	
-		echo '</select>';
-		//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
+	$Admin -> category_tree(0, $category_data['parentid']);	
+	echo '</select>';
+	//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
 		
 	?>
     </div>
@@ -35,8 +35,34 @@
     </div>
     
     <div class="form-group">
-      <label for="exampleInputEmail1">Attributes</label>
-      <?=$this->Form->input('status',array('type'=>'select', 'options'=>$att_data, 'class'=>'form-control','label'=>'','div'=>false, 'multiple'=>'multiple', 'name'=>'data[Category][att]'));?>
+      <label for="exampleInputEmail1">Attributes</label>      
+      <select name="data[Category][att][]" multiple="multiple" class="form-control">
+      <?php 	  
+	  	  foreach($att_data as $key=>$data)
+		  {
+			 $i=0;
+			 foreach($cat_id['attid'] as $id_att)
+			 {
+				 if($id_att==$key)
+				 {
+					 ?>
+					 <option value="<?php echo $key; ?>" selected="selected"><?php echo $data; ?></option>	 
+                     <?php
+					 $i++;
+					 break;
+				 }
+			 }
+			 if($i==0)
+			 {
+			  ?>
+			  <option value="<?php echo $key; ?>"><?php echo $data; ?></option>
+			  <?php 
+			 }
+		  }
+		  ?>         
+      </select>
+      
+	  <?php //echo $this->Form->input('status',array('type'=>'select', 'options'=>$att_data, 'class'=>'form-control','label'=>'','div'=>false, 'multiple'=>'multiple', 'name'=>'data[Category][att]'));?>
     </div>
     
     <div class="form-group">

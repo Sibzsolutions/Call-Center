@@ -56,7 +56,7 @@
                         <td>
                         <img src="<?php echo $this->webroot.'img/category/thumb/small_images/'.$category_data['catimg']; ?>"/>
                         </td>
-                        <td><?php echo $category_data['parentid']; ?></td>
+                        <td><?php echo $category_data['parent_name']; ?></td>
                         <td><?php echo $category_data['url_alias']; ?></td>
                         <td><?php echo $category_data['catmtitle']; ?></td>
                         <td><?php echo $category_data['catmkeywords']; ?></td>
