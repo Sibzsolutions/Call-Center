@@ -106,7 +106,7 @@
 			  $i++;
 			  
 			  break;
-			  
+			  			  
 			}
 		  }
 		  
@@ -123,26 +123,10 @@
 			  
                Status
               <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
-              <?php 
-	
-				  if($product_select['del_status'] == 1)
-				  {
-					  ?>
-					  <option selected="selected" value="1">Yes</option>
-					  <option value="0">No</option>
-					  <?php
-				  }
-				  if($product_select['del_status'] == 0)
-				  {
-					  ?>
-					  <option value="1">Yes</option>
-					  <option selected="selected" value="0">No</option>
-					  <?php
-				  }
-				  ?>
-                  </select>
+                  <option value="1">Yes</option>
+                  <option value="0">No</option>					
+              </select>
 			  <br />
-			  
 			  <?php
 		  }
 	  }
@@ -192,7 +176,7 @@
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Canonnical Url</label>
-      <?=$this->Form->input('prodcanonical',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Canonnical Url', 'value'=>$product_data['prodmkeywords']));?>
+      <?=$this->Form->input('prodcanonical',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Canonnical Url', 'value'=>$product_data['prodcanonical']));?>
     </div>
     <!--<div class="form-group">
     <label for="exampleInputEmail1">Page Content</label>

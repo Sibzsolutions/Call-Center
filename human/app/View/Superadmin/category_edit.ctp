@@ -1,4 +1,5 @@
 <?php 
+	
 	App::import('Controller', 'Admins');
 	$Admin = new AdminController;
 	//$department_id = 4 ; // put here department ID as per your need
@@ -94,7 +95,7 @@
     
     <div class="form-group">
       <label for="exampleInputEmail1">Default Canonical Tag</label>
-      <?=$this->Form->input('catcanonical',array('type'=>'text', 'class'=>'form-control','label'=>'','div'=>false));?>
+      <?=$this->Form->input('catcanonical',array('type'=>'text', 'class'=>'form-control','label'=>'','div'=>false, 'value'=>$category_data['catcanonical']));?>
     </div>
     
     <div class="form-group">

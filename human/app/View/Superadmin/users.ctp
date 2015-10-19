@@ -21,70 +21,40 @@
                 </div><!-- /.box-header -->
                 <div class="box-header">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_dynamic_page' ?>">Add New Page</a>
+                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
                         <th>Id</th>
-                        <th>Page Name</th>
-                        <th>Meta title</th>
-                        <th>Meta Keyword</th>
-                        <th>Meta Description</th>
-                        <th>Page Content</th>
-                        <th>Script</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>User Type</th>
+                        <th>Last Login</th>
                         <th>Status</th>                        
                         <th>Action</th>                        
                       </tr>
                     </thead>
                     <tbody>
                       <?php
-                      foreach($dynamic_pages_data as $dynamic_page)
+                      foreach($users_data as $user)
                       {
-						  $dynamic_page_data = $dynamic_page['Dynamic_page'];
+						  $user_data = $user['User'];
                       ?>
                         <tr>
-                        <td><?php echo $dynamic_page_data['id']; ?></td>
-                        <td><?php echo $dynamic_page_data['name']; ?></td>
-                        <td><?php echo $dynamic_page_data['meta_title']; ?></td>
-                        <td><?php echo $dynamic_page_data['meta_keywords']; ?></td>
-                        <td><?php echo $dynamic_page_data['meta_description']; ?></td>
-                        <td>
-						<?php 
-						  if(strlen($dynamic_page_data['page_content'])<=100)
-						  {
-							echo $dynamic_page_data['page_content'];
-						  }
-						  else
-						  {
-							$page_content = substr($dynamic_page_data['page_content'],0,100) . '...';
-							echo $page_content;
-						  }
-						?>
-                        </td>
-                        <td>
-						<?php 
-						if($dynamic_page_data['script'] == '')
-						echo "No script is here";
-						else
-						{
-						  if(strlen($dynamic_page_data['script'])<=100)
-						  {
-							echo htmlspecialchars($dynamic_page_data['script']);
-						  }
-						  else
-						  {
-							$y=substr($dynamic_page_data['script'],0,100) . '...';
-							echo htmlspecialchars($y);
-						  }
-						}
-						?>
-                        </td>
-                        <td><?php if($dynamic_page_data['status'] == 1) echo "Active"; else echo "Inactive"; ?></td>
-                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/dynamic_page_edit/'.$dynamic_page_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/dynamic_page_status_change/'.$dynamic_page_data['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td><?php echo $user_data['id']; ?></td>
+                        <td><?php echo $user_data['usrfname']; ?></td>
+                        <td><?php echo $user_data['usrlname']; ?></td>
+                        <td><?php echo $user_data['username']; ?></td>
+                        <td><?php echo $user_data['usrtype']; ?></td>
+                        <td><?php echo $user_data['last_login']; ?></td>
+                        <td><?php if($user_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
+                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/user_edit/'.$user_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/user_status_change/'.$user_data['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
-                        <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'admin/dynamic_page_delete/'.$dynamic_page_data['id']; ?>"><i class="fa  fa-trash"></i></a>--></td>
+                        <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php echo $this->webroot.'superadmin/user_delete/'.$user_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
+                        </td>
                         </tr>
                       
 					  <?php
@@ -116,6 +86,7 @@
 
 <script>
   $(function () {
+	$("#example2").DataTable();
 	$('#example1').DataTable({
 	  "aaSorting": [],
 	  "paging": true,

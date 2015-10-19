@@ -21,7 +21,7 @@
                 </div><!-- /.box-header -->
                 <div class="box-header">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'admin/add_dynamic_page' ?>">Add New Page</a>
+                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_dynamic_page' ?>">Add New Page</a>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <table id="example1" class="table table-bordered table-striped">
@@ -82,9 +82,9 @@
 						?>
                         </td>
                         <td><?php if($dynamic_page_data['status'] == 1) echo "Active"; else echo "Inactive"; ?></td>
-                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/dynamic_page_edit/'.$dynamic_page_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/dynamic_page_status_change/'.$dynamic_page_data['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/dynamic_page_edit/'.$dynamic_page_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/dynamic_page_status_change/'.$dynamic_page_data['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
-                        <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'admin/dynamic_page_delete/'.$dynamic_page_data['id']; ?>"><i class="fa  fa-trash"></i></a>--></td>
+                        <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'superadmin/dynamic_page_delete/'.$dynamic_page_data['id']; ?>"><i class="fa  fa-trash"></i></a>--></td>
                         </tr>
                       
 					  <?php

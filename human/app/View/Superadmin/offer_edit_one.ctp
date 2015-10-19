@@ -1,32 +1,92 @@
 <?php 
-
+	
 	App::import('Controller', 'Admins');
 	$Admin = new AdminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
-<script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
-<script>
-                        
-	$(document).ready(function(){
-		
-		$('#att_select').change(function(){
-		
-		var cat_type_data = $('#att_select').val();
-		
-		$.post("<?=$this->webroot?>Admin/product_attribute_change_edit", {
-												 cat_id : cat_type_data ,
-												 product_id : '<?php echo $page_id; ?>'},
-		
-												 function(result){
- 				$('#att_one').html(result);			 
-			});
-		});
-	});
+  <!-- form start -->
+  <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
+  <div class="box-body">
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Offer Name</label>
+      <?=$this->Form->input('offername',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer Name'));?>
+    </div>
+    
+    <div class="form-group">
+    <label>Offer Categories</label>
+    <select multiple="multiple" name="data[Offer_master][catid][]" class="form-control select2" style="width: 100%;">
+    <option value="0">All</option>
+	<?php
+    $Admin -> offer_category_tree(0, $offer_data['offercat']);	
+    echo '</select>';
+    //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
+    
+	?>
+    </div>
+    
+    <div class="form-group">
+    <label>Offer Products</label>
+    <!--<select multiple="multiple" name="data[Offer_master][productid][]" class="form-control select2" style="width: 100%;">
+    <option value="0">All</option>-->
+	<?php
+    
+    $Admin -> offer_product_tree(0, $offer_data['prod']);	
+    //echo '</select>';
+    //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
+    ?>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Offer Description</label>
+      <?=$this->Form->input('offerdesc',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer Description'));?>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Discount</label><!-- 'class'=>'form-control', -->
+      <?=$this->Form->input('discount',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer Discount'));?>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Free Shipping</label>
+            <?=$this->Form->input('free_shipping',array('type'=>'select', 'options'=>array(1=>'Yes', 0=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
 
-</script>
+    </div>
+ 
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 
-<!-- form start -->
-  <?=$this->Form->create('Produc_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
+  <script>
+
+	  $(document).ready(
+	
+		  function () {
+	
+				$( "#datepicker_first" ).datepicker({
+				  changeMonth: true,//this option for allowing user to select month
+				  changeYear: true //this option for allowing user to select from year range
+				});
+				
+				$( "#datepicker_second" ).datepicker({
+				  changeMonth: true,//this option for allowing user to select month
+				  changeYear: true //this option for allowing user to select from year range
+				});
+			  }
+		);
+
+  </script>  
+    
+    <div class="form-group">
+      <label for="exampleInputEmail1">Offer Start Date</label>
+      <?=$this->Form->input('start_date',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer Start date','id'=>'datepicker_first'));?>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Offer End Date</label>
+      <?=$this->Form->input('end_date',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer End Date','id'=>'datepicker_second'));?>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Status</label>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    </div>
+    
+  </div>
+  
   <div class="box-body">
   
     <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['id']));?>
@@ -34,126 +94,20 @@
     <div class="form-group">
     <label>Parent Category</label>
     
-    <select id="att_select"  name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
+    <select name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
         $Admin -> category_tree(0, $product_data['catid']);	
         echo '</select>';
+        //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
+        
     ?>
     </div>
     
     <div class="form-group">
       <label for="exampleInputEmail1">Product Name</label>
       <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['prodname']));?>
-    </div>
-    
-    <div id="att_one">
-	
-	<?php
-	  
-	foreach($attribute_data as $data)
-	{		
-	  ?>
-	  <div class="form-group">
-	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
-	  
-      <?php
-	  	  
-	  foreach($data['Attribute_value'] as $data_att)
-	  {
-		  $i=0;
-		  foreach($product_att_data as $product_select)
-		  {
-			if($product_select['id'] == $data_att['Attribute_value']['id'])  
-			{
-			  ?>
-                
-              <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
-              
-			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
-              
-              <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php echo $product_select['add_cost'] ?>"/>
-              
-              <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php echo $product_select['less_cost'] ?>"/>
-    		  
-              Status
-              <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
-              <?php 
-	
-				  if($product_select['del_status'] == 1)
-				  {
-					  ?>
-					  <option selected="selected" value="1">Yes</option>
-					  <option value="0">No</option>
-					  <?php
-				  }
-				  if($product_select['del_status'] == 0)
-				  {
-					  ?>
-					  <option value="1">Yes</option>
-					  <option selected="selected" value="0">No</option>
-					  <?php
-				  }
-				  ?>
-                  
-		  </select>
-
-                        
-              <br />
-  			  
-              <?php
-			  
-			  $i++;
-			  
-			  break;
-			  
-			}
-		  }
-		  
-		  if($i==0)
-		  {
-			  ?>
-			  <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
-			  
-			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
-			  
-			  <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]"/>
-			  
-			  <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"/>
-			  
-               Status
-              <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
-              <?php 
-	
-				  if($product_select['del_status'] == 1)
-				  {
-					  ?>
-					  <option selected="selected" value="1">Yes</option>
-					  <option value="0">No</option>
-					  <?php
-				  }
-				  if($product_select['del_status'] == 0)
-				  {
-					  ?>
-					  <option value="1">Yes</option>
-					  <option selected="selected" value="0">No</option>
-					  <?php
-				  }
-				  ?>
-                  </select>
-			  <br />
-			  
-			  <?php
-		  }
-	  }
-	  ?>
-
-      </div>
-	  <?php
-    }
-	?>
-    </div>
-            
+    </div>        
     <div class="form-group">
       <label for="exampleInputEmail1">Product Short Description</label>
       <?=$this->Form->input('prodscdes',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$product_data['prodscdes']));?>
@@ -200,7 +154,7 @@
     </div>-->
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
     </div>
   </div><!-- /.box-body -->
   <div class="box-footer">

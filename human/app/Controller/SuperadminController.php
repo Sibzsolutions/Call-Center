@@ -29,7 +29,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  * @package       app.Controller
  * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
-class AdminController extends AppController {
+class SuperadminController extends AppController {
 
 	
 
@@ -63,9 +63,9 @@ class AdminController extends AppController {
 	function beforeFilter()
 	{
 		 parent::beforeFilter();
-		 AuthComponent::$sessionKey='admin';
+		 AuthComponent::$sessionKey='superadmin';
 		 $this->Auth->fields = array('username' => 'username','password' => 'password');
-		 $this->Auth->authenticate = array('Form' => array('scope'=>array('User.usrtype'=>array('1'))));
+		 $this->Auth->authenticate = array('Form' => array('scope'=>array('User.usrtype'=>array('2'))));
 		 $this->Auth->loginAction=array('controller' => 'Admin','action' => 'login');
 		 $this->Auth->logoutRedirect=array('controller' => 'Admin','action' => 'login');
 		 $this->Auth->loginRedirect = array('controller'=>'Admin','action'=>'index');
@@ -73,7 +73,7 @@ class AdminController extends AppController {
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
 		 $this->Auth->allow('register','login');  
 		 
-		 $this->layout="administrator_layout";   
+		 $this->layout="Superadministrator_layout";   
 		 
 		 
 		 $userdata = $this->Auth->user();
@@ -103,7 +103,9 @@ class AdminController extends AppController {
 		
 		if($this->request->data)
 		{
-			$this->request->data['User']['usrtype']=1;
+			debug($this->request->data);
+			
+			$this->request->data['User']['usrtype']=2;
 			
 			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
 			
@@ -150,8 +152,10 @@ class AdminController extends AppController {
 		$this->set('site_setting',$site_setting);
 		
 		if ($this->request->is('post')) {
-					
+			
 			$this->Site_setting->save($this->request->data);
+			
+			$this->redirect('site_setting');
 		}
 	}
 	
@@ -341,6 +345,7 @@ class AdminController extends AppController {
 			 $att_data[$data['Attribute_master']['id']] = $data['Attribute_master']['attname'];
 		}
 		
+		if(isset($att_data))
 		$this->set('att_data', $att_data);
 		
 		if ($this->request->is('post')) {
@@ -431,6 +436,7 @@ class AdminController extends AppController {
 			 $att_data[$data['Attribute_master']['id']] = $data['Attribute_master']['attname'];
 		}
 		
+		if(isset($att_data))
 		$this->set('att_data', $att_data);
 		
 		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
@@ -488,7 +494,7 @@ class AdminController extends AppController {
 			
 			$this->Category->save($this->request->data);
 			
-			if($this->request->data['Category']['att'] !='')
+			if(isset($this->request->data['Category']['att']) !='')
 			{
 				$cat_id = $this->request->data['Category']['id'];
 				
@@ -836,6 +842,7 @@ class AdminController extends AppController {
 						$product_att['Produc_attribute']['attvid'] = $data_second['id'];
 						$product_att['Produc_attribute']['add_cost'] = $data_second['add_cost'];
 						$product_att['Produc_attribute']['less_cost'] = $data_second['less_cost'];
+						$product_att['Produc_attribute']['del_status'] = $data_second['del_status'];
 						
 						$this->Produc_attribute->create();
 						$this->Produc_attribute->save($product_att);
@@ -1005,63 +1012,77 @@ class AdminController extends AppController {
 			
 			for($i=0;$i<$count_data;$i++)
 			{
-				$category_name = $this->Category->find('first', array('conditions' => array('Category.id' => $offercat_data[$i])));
 				
-				if($i==0)
-				{
-					if(isset($category_name['Category']['catname']))
-					$category_txt[] = $category_name['Category']['catname'];
-					else
-					$category_txt[] = 'N/A';
-				}
-				elseif($i==($count_data-1))
-				{
-					if(isset($category_name['Category']['catname']))
-					$category_txt[] = $category_name['Category']['catname'];
-					else
-					$category_txt[] = 'N/A';
-				}
+				if($offercat_data[$i] == 0)
+				$category_txt[] = 'All';
 				else
 				{
-					if(isset($category_name['Category']['catname']))
-					$category_txt[] = $category_name['Category']['catname'].',';
+					$category_name = $this->Category->find('first', array('conditions' => array('Category.id' => $offercat_data[$i])));
+				
+					if($i==0)
+					{
+						if(isset($category_name['Category']['catname']))
+						$category_txt[] = $category_name['Category']['catname'];
+						else
+						$category_txt[] = 'N/A';
+					}
+					elseif($i==($count_data-1))
+					{
+						if(isset($category_name['Category']['catname']))
+						$category_txt[] = $category_name['Category']['catname'];
+						else
+						$category_txt[] = 'N/A';
+					}
 					else
-					$category_txt[] = 'N/A';
+					{
+						if(isset($category_name['Category']['catname']))
+						$category_txt[] = $category_name['Category']['catname'].',';
+						else
+						$category_txt[] = 'N/A';
+					}
 				}
 			}
 			
 			$offers_data[$offer_key]['Offer_master']['category_txt'] = $category_txt;
 			
+			unset($category_txt);
+			
 			for($i=0;$i<$count_data_prod;$i++)
 			{
-				if(isset($offercat_data[$i]))
-				$product_name = $this->Produc_master->find('first', array('conditions' => array('Produc_master.id' => $offercat_data[$i])));
 				
-				
-				if($i==0)
-				{
-					if(isset($product_name['Produc_master']['prodname']))
-					$product_txt[] = $product_name['Produc_master']['prodname'];
-					else
-					$product_txt[] = 'N/A';
-				}
-				elseif($i==($count_data_prod-1))
-				{
-					if(isset($product_name['Produc_master']['prodname']))
-					$product_txt[] = $product_name['Produc_master']['prodname'];
-					else
-					$product_txt[] = 'N/A';
-				}
+				if($offercat_data[$i] == 0)
+				$product_txt[] = 'All';
 				else
 				{
-					if(isset($product_name['Produc_master']['prodname']))
-					$product_txt[] = $product_name['Produc_master']['prodname'].',';
+					if(isset($offercat_data[$i]))
+					$product_name = $this->Produc_master->find('first', array('conditions' => array('Produc_master.id' => $offercat_data[$i])));
+					if($i==0)
+					{
+						if(isset($product_name['Produc_master']['prodname']))
+						$product_txt[] = $product_name['Produc_master']['prodname'];
+						else
+						$product_txt[] = 'N/A';
+					}
+					elseif($i==($count_data_prod-1))
+					{
+						if(isset($product_name['Produc_master']['prodname']))
+						$product_txt[] = $product_name['Produc_master']['prodname'];
+						else
+						$product_txt[] = 'N/A';
+					}
 					else
-					$product_txt[] = 'N/A';
+					{
+						if(isset($product_name['Produc_master']['prodname']))
+						$product_txt[] = $product_name['Produc_master']['prodname'].',';
+						else
+						$product_txt[] = 'N/A';
+					}
 				}
 			}
 			
 			$offers_data[$offer_key]['Offer_master']['product_txt'] = $product_txt;
+			
+			unset($product_txt);
 		}
 		
 		$this->set('offers_data', $offers_data);
@@ -1116,7 +1137,7 @@ class AdminController extends AppController {
 						$cate = $cate.$cat_data.',';
 					}
 				}
-				
+								
 				$i++;
 			}
 			$offerprod = $cate;
@@ -1213,6 +1234,20 @@ class AdminController extends AppController {
 	public function attributes() 
 	{
 		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($attribute_data as $key=>$data)
+		{
+			$data = $data['Attribute_master'];
+			
+			$attribute_cat_data = $this->Attribute_category->find('first', array('conditions' => array('Attribute_category.attid' => $data['id'])));	
+			$data_second = $attribute_cat_data['Attribute_category'];
+			
+			$cat_data = $this->Category->find('first', array('conditions' => array('Category.id' => $data_second['catid'])));							
+			
+			$catname = $cat_data['Category']['catname'];
+			
+			$attribute_data[$key]['Attribute_master']['catname'] = $catname;			
+		}
 		
 		$this->set('attributes_data', $attribute_data);
 		

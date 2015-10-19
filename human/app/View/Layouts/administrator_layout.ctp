@@ -108,9 +108,9 @@
         <!-- Logo -->
         <a href="index2.html" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>Superadmin</b></span>
+          <span class="logo-mini"><b>Admin</b></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>Superadministrator</b></span>
+          <span class="logo-lg"><b>Administrator</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -379,7 +379,7 @@
           <!-- /.search form -->
           <!-- sidebar menu: : style can be found in sidebar.less -->
           
-          <?=$this->element('superadmin_side_bar')?>
+          <?=$this->element('admin_side_bar')?>
           
           
         </section>
