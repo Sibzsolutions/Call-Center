@@ -139,9 +139,10 @@ class AdminController extends AppController {
 	{
 		return $this->redirect($this->Auth->logout());
 	}
+	
 	public function index() {
 		
-		$this->layout="superadministrator_layout";
+		$this->layout="administrator_layout";
 	}	
 	
 	public function site_setting() 
@@ -158,7 +159,7 @@ class AdminController extends AppController {
 	public function users() 
 	{
 		$users_data = $this->User->find('all', array('order' => array('id' => 'DESC')));
-				
+						
 		$this->set('users_data', $users_data);
 	}
 	

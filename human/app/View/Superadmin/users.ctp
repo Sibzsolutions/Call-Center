@@ -30,6 +30,7 @@
                         <th>Id</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Username</th>
                         <th>Email</th>
                         <th>User Type</th>
                         <th>Last Login</th>
@@ -48,6 +49,7 @@
                         <td><?php echo $user_data['usrfname']; ?></td>
                         <td><?php echo $user_data['usrlname']; ?></td>
                         <td><?php echo $user_data['username']; ?></td>
+                        <td><?php echo $user_data['email']; ?></td>
                         <td><?php echo $user_data['usrtype']; ?></td>
                         <td><?php echo $user_data['last_login']; ?></td>
                         <td><?php if($user_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>

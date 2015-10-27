@@ -337,10 +337,10 @@
                   <!-- Menu Footer-->
                   <li class="user-footer">
                     <div class="pull-left">
-                      <a href="<?php echo $this->webroot.'admin/profile'; ?>" class="btn btn-default btn-flat">Profile</a>
+                      <a href="<?php echo $this->webroot.'superadmin/profile'; ?>" class="btn btn-default btn-flat">Profile</a>
                     </div>
                     <div class="pull-right">
-                      <a href="<?php echo $this->webroot.'admin/logout'; ?>" class="btn btn-default btn-flat">Sign out</a>
+                      <a href="<?php echo $this->webroot.'superadmin/logout'; ?>" class="btn btn-default btn-flat">Sign out</a>
                     </div>
                   </li>
                 </ul>

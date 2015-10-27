@@ -106,7 +106,7 @@
 			  $i++;
 			  
 			  break;
-			  			  
+			  
 			}
 		  }
 		  
@@ -123,10 +123,26 @@
 			  
                Status
               <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
-                  <option value="1">Yes</option>
-                  <option value="0">No</option>					
-              </select>
+              <?php 
+	
+				  if($product_select['del_status'] == 1)
+				  {
+					  ?>
+					  <option selected="selected" value="1">Yes</option>
+					  <option value="0">No</option>
+					  <?php
+				  }
+				  if($product_select['del_status'] == 0)
+				  {
+					  ?>
+					  <option value="1">Yes</option>
+					  <option selected="selected" value="0">No</option>
+					  <?php
+				  }
+				  ?>
+                  </select>
 			  <br />
+			  
 			  <?php
 		  }
 	  }
@@ -152,7 +168,9 @@
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Clearance</label>
-      <?=$this->Form->input('clearance',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance', 'value'=>$product_data['clearance']));?>
+	  <?=$this->Form->input('clearance',array('type'=>'select', 'options'=>array(1=>'Yes', 0=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    <?php //echo $this->Form->input('clearance',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance'));?>
+      <?php //echo $this->Form->input('clearance',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance', 'value'=>$product_data['clearance']));?>
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Images</label>
@@ -176,7 +194,7 @@
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Canonnical Url</label>
-      <?=$this->Form->input('prodcanonical',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Canonnical Url', 'value'=>$product_data['prodcanonical']));?>
+      <?=$this->Form->input('prodcanonical',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Canonnical Url', 'value'=>$product_data['prodmkeywords']));?>
     </div>
     <!--<div class="form-group">
     <label for="exampleInputEmail1">Page Content</label>

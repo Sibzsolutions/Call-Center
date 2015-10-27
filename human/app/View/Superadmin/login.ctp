@@ -36,7 +36,7 @@
         <?=$this->Session->flash('auth');?>
         <?=$this->Form->create('User');?>
           <div class="form-group has-feedback">
-            <?=$this->Form->input('username',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>''));?>
+            <?=$this->Form->input('username',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>''));?>
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">

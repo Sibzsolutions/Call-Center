@@ -35,32 +35,32 @@
         <p class="login-box-msg">Register a new membership</p>
         <?=$this->Session->flash('auth');?>
         <?=$this->Form->create('User');?>
-          <div class="form-group has-feedback">
-          
-          	<?=$this->Form->input('usrfname',array( "type"=>"text", "class"=>"form-control", "placeholder"=>"First name",'required'=>'required','label'=>'','div'=>false));?>
-
+        
+          <div class="form-group has-feedback">          
+          	<?=$this->Form->input('usrfname',array( "type"=>"text", "class"=>"form-control", "placeholder"=>"Enter First name",'required'=>'required','label'=>'','div'=>false));?>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
           </div>
           
           <div class="form-group has-feedback">
-
-          	<?=$this->Form->input('usrlname',array('type'=>'text', 'class'=>'form-control', 'placeholder'=>'Last name','required'=>'required','label'=>'','div'=>false));?>
-
+          	<?=$this->Form->input('usrlname',array('type'=>'text', 'class'=>'form-control', 'placeholder'=>'Enter Last name','required'=>'required','label'=>'','div'=>false));?>
             <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
           </div>
 
           <div class="form-group has-feedback">
-
-          	<?=$this->Form->input('username',array("type"=>"email", "class"=>"form-control", "placeholder"=>"Email",'required'=>'required','label'=>'','div'=>false));?>
-
+          	<?=$this->Form->input('username',array("type"=>"text", "class"=>"form-control", "placeholder"=>"Enter Username",'required'=>'required','label'=>'','div'=>false));?>
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           </div>
+          
           <div class="form-group has-feedback">
-
+          	<?=$this->Form->input('email',array("type"=>"email", "class"=>"form-control", "placeholder"=>"Enter Email",'required'=>'required','label'=>'','div'=>false));?>
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+          
+          <div class="form-group has-feedback">
           	<?=$this->Form->input('password',array('type'=>'password', 'class'=>'form-control', 'placeholder'=>'Retype password','required'=>'required','label'=>'','div'=>false));?>
-
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
+          
           <div class="row">
             <div class="col-xs-8">
               <div class="checkbox icheck">

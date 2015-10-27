@@ -70,7 +70,7 @@
 							echo "N/A";
 						?>
                         </td>
-                        <td><?php if($category_data['del_status'] == 1) echo "Active"; else echo "Inactive"; ?></td>
+                        <td><?php if($category_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
                         <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'admin/category_edit/'.$category_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'admin/category_status_change/'.$category_data['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
                         <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'admin/user_delete/'.$category_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->

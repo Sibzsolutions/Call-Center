@@ -5,12 +5,20 @@ class User extends AppModel {
 	 
 	 var $validate = array(
 		
-		 'required' => array(
-		 'on'         => 'create',
-		 'rule' => 'isUnique',
-        
+		 'username' => array(
+		 
+			 'on'         => 'create',
+			 'rule' => 'isUnique',
+			 	'message'   => 'Username already exits.',
 		 ),
-		
+		 
+		 'email' => array(
+		 
+			 'on'         => 'create',
+			 'rule' => 'isUnique',
+			 	'message'   => 'Email address already exits.',
+		 ),
+		 
 		 'password' => array(
 				'length' => array(
 				'rule'      => array('between', 8, 40),
@@ -22,23 +30,15 @@ class User extends AppModel {
 		
             'rule' => "/^[a-z ,.'-]+$/i",
             'message' => 'Please do not use special characters.',			
-           ),
+          ),
 		   
-		   'usrlname' => array(
+		  'usrlname' => array(
 		  
-				'rule' => 'notEmpty',
-				'message' => 'A last name is required',
-				
-				'alpha'=>array(
-				   'rule' => "/^[a-z ,.'-]+$/i",
-				'message' => 'Please do not use special characters.',
-				'allowEmpty' => true
-				)
-            ),
-		
+				'rule' => "/^[a-z ,.'-]+$/i",
+            	'message' => 'Please do not use special characters.',			
+          ),		
    );
-    
-	
+    	
     public function beforeSave($options = array()) {
         if (!empty($this->data[$this->alias]['password'])) {
             $passwordHasher = new SimplePasswordHasher();
@@ -46,7 +46,8 @@ class User extends AppModel {
                 $this->data[$this->alias]['password']
             );
         }
-        return true;
+        
+		return true;
     }	
 }
 ?>

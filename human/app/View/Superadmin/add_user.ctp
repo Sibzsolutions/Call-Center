@@ -10,8 +10,12 @@
       <?=$this->Form->input('usrlname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Name'));?>
     </div>
     <div class="form-group">
+      <label for="exampleInputEmail1">Username</label>
+      <?=$this->Form->input('username',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Username'));?>
+    </div>
+    <div class="form-group">
       <label for="exampleInputEmail1">Email</label>
-      <?=$this->Form->input('username',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Email'));?>
+      <?=$this->Form->input('email',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Email'));?>
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Password</label>

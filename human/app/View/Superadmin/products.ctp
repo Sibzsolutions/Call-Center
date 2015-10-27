@@ -55,7 +55,7 @@ bute<?php ?>
                         <td><?php echo $product['prodscdes']; ?></td>
                         <td><?php echo $product['proddesc']; ?></td>
                         <td><?php echo $product['prodprice']; ?></td>
-                        <td><?php echo $product['clearance']; ?></td>
+                        <td><?php if($product['clearance']==1) echo "Yes"; else echo "No"; ?></td>
                         <td><?php echo $product['date_added']; ?></td>
                         <td><?php echo $product['url_alias']; ?></td>
                         <td><?php echo $product['prodmtitle']; ?></td>

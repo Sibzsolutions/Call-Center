@@ -14,13 +14,17 @@
       <?=$this->Form->input('usrlname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Name', 'value'=>$edit_user_data['usrlname']));?>
     </div>
     <div class="form-group">
-      <label for="exampleInputEmail1">Email</label>
+      <label for="exampleInputEmail1">Username</label>
       <?=$this->Form->input('username',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Email', 'value'=>$edit_user_data['username']));?>
     </div>
     <div class="form-group">
-      <label for="exampleInputEmail1">Last Login</label>
-      <?=$this->Form->input('last_login',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$edit_user_data['last_login']));?>
+      <label for="exampleInputEmail1">Email</label>
+      <?=$this->Form->input('email',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Email', 'value'=>$edit_user_data['email']));?>
     </div>
+    <!--<div class="form-group">
+      <label for="exampleInputEmail1">Last Login</label>
+      <?php //echo $this->Form->input('last_login',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$edit_user_data['last_login']));?>
+    </div>-->
     <div class="form-group">
       <label for="exampleInputEmail1">Default Canonical Tag</label>
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>

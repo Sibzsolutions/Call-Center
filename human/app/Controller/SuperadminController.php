@@ -66,9 +66,9 @@ class SuperadminController extends AppController {
 		 AuthComponent::$sessionKey='superadmin';
 		 $this->Auth->fields = array('username' => 'username','password' => 'password');
 		 $this->Auth->authenticate = array('Form' => array('scope'=>array('User.usrtype'=>array('2'))));
-		 $this->Auth->loginAction=array('controller' => 'Admin','action' => 'login');
-		 $this->Auth->logoutRedirect=array('controller' => 'Admin','action' => 'login');
-		 $this->Auth->loginRedirect = array('controller'=>'Admin','action'=>'index');
+		 $this->Auth->loginAction=array('controller' => 'Superadmin','action' => 'login');
+		 $this->Auth->logoutRedirect=array('controller' => 'Superadmin','action' => 'login');
+		 $this->Auth->loginRedirect = array('controller'=>'Superadmin','action'=>'index');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
 		 $this->Auth->allow('register','login');  
@@ -103,11 +103,24 @@ class SuperadminController extends AppController {
 		
 		if($this->request->data)
 		{
-			debug($this->request->data);
+			//debug($this->request->data);
 			
 			$this->request->data['User']['usrtype']=2;
 			
 			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
+			
+			/*
+			if($this->User->save($this->request->data))
+			{
+				echo "Right";
+				die();
+			}
+			else
+			{
+				echo "Wrong";
+				die();
+			}
+			*/
 			
 			if($this->User->save($this->request->data))
 			{
@@ -200,7 +213,7 @@ class SuperadminController extends AppController {
 			
 			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
 			
-			$this->User->save($this->request->data);
+			if($this->User->save($this->request->data))
 			$this->redirect('users');
 		}
 	}
@@ -614,7 +627,93 @@ class SuperadminController extends AppController {
 		}
 	}
 	
+	/*
 	public function product_attribute_change()//$id 
+	{
+		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
+		
+		if($cat_attribute_data != '')
+		{
+			foreach($cat_attribute_data as $cat)
+			$attid[] = $cat['Attribute_category']['attid'];
+			
+			if(isset($attid))
+			{
+				$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
+				
+				foreach($attributes_data as $master_data)
+				$master_attid[] = $master_data['Attribute_master']['id'];
+				
+				$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
+				
+				foreach($attribute_data as $key=>$data)
+				{
+					$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+					
+					$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+				}
+				
+				echo "Attribute_data<pre>";
+				print_r($attribute_data);
+				echo "<pre>";
+
+				die();
+				
+				$this->set('attribute_data', $attribute_data);		
+			}
+		}
+	}
+	
+	public function product_attribute_change_edit()
+	{
+		$product_id = $_REQUEST['product_id'];
+		
+		$cat_id = $_REQUEST['cat_id'];
+		
+		$product_attribute = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid'=>$product_id)));
+		
+		foreach($product_attribute as $attribute)
+		{
+			$product['id'] = $attribute['Produc_attribute']['attvid'];
+			$product['add_cost'] = $attribute['Produc_attribute']['add_cost'];
+			$product['less_cost'] = $attribute['Produc_attribute']['less_cost'];			
+			$product['del_status'] = $attribute['Produc_attribute']['del_status'];			
+			
+			$prd_att[] = $product;
+		}
+		
+		$this->set('product_att_data', $prd_att);
+		
+		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $cat_id)));
+		
+		if($cat_attribute_data != '')
+		{
+			foreach($cat_attribute_data as $cat)
+			$attid[] = $cat['Attribute_category']['attid'];
+			
+			if(isset($attid))
+			{
+				$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
+				
+				foreach($attributes_data as $master_data)
+				$master_attid[] = $master_data['Attribute_master']['id'];
+				
+				$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
+				
+				foreach($attribute_data as $key=>$data)
+				{
+					$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
+					
+					$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
+				}
+				
+				$this->set('attribute_data', $attribute_data);		
+			}
+		}
+	}
+	*/
+	
+		public function product_attribute_change()//$id 
 	{
 		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
 		
@@ -691,6 +790,7 @@ class SuperadminController extends AppController {
 			}
 		}
 	}
+
 	
 	public function add_products() 
 	{
@@ -1092,58 +1192,70 @@ class SuperadminController extends AppController {
 	{
 		if ($this->request->is('post')) {
 			
-			$i=0;
-			$count_data = count($this->request->data['Offer_master']['catid']);
-			$count_data = ($count_data-1);
+			$this->request->data['Offer_master']['offerstartdt'] = date("Y-m-d H:i:s",strtotime($this->request->data['Offer_master']['start_date']));
 			
-			foreach($this->request->data['Offer_master']['catid'] as $key=>$cat_data)
+			$this->request->data['Offer_master']['offerenddt'] = date("Y-m-d H:i:s",strtotime($this->request->data['Offer_master']['end_date']));
+			
+			$i=0;
+			if(isset($this->request->data['Offer_master']['catid']))
 			{
-				if($count_data == 0)
-				$cate = $cat_data;
-				else
+				$count_data = count($this->request->data['Offer_master']['catid']);
+				$count_data = ($count_data-1);
+				
+				foreach($this->request->data['Offer_master']['catid'] as $key=>$cat_data)
 				{
-					if($i==0)
-					$cate = $cat_data.',';
+					if($count_data == 0)
+					$cate = $cat_data;
 					else
 					{
-						if($key == $count_data)
-						$cate = $cate.$cat_data;
+						if($i==0)
+						$cate = $cat_data.',';
 						else
-						$cate = $cate.$cat_data.',';
+						{
+							if($key == $count_data)
+							$cate = $cate.$cat_data;
+							else
+							$cate = $cate.$cat_data.',';
+						}
 					}
+					
+					$i++;
 				}
 				
-				$i++;
+				$offercat = $cate;
+				$this->request->data['Offer_master']['offerprod'] = $offerprod;
 			}
-			$offercat = $cate;
 			
 			$i=0;
-			$count_data = count($this->request->data['Offer_master']['productid']);
-			$count_data = ($count_data-1);
-			
-			foreach($this->request->data['Offer_master']['productid'] as $key=>$cat_data)
+			if(isset($this->request->data['Offer_master']['productid']))
 			{
-				if($count_data == 0)
-				$cate = $cat_data;
-				else
+				$count_data = count($this->request->data['Offer_master']['productid']);
+				$count_data = ($count_data-1);
+			
+				foreach($this->request->data['Offer_master']['productid'] as $key=>$cat_data)
 				{
-					if($i==0)
-					$cate = $cat_data.',';
+					if($count_data == 0)
+					$cate = $cat_data;
 					else
 					{
-						if($key == $count_data)
-						$cate = $cate.$cat_data;
+						if($i==0)
+						$cate = $cat_data.',';
 						else
-						$cate = $cate.$cat_data.',';
+						{
+							if($key == $count_data)
+							$cate = $cate.$cat_data;
+							else
+							$cate = $cate.$cat_data.',';
+						}
 					}
+									
+					$i++;
 				}
-								
-				$i++;
+				
+				$offerprod = $cate;
+				
+				$this->request->data['Offer_master']['offercat'] = $offercat;
 			}
-			$offerprod = $cate;
-			
-			$this->request->data['Offer_master']['offerprod'] = $offerprod;
-			$this->request->data['Offer_master']['offercat'] = $offercat;
 			
 			if($this->Offer_master->save($this->request->data))
 			$this->redirect('offers');
@@ -1158,60 +1270,72 @@ class SuperadminController extends AppController {
 				
 		if ($this->request->is('post')) {
 			
-			$i=0;
-			$count_data = count($this->request->data['Offer_master']['catid']);
-			$count_data = ($count_data-1);
+			$this->request->data['Offer_master']['offerstartdt'] = date("Y-m-d H:i:s",strtotime($this->request->data['Offer_master']['start_date']));
 			
-			foreach($this->request->data['Offer_master']['catid'] as $key=>$cat_data)
-			{
-				if($count_data == 0)
-				$cate = $cat_data;
-				else
-				{
-					if($i==0)
-					$cate = $cat_data.',';
-					else
-					{
-						if($key == $count_data)
-						$cate = $cate.$cat_data;
-						else
-						$cate = $cate.$cat_data.',';
-					}
-				}
-			
-				$i++;
-			}
-			
-			$offercat = $cate;
+			$this->request->data['Offer_master']['offerenddt'] = date("Y-m-d H:i:s",strtotime($this->request->data['Offer_master']['end_date']));
 			
 			$i=0;
-			$count_data = count($this->request->data['Offer_master']['productid']);
-			$count_data = ($count_data-1);
-			
-			foreach($this->request->data['Offer_master']['productid'] as $key=>$cat_data)
+			if(isset($this->request->data['Offer_master']['catid']))
 			{
-				if($count_data == 0)
-				$cate = $cat_data;
-				else
+				$count_data = count($this->request->data['Offer_master']['catid']);
+				$count_data = ($count_data-1);
+				
+				foreach($this->request->data['Offer_master']['catid'] as $key=>$cat_data)
 				{
-					if($i==0)
-					$cate = $cat_data.',';
+					if($count_data == 0)
+					$cate = $cat_data;
 					else
 					{
-						if($key == $count_data)
-						$cate = $cate.$cat_data;
+						if($i==0)
+						$cate = $cat_data.',';
 						else
-						$cate = $cate.$cat_data.',';
+						{
+							if($key == $count_data)
+							$cate = $cate.$cat_data;
+							else
+							$cate = $cate.$cat_data.',';
+						}
 					}
+				
+					$i++;
 				}
 				
-				$i++;
+				$offercat = $cate;
+				
+				$this->request->data['Offer_master']['offerprod'] = $offerprod;
 			}
 			
-			$offerprod = $cate;
+			$i=0;
+			if(isset($this->request->data['Offer_master']['productid']))
+			{
+				$count_data = count($this->request->data['Offer_master']['productid']);
+				$count_data = ($count_data-1);
+				
+				foreach($this->request->data['Offer_master']['productid'] as $key=>$cat_data)
+				{
+					if($count_data == 0)
+					$cate = $cat_data;
+					else
+					{
+						if($i==0)
+						$cate = $cat_data.',';
+						else
+						{
+							if($key == $count_data)
+							$cate = $cate.$cat_data;
+							else
+							$cate = $cate.$cat_data.',';
+						}
+					}
+					
+					$i++;
+				}
+				
+				$offerprod = $cate;
+				
+				$this->request->data['Offer_master']['offercat'] = $offercat;
+			}
 			
-			$this->request->data['Offer_master']['offerprod'] = $offerprod;
-			$this->request->data['Offer_master']['offercat'] = $offercat;
 			
 			if($this->Offer_master->save($this->request->data))
 			$this->redirect('offers');
