@@ -99,7 +99,7 @@ class SuperadminController extends AppController {
 	
 	function register() 
 	{
-		$this->layout='';
+		//$this->layout='';
 		
 		if($this->request->data)
 		{

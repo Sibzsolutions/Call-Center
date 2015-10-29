@@ -210,6 +210,8 @@ class BuyshopsController extends AppController {
 		
 			$this->set('count_add_to_cart', $count_add_to_cart);
 		}
+		
+		
 		$product_image = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['Produc_master']['id'])));
 		
 		if(isset($product_image))

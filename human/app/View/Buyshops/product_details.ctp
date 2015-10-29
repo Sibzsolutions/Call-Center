@@ -137,6 +137,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						  <div class="head_desc"><a href="#">12 reviews</a><img src="<?php echo $this->webroot.'img/buy_shop/review.png'; ?>" alt=""/></li></div>
 					       <div class="clearfix"></div>
 					     </div>
+						 
 						  <div id="cart">
 						  <?php 						  
 						  if($count_add_to_cart>0)
@@ -153,6 +154,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						  }
 						  ?>
 						  </div>
+						  
 					  <script>
 				
 						$(document).ready(function(){

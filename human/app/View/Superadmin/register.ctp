@@ -17,26 +17,12 @@ body {
 </head>
 
 <body>
-<div class="wrapper">
-  <div class="header">
-    <div class="logo"><img src="<?php echo $this->webroot.'img/local/logo.jpg';?>" /></div>
-    <div class="main_menu">
-      <ul>
-        <li><a href="#">Site Setting</a></li>
-        <li><a href="#">User Management</a></li>
-        <li><a href="#">Order Management</a></li>
-        <li><a href="#">Manage Pages</a></li>
-        <li><a href="#">Manage Categories</a></li>
-        <li><a href="#">Manage Products</a></li>
-        <li><a href="#">Manage Reviews</a></li>
-      </ul>
-      <div class="setting_icon"><img src="<?php echo $this->webroot.'img/local/setting_icon.jpg';?>" /></div>
+
+    <div class="heading25">
+      <img src="<?php echo $this->webroot.'img/local/basic_icon.jpg'; ?>" />&nbsp;Registration Form
     </div>
-  </div>
-  <div class="content">
-    <div class="heading55">Dashboard</div>
-    <div class="gray_box text12_black">&nbsp;&nbsp;Home > Dashboard</div>
-    
+    <div class="width100 basic_form">
+	
 	<div class="login_box">
 	  
 	  <div >
@@ -44,59 +30,68 @@ body {
 		<?=$this->Session->flash('auth');?>
 		<?=$this->Form->create('User');?>
 		
-		<div class="login_input_box" style="padding-top:87px;">
-		  <label>First Name:</label>
+	  <div class="width100 basic_form">
+      
+		<div class="basic_form_label">
+		<label>First Name:</label>
+		<div class="input_box">
 		
-		  <?=$this->Form->input('usrfname',array( "type"=>"text", "class"=>"form-control", "placeholder"=>"Enter First name",'required'=>'required','label'=>'','div'=>false));?>		  
+		  <?=$this->Form->input('usrfname',array( "type"=>"text", "class"=>"form-control input_text", "placeholder"=>"Enter First name",'required'=>'required','label'=>'','div'=>false));?>		  
 		
 		</div>
-		
-		<div class="login_input_box">
-		  <label>Last Name:</label>
-		  
-		  <?=$this->Form->input('usrlname',array('type'=>'text', 'class'=>'form-control', 'placeholder'=>'Enter Last name','required'=>'required','label'=>'','div'=>false));?>
-		  
 		</div>
 		
-		<div class="login_input_box">
-		  <label>Username:</label>
-		  
-		  <?=$this->Form->input('username',array("type"=>"text", "class"=>"form-control", "placeholder"=>"Enter Username",'required'=>'required','label'=>'','div'=>false));?>
+		<div class="basic_form_label">
+		<label>Last Name:</label>
+		<div class="input_box">
+		
+		  <?=$this->Form->input('usrlname',array('type'=>'text', 'class'=>'form-control input_text', 'placeholder'=>'Enter Last name','required'=>'required','label'=>'','div'=>false));?>
 		  
 		</div>
-		
-		<div class="login_input_box">
-		  <label>Email:</label>
-		  
-		  <?=$this->Form->input('email',array("type"=>"email", "class"=>"form-control", "placeholder"=>"Enter Email",'required'=>'required','label'=>'','div'=>false));?>
-		  
 		</div>
 		
-		<div class="login_input_box">
-		  <label>Password:</label>
+		<div class="basic_form_label">
+		<label>Username:</label>
+		<div class="input_box">
 		  
-		  <?=$this->Form->input('password',array('type'=>'password', 'class'=>'form-control', 'placeholder'=>'Enter password','required'=>'required','label'=>'','div'=>false));?>
+		  <?=$this->Form->input('username',array("type"=>"text", "class"=>"form-control input_text", "placeholder"=>"Enter Username",'required'=>'required','label'=>'','div'=>false));?>
 		  
 		</div>
-		
-        <div class="login_input_box">
-		
-		  <?=$this->Form->button('Register',array('class'=>'btn-flat login_button', 'style'=>'margin: 0 0 0 312px;'))?>	
-		  
-		  <?=$this->Form->end()?>
-			
 		</div>
 		
-		<div class="login_input_box" style="color: #030303; font-family: arial; font-size: 14px; font-weight: bold; margin: 90px 0 30px; text-align: center;">@2015 ONLYHUMANSPORTSWEAR. ALL RIGHTS RESERVED.</div>
+		<div class="basic_form_label">
+		<label>Email:</label>
+		<div class="input_box">
+		  
+		  <?=$this->Form->input('email',array("type"=>"email", "class"=>"form-control input_text", "placeholder"=>"Enter Email",'required'=>'required','label'=>'','div'=>false));?>
+		  
+		</div>
+		</div>
+		
+		<div class="basic_form_label">
+		<label>Password:</label>
+		<div class="input_box">
+		  
+			<?=$this->Form->input('password',array('type'=>'password', 'class'=>'form-control input_text', 'placeholder'=>'Enter password','required'=>'required','label'=>'','div'=>false));?>
+		  
+		</div>
+		</div>
+		
+		<div class="basic_form_label">
+		<label></label>
+        <div class="input_box">
+		
+		  <?=$this->Form->button('Register',array('class'=>'login_button'))?>	
+		</div>
+		</div>  
+		
+		<?=$this->Form->end()?>
+
 	  </div>
 	</div>
 
   </div>
-  <div class="footer">@ 2015 onlyhumansportswear. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-</div>
-</body>
-</html>
-
+    </div>
 <?php 
 
 /*
