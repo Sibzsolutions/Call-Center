@@ -1,4 +1,107 @@
 <?php ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Dashboard</title>
+<style type="text/css">
+body {
+	background-color: #FFF;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+<link href="<?php echo $this->webroot.'css/local/style.css';?>" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo"><img src="<?php echo $this->webroot.'img/local/logo.jpg';?>" /></div>
+    <div class="main_menu">
+      <ul>
+        <li><a href="#">Site Setting</a></li>
+        <li><a href="#">User Management</a></li>
+        <li><a href="#">Order Management</a></li>
+        <li><a href="#">Manage Pages</a></li>
+        <li><a href="#">Manage Categories</a></li>
+        <li><a href="#">Manage Products</a></li>
+        <li><a href="#">Manage Reviews</a></li>
+      </ul>
+      <div class="setting_icon"><img src="<?php echo $this->webroot.'img/local/setting_icon.jpg';?>" /></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="heading55">Dashboard</div>
+    <div class="gray_box text12_black">&nbsp;&nbsp;Home > Dashboard</div>
+    
+	<div class="login_box">
+	  
+	  <div >
+
+		<?=$this->Session->flash('auth');?>
+		<?=$this->Form->create('User');?>
+		
+		<div class="login_input_box" style="padding-top:87px;">
+		  <label>First Name:</label>
+		
+		  <?=$this->Form->input('usrfname',array( "type"=>"text", "class"=>"form-control", "placeholder"=>"Enter First name",'required'=>'required','label'=>'','div'=>false));?>		  
+		
+		</div>
+		
+		<div class="login_input_box">
+		  <label>Last Name:</label>
+		  
+		  <?=$this->Form->input('usrlname',array('type'=>'text', 'class'=>'form-control', 'placeholder'=>'Enter Last name','required'=>'required','label'=>'','div'=>false));?>
+		  
+		</div>
+		
+		<div class="login_input_box">
+		  <label>Username:</label>
+		  
+		  <?=$this->Form->input('username',array("type"=>"text", "class"=>"form-control", "placeholder"=>"Enter Username",'required'=>'required','label'=>'','div'=>false));?>
+		  
+		</div>
+		
+		<div class="login_input_box">
+		  <label>Email:</label>
+		  
+		  <?=$this->Form->input('email',array("type"=>"email", "class"=>"form-control", "placeholder"=>"Enter Email",'required'=>'required','label'=>'','div'=>false));?>
+		  
+		</div>
+		
+		<div class="login_input_box">
+		  <label>Password:</label>
+		  
+		  <?=$this->Form->input('password',array('type'=>'password', 'class'=>'form-control', 'placeholder'=>'Enter password','required'=>'required','label'=>'','div'=>false));?>
+		  
+		</div>
+		
+        <div class="login_input_box">
+		
+		  <?=$this->Form->button('Register',array('class'=>'btn-flat login_button', 'style'=>'margin: 0 0 0 312px;'))?>	
+		  
+		  <?=$this->Form->end()?>
+			
+		</div>
+		
+		<div class="login_input_box" style="color: #030303; font-family: arial; font-size: 14px; font-weight: bold; margin: 90px 0 30px; text-align: center;">@2015 ONLYHUMANSPORTSWEAR. ALL RIGHTS RESERVED.</div>
+	  </div>
+	</div>
+
+  </div>
+  <div class="footer">@ 2015 onlyhumansportswear. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+</div>
+</body>
+</html>
+
+<?php 
+
+/*
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -102,3 +205,7 @@
     </script>
   </body>
 </html>
+<?php 
+
+*/
+?>

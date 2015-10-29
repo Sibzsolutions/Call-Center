@@ -1,4 +1,4 @@
-bute<?php ?>
+<?php ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
 <!-- Bootstrap 3.3.5 -->
 <link rel="stylesheet" href="<?php echo $this->webroot.'bootstrap/css/bootstrap.min.css';?>">

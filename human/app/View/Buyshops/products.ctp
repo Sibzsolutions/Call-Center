@@ -32,11 +32,26 @@
 		      <h4><p>Cart: <span class="simpleCart_total_old"></span> (<span id="simpleCart_quantity_old" class="simpleCart_quantity_old">
 			  
 			  <?php 
-			  
-			  if(isset($count_add_to_cart))
+			  	
+			  if($this->Session->check('count_add_cart_session') == 1)
+			  $count_add_cart_session = $this->Session->read('count_add_cart_session');			
+				
+			  if($this->Session->check('count_add_to_cart') == 1)
+			  $count_add_to_cart = $this->Session->read('count_add_to_cart');			
+				
+			  //echo "count_add_cart_session".$count_add_cart_session;
+				
+			  //echo "count_add_to_cart".$count_add_to_cart;
+				
+			  if(isset($count_add_to_cart) && isset($count_add_cart_session))
+				echo ($count_add_to_cart+$count_add_cart_session); 			  
+			  elseif(isset($count_add_cart_session))
+			    echo $count_add_cart_session; 
+			  elseif(isset($count_add_to_cart))
 				echo $count_add_to_cart; 
 			  else
-				echo "0"  
+				echo "0" ; 							
+			  
 			  ?>
 			  
 			  </span> items)</p><img src="<?php echo $this->webroot.'img/buy_shop/bag.png'; ?>" alt=""/><div class="clearfix"> </div></h4>
@@ -76,12 +91,10 @@
 					
 					?>
 					<div class="grids_of_4">						
-					<?php
-					
+					<?php					
 				}
-					
+				
 				?>
-						
 				  <div class="grid1_of_4 simpleCart_shelfItem">
 						<div class="content_box"><a href="<?php echo $this->webroot.'buy_shops/product_details/'.$product['id']; //single.html?>">
 						  <div class="view view-fifth">

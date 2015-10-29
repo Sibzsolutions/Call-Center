@@ -50,10 +50,12 @@ body a{
 	height: 46px;
 }
 .search {
-	background: #fff;
-  border: 1px solid #ddd;
-  position: relative;
-  float: left;
+	background: #fff none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    float: left;
+    font-size: 16px;
+    position: relative;
+	height: 40px;
 }
 .search input[type="text"] {
 	border: none;
@@ -156,16 +158,17 @@ body a{
 	padding-left:0;
 }
 .logo h1{
-	  text-transform: uppercase;
-      font-size: 1.5em;
- 	 font-weight: 800;
-     margin: 5px 0 0 0;
+    font-size: 1.5em;
+    font-weight: 800 !important;
+    margin: 5px 0 0;
+    text-transform: uppercase;
 }
 .logo h1 a span{
 	color:#f54d56;
 }
 .logo h1 a{
 	color:#333;
+	text-decoration: none;
 }
 .logo h1 a:hover{
 	text-decoration:none;
@@ -178,7 +181,7 @@ body a{
 /* start menu */
 .h_nav h4{
 	border-bottom:1px solid rgb(236, 236, 236);
-	font-size: 1.5em;
+	font-size: 20px;
 	color:#000;
 	line-height: 1.8em;
 	text-transform:uppercase;
@@ -191,15 +194,13 @@ body a{
 	display: block;
 }
 .h_nav ul li a{
-	display:block;
-	font-size:1em;
-	color:#777;
-	text-transform:capitalize;
-	line-height:2.5em;
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
+ color: #777;
+    display: block;
+    font-size: 13px;
+    line-height: 33px;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: all 0.3s ease-in-out 0s;
 }
 .h_nav ul li a:hover{
 	color:#00405d;
@@ -1333,14 +1334,16 @@ p.empty a{
   color: #000;
 }
 .box_11-cart{
-   float:right;
+   float:right;   
 }
 .box_11 h4{
-  border:none;
-  color: #fff;
-  font-size: 0.85em;
-  margin-bottom: 0;
-  padding:0;
+	
+    border: medium none;
+    color: #fff;
+    font-family: arial;
+    font-size: 14px;
+    margin-bottom: 0;
+    padding: 2px;
 }
 .box_11 p{
 	float:left;

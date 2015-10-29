@@ -11,17 +11,17 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
-
 <div class="row">
             <div class="col-xs-12">
               
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title">Data Table With Full Features</h3>
+                  <!--<h3 class="box-title">Data Table With Full Features</h3>-->
                 </div><!-- /.box-header -->
                 <div class="box-header">
                 
                 <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
+				
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <table id="example1" class="table table-bordered table-striped">

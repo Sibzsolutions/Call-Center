@@ -1,4 +1,4 @@
-bute<?php ?>
+<?php ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
 <!-- Bootstrap 3.3.5 -->
 <link rel="stylesheet" href="<?php echo $this->webroot.'bootstrap/css/bootstrap.min.css';?>">
@@ -10,6 +10,10 @@ bute<?php ?>
 <link rel="stylesheet" href="<?php echo $this->webroot.'plugins/datatables/dataTables.bootstrap.css';?>">
 <!-- Theme style -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+<div class="heading55">Dashboardddd</div>
+<div class="gray_box text12_black">&nbsp;&nbsp;Home > Dashboard</div>
+
 
 <div class="row">
             <div class="col-xs-12">

@@ -73,6 +73,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<div class="col1">
 								<div class="h_nav">
 									<ul>
+										<li><a href="<?php echo $this->webroot.'buyshops/products';?>">Products</a></li>
 										<li><a href="men.html">Accessories</a></li>
 										<li><a href="men.html">Bags</a></li>
 										<li><a href="men.html">Caps & Hats</a></li>
@@ -90,6 +91,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<div class="col1">
 								<div class="h_nav">
 									<ul>
+										<li><a href="<?php echo $this->webroot.'buyshops/products';?>">Products</a></li>
 										<li><a href="men.html">Shirts</a></li>
 										<li><a href="men.html">Shoes, Boots & Trainers</a></li>
 										<li><a href="men.html">Shorts</a></li>
@@ -108,6 +110,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<div class="h_nav">
 									<h4>Popular Brands</h4>
 									<ul>
+										<li><a href="<?php echo $this->webroot.'buyshops/products';?>">Products</a></li>
 										<li><a href="men.html">Levis</a></li>
 										<li><a href="men.html">Persol</a></li>
 										<li><a href="men.html">Nike</a></li>
@@ -203,7 +206,32 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <div class="clearfix"></div>
 	 </div>
 </div>
-<div class="banner">
+
+<link rel="stylesheet" href="<?php echo $this->webroot.'css/home_slider/templatemo_style.css';?>" />
+
+<div id="main" role="main">
+  <section class="slider">
+    <div class="flexslider">
+      <ul class="slides">
+        <?php foreach($slider_images as $image) { ?>
+        <li style="background-image:url(<?php echo $this->webroot.'img/slider/'.$image['Slider_image']['image_path']; ?>); background-repeat:no-repeat; min-height:565px; width:100%; background-size:cover">
+          <div class="main_banner2">
+            <div class=slider_box>
+              <div class=slider_heading1><?php echo $image['Slider_image']['heading']; ?></div>
+              <div class=slider_heading2><?php echo $image['Slider_image']['short_desc']; ?></div>
+              <div class=slider_content><?php echo $image['Slider_image']['long_desc']; ?></div>
+            </div>
+            <div class="slider_img"></div>
+          </div>
+        </li>
+        <?php } ?>
+      </ul>
+    </div>
+  </section>
+</div>
+
+
+<!--<div class="banner">
 	<div class="container">
 		<div class="banner_desc">
 			<h1>New Season Arrivals.</h1>
@@ -213,7 +241,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			    </div>
 		</div>
 	</div>
-</div>	
+</div>-->
+
 <div class="content_top">
 	<h3 class="m_1">Latest Products</h3>
 	<div class="container">
@@ -404,3 +433,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </div>
 </body>
 </html>		
+
+<!--HOME-SLIDER-->
+<link rel="stylesheet" href="<?php echo $this->webroot; ?>js/home_slider/flexslider.css" type="text/css" media="screen" />
+<script defer src="<?php echo $this->webroot; ?>js/home_slider/jquery.flexslider.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+      SyntaxHighlighter.all();
+    });
+    $(window).load(function(){
+      $('.flexslider').flexslider({
+        animation: "slide",
+        start: function(slider){
+          $('body').removeClass('loading');
+        }
+      });
+    });
+  </script>
+<!--HOME-SLIDER-->

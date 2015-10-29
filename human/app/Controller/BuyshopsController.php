@@ -41,7 +41,7 @@ class BuyshopsController extends AppController {
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -109,6 +109,10 @@ class BuyshopsController extends AppController {
 	  public function index() {
 		
 		$this->layout='';
+		
+		$slider_images = $this->Slider_image->find('all', array('conditions'=>array('Slider_image.del_status'=>0)));
+		
+		$this->set(compact('slider_images'));
 		
 		$products = $this->Produc_master->find('all');
 		
@@ -199,12 +203,13 @@ class BuyshopsController extends AppController {
 		$product = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
 		
 		if($this->Auth->user())
-		$user_data = $this->Auth->user();
+		{
+			$user_data = $this->Auth->user();
 				
-		$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'],'Cart_master.product_id'=>$product['Produc_master']['id'], 'Cart_master.del_status'=>0)));
+			$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'],'Cart_master.product_id'=>$product['Produc_master']['id'], 'Cart_master.del_status'=>0)));
 		
-		$this->set('count_add_to_cart', $count_add_to_cart);
-		
+			$this->set('count_add_to_cart', $count_add_to_cart);
+		}
 		$product_image = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['Produc_master']['id'])));
 		
 		if(isset($product_image))
@@ -215,40 +220,53 @@ class BuyshopsController extends AppController {
 	 	 
 	public function add_to_cart() { 
 		
-		echo "shashikant";
-		
 		$product_data = $_REQUEST;
 		
 		if($this->Auth->user())
 		{
 			$user_data = $this->Auth->user();
-		
+			
 			$add_to_cart['Cart_master']['user_id'] = $user_data['id'];
 			
 			$add_to_cart['Cart_master']['product_id'] = $product_data['product_id'];
 			
 			$this->Cart_master->save($add_to_cart);		
+			
+			$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		
+			$this->set('count_add_to_cart', $count_add_to_cart);		
+			
+			if(isset($count_add_to_cart))
+			{
+				$this->Session->write('count_add_to_cart', $count_add_to_cart);
+			}			
+		}
+		
+		$data[$product_data['product_id']] = $product_data['product_id'];
+		
+		if($this->Session->check('add_cart_session') == 1)
+		{
+			$add_cart_session = $this->Session->read('add_cart_session');			
+			
+			$data_first = $add_cart_session + $data;
+			
+			$this->Session->write('add_cart_session', $data_first);
 		}
 		else
 		{
-			$this->Sesssion->write('add_cart_session', $product_data['product_id']);
-			
-			$add_cart_session[] = $product_data['product_id'];
-			
-			//$this->Sesssion->write('add_cart_session', $product_data['product_id']);
-			
-			echo "Add_cart_session<pre>";
-			print_r($add_cart_session);
-			echo "<pre>";
-			
-			die();
+			$this->Session->write('add_cart_session', $data);
 		}
 		
-		$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		$add_cart_session_pr = $this->Session->read('add_cart_session');			
 		
-		$this->set('count_add_to_cart', $count_add_to_cart);
 		
-		die();
+		if(isset($add_cart_session_pr))
+		{
+			$count_add_cart_session = count($add_cart_session_pr);
+			
+			$this->Session->write('count_add_cart_session', $count_add_cart_session);
+		}
+		
 	}
 	
 	public function register() 

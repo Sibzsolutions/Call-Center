@@ -38,7 +38,7 @@ class SuperadminController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image');
 
 /**
  * Displays a view
@@ -103,24 +103,9 @@ class SuperadminController extends AppController {
 		
 		if($this->request->data)
 		{
-			//debug($this->request->data);
+			$this->request->data['User']['usrtype'] = 2;
 			
-			$this->request->data['User']['usrtype']=2;
-			
-			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
-			
-			/*
-			if($this->User->save($this->request->data))
-			{
-				echo "Right";
-				die();
-			}
-			else
-			{
-				echo "Wrong";
-				die();
-			}
-			*/
+			$this->request->data['User']['last_login'] = date('Y-m-d H:i:s',time());
 			
 			if($this->User->save($this->request->data))
 			{
@@ -791,7 +776,6 @@ class SuperadminController extends AppController {
 		}
 	}
 
-	
 	public function add_products() 
 	{
 		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
@@ -1568,6 +1552,208 @@ class SuperadminController extends AppController {
 		if($this->Attribute_value->save($attribute_value_data))
 		$this->redirect('attribute_values/'.$redirect_id);			
 	}	
+			
+	public function main_slider_images() 
+	{
+		$slider_images = $this->Slider_image->find('all', array('order' => array('id' => 'DESC')));
 		
+		foreach($slider_images as $key=>$slider_image)
+		{
+			$slider_image = $slider_image['Slider_image'];
+			
+			if($slider_image['cat_id'] !='')
+			{
+				$cat_id = $slider_image['cat_id'];
+				$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$cat_id)));
+				$slider_images[$key]['Slider_image']['catname'] = $category_data['Category']['catname'];
+			}
+			
+			if($slider_image['product_id'] !='')
+			{
+				$product_id = $slider_image['product_id'];
+				$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_id)));
+				$slider_images[$key]['Slider_image']['prodname'] = $product_data['Produc_master']['prodname'];
+			}			
+		}
+		
+		$this->set(compact('slider_images'));
+		
+		if ($this->request->is('post')) {
+			
+			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
+			
+			$this->Product->save($this->request->data);
+			$this->redirect('products');
+		}
+	}		
+				
+	public function main_slider_image_edit($id) 
+	{
+		echo "Id".$id;		
+		
+		echo "<br>main_slider_image_edit";
+		
+		$products = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($products as $product)
+		{
+			$product = $product['Produc_master'];
+			
+			$products_dropdown[$product['id']] = $product['prodname'];			
+		}
+		
+		$category_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($category_data as $category)
+		{
+			$category = $category['Category'];
+			
+			$categories_dropdown[$category['id']] = $category['catname'];			
+		}
+		
+		$this->set(compact('products_dropdown', 'categories_dropdown'));
+		
+		$slider_images_data = $this->Slider_image ->find('first', array('conditions'=>array('Slider_image.id'=>$id)));
+		
+		$this->set(compact('slider_images_data'));
+		
+		if ($this->request->is('post')) {
+			
+			echo "Requested_data<pre>";
+			print_r($this->request->data);
+			echo "<pre>";
+			
+			if($this->request->data['Slider_image']['image']['name'] !='')
+			{
+				$this->request->data['Slider_image']['image_path'] = $this->request->data['Slider_image']['image']['name'];
+				
+				$name = $this->request->data['Slider_image']['image']['name'];
+				$tmp_name = $this->request->data['Slider_image']['image']['tmp_name'];
+				$type = $this->request->data['Slider_image']['image']['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/slider/'.$name))
+					{ 
+						$url="../webroot/img/slider/".$name;
+						$thumbnail_url="../webroot/img/slider/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,200);
+						
+						$url="../webroot/img/slider/".$name;
+						$thumbnail_url="../webroot/img/slider/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,1500);						
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_main_slider_image');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_main_slider_image');	
+				}			
+			}
+			
+			if($this->request->data['Slider_image']['Category'] == 1)
+			$this->request->data['Slider_image']['cat_id'] = $this->request->data['Slider_image']['category_id'];
+			
+			if($this->request->data['Slider_image']['Product'] == 1)
+			$this->request->data['Slider_image']['product_id'] = $this->request->data['Slider_image']['product_id'];
+			
+			$this->Slider_image->save($this->request->data);
+			
+			$this->redirect('main_slider_images');								
+		}
+	}			
+					
+	public function add_main_slider_image() 
+	{
+		$products = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($products as $product)
+		{
+			$product = $product['Produc_master'];
+			
+			$products_dropdown[$product['id']] = $product['prodname'];			
+		}
+		
+		$category_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
+		
+		foreach($category_data as $category)
+		{
+			$category = $category['Category'];
+			
+			$categories_dropdown[$category['id']] = $category['catname'];			
+		}
+		
+		$this->set(compact('products_dropdown', 'categories_dropdown'));
+		
+		if ($this->request->is('post')) {
+			
+			if(isset($this->request->data['Slider_image']['image']))
+			{
+				$this->request->data['Slider_image']['image_path'] = $this->request->data['Slider_image']['image']['name'];
+				
+				$name = $this->request->data['Slider_image']['image']['name'];
+				$tmp_name = $this->request->data['Slider_image']['image']['tmp_name'];
+				$type = $this->request->data['Slider_image']['image']['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/slider/'.$name))
+					{ 
+						$url="../webroot/img/slider/".$name;
+						$thumbnail_url="../webroot/img/slider/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,200);
+						
+						$url="../webroot/img/slider/".$name;
+						$thumbnail_url="../webroot/img/slider/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,1500);						
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_main_slider_image');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_main_slider_image');	
+				}			
+			}
+			
+			if($this->request->data['Slider_image']['Category'] == 1)
+			$this->request->data['Slider_image']['cat_id'] = $this->request->data['Slider_image']['category_id'];
+			
+			if($this->request->data['Slider_image']['Product'] == 1)
+			$this->request->data['Slider_image']['product_id'] = $this->request->data['Slider_image']['product_id'];
+			
+			$this->Slider_image->save($this->request->data);
+			
+			$this->redirect('main_slider_images');				
+		}
+	}				
+	
+	public function main_slider_image_status_change($id) 
+	{
+		$slider_image_data = $this->Slider_image->find('first', array('conditions'=>array('Slider_image.id'=>$id)));
+		
+		if($slider_image_data['Slider_image']['del_status']==1)
+		$slider_image_data['Slider_image']['del_status'] = 0;	
+		
+		else
+		$slider_image_data['Slider_image']['del_status'] = 1;
+		
+		if($this->Slider_image->save($slider_image_data))
+		$this->redirect('main_slider_images');					
+	}
+					
 	
 }

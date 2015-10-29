@@ -1,4 +1,61 @@
-<script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Login</title>
+<style type="text/css">
+body {
+	background-color: #FFF;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+<link href="<?php echo $this->webroot.'css/local/style.css';?>" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="login_box">
+  <div class="login_logo"><img src="<?php echo $this->webroot.'img/local/login_logo.jpg';?>" width="403" height="50" alt="login_logo" /></div>
+  <div class="login_main_box">
+
+	<?=$this->Session->flash('auth');?>
+	<?=$this->Form->create('User');?>
+
+	<div class="login_input_box" style="padding-top:87px;">
+      <label>Username:</label>
+      
+	  <?=$this->Form->input('username',array('type'=>'text','required'=>'required','label'=>'','div'=>false));?>
+	  <!--<input type="text" name="textfield" id="textfield" />-->
+	  
+    </div>
+    <div class="login_input_box">
+      <label>Password:</label>
+	  
+	  <?=$this->Form->input('password',array('type'=>'password','required'=>'required','label'=>'','div'=>false))?>
+	  <!--<input type="text" name="textfield" id="textfield" />-->
+	  
+    </div>
+    <div class="login_input_box">
+	
+	  <?=$this->Form->button('Sign In',array('class'=>'btn-flat login_button', 'style'=>'margin: 0 0 0 312px;'))?>	
+	  <!--<input type="submit" name="button" id="button" value="Login" class="login_button" style="margin: 0 0 0 312px;" />-->
+	  
+	  <?=$this->Form->end()?>
+		
+	</div>
+	
+	<div class="login_input_box" style="color: #030303; font-family: arial; font-size: 14px; font-weight: bold; margin: 90px 0 30px; text-align: center;">@2015 ONLYHUMANSPORTSWEAR. ALL RIGHTS RESERVED.</div>
+  </div>
+</div>
+</body>
+</html>
+
+
+<?php 
+
+/*
+
 <html>
   <head>
     <meta charset="utf-8">
@@ -12,8 +69,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="<?php echo $this->webroot."css/temp_first/AdminLTE.min.css";?>">
+    <!-- Theme style 
+    <link rel="stylesheet" href="<?php //echo $this->webroot."css/temp_first/AdminLTE.min.css";?>">-->
     <!-- iCheck -->
     <link rel="stylesheet" href="<?php echo $this->webroot."plugins/iCheck/square/blue.css";?>">
 
@@ -86,3 +143,7 @@
     </script>
     </body>
 </html>
+<?php 
+*/
+
+?>

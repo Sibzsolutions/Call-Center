@@ -650,7 +650,7 @@
 	</div>
    -->
     
-	<?php echo "shashikant".$this->element('sql_dump'); ?>
+	<?php //echo "shashikant".$this->element('sql_dump'); ?>
 
 	
 </body>
