@@ -73,12 +73,71 @@
 				<div class="width100"><a href="#">girls</a></div>
 				<div class="width100"><a href="#">sale</a></div>
 		</div>
-		<div class="refine_heading">filter by</div>
-		
+
 		<?php 
 		
-		foreach($category_att as $cat_filter)
+		if(isset($category_att) !='')
 		{
+		
+		$end_arr = end($category_att);         // move the internal pointer to the end of the array
+		
+		if($end_arr!='')
+		$end_key = key($end_arr);
+		$i=0;
+		foreach($category_att as $key=>$cat_filter)
+		{
+			if($i==0)
+			echo '<div class="refine_heading">filter by</div>';
+		
+			$i++;
+			
+			if($key== $end_key)
+			{
+			
+			?>
+			<section  class="sky-form" style="float:left; width:100%">
+
+			<div class="left_heading">Price</div>
+			<div class="width100">
+				<div class="col col-4">
+
+			<div id="ranged-value" style="margin: 1px 6px; width: 95%;"></div>
+
+			<div class="packages_slider">
+				<input type="text" id="range" value="" name="range" />
+			</div>
+
+			</div>
+			
+			<script>
+			
+			$(function () {
+
+				$("#range").ionRangeSlider({
+					type: 'double',
+					//step: 4,
+					//from: 500,
+
+					min: 0,
+					max: 1000,
+
+					onFinish: function (data) {
+						
+						$.post("<?php echo $this->webroot; ?>Buyshops/filter_search_type",
+						{length_min:data.from,length_max:data.to},
+						function(data,status){
+							$('#result_sort').html(data);
+						});
+					},
+				});
+			});
+
+			</script>
+
+				</div>
+		</section>
+				<?php
+			}
 			?>
 			
 			<div class="width100 filter_box">
@@ -149,47 +208,12 @@
 		
 		?>
 		
-		<section  class="sky-form" style="float:left; width:100%">
-
-			<div class="left_heading">Price</div>
-			<div class="width100">
-				<div class="col col-4">
-
-			<div id="ranged-value" style="margin: 1px 6px; width: 95%;"></div>
-
-			<div class="packages_slider">
-				<input type="text" id="range" value="" name="range" />
-			</div>
-
-			</div>
-			
-			<script>
-			
-			$(function () {
-
-				$("#range").ionRangeSlider({
-					type: 'double',
-					//step: 4,
-					//from: 500,
-
-					min: 0,
-					max: 1000,
-
-					onFinish: function (data) {
-						
-						$.post("<?php echo $this->webroot; ?>Buyshops/filter_search_type",
-						{length_min:data.from,length_max:data.to},
-						function(data,status){
-							$('#result_sort').html(data);
-						});
-					},
-				});
-			});
-
-			</script>
-
-				</div>
-		</section>
+		<?php
+		
+		}
+		?>
+		
+		
    </div>
    
 	<div class="col-md-9 w_content">
@@ -435,11 +459,11 @@
 
 			if(!empty($products))
 			{   
-				echo "<div class='pagination' style='margin-left: 147px;'>";
+				echo "<div class='pagination'>";
 				echo @$this->Paginator->prev('« Previous', null, null, array('class' => 'disabled')); 
 				echo @$this->Paginator->numbers();
 				echo @$this->Paginator->next('Next »', null, null, array('class' => 'disabled')); 
-				echo '<div style="float:right;padding:5px;color:#000">'.$this->Paginator->counter().'</div>';
+				echo '<div>'.$this->Paginator->counter().'</div>';
 				echo "<div class='clear'></div>";
 				echo "</div>";
 			}								

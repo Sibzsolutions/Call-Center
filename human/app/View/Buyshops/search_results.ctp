@@ -22,7 +22,7 @@
 	});
 </script>
 
-<div class="container">
+<div>
   
 <?php //echo $this->element('filter_side_bar'); ?>
   
@@ -61,13 +61,11 @@
       </div>
     </div>
 
-<div class="women_main" >
+<div class="width1220" >
 <!-- start sidebar -->
-	<div class="col-md-3">
-	  <div class="w_sidebar" style="margin-top:75px">
-	  
-		<div class="w_nav1" >
-			<h4>All</h4>
+	  <div class="refine_box">
+	  		<div class="width100">
+			<div class="refine_heading">All</div>
 			<ul>
 				<li><a href="women.html">women</a></li>
 				<li><a href="#">new arrivals</a></li>
@@ -76,14 +74,12 @@
 				<li><a href="#">girls</a></li>
 				<li><a href="#">sale</a></li>
 			</ul>	
-		</div>
-		<h3>filter by</h3>
-		
-		
-		<section  class="sky-form">
-
-			<h4>Price</h4>
-			<div class="row1 scroll-pane">
+            </div>
+		<div class="width100">
+        <div class="refine_heading">filter by</div>
+		<section  class="sky-form" style="float:left; width:100%">
+			<div class="left_heading">Price</div>
+			<div class="width100">
 				<div class="col col-4">
 
 			<div id="ranged-value" style="margin: 1px 6px; width: 95%;"></div>
@@ -120,11 +116,9 @@
 			</script>
 
 				</div>
-			</div>
-
 		</section>
+        </div>
 	  </div>
-   </div>
    
 	<div class="col-md-9 w_content">
 	    <div class="women">
@@ -202,6 +196,7 @@
 			
 			$arr_space = range(0, 100, 4); // gives 0, 4, 8, 12
 			
+			if(isset($products))
 			foreach($products as $product)
 			{
 				$product = $product['Produc_master'];
@@ -344,14 +339,16 @@
    
 				   
 			}		
-		
+			else
+				echo "Sorry No Products Found";
+			
 	   if(!empty($products))
 	   {   
-			echo "<div class='pagination' style='margin-left: 147px;'>";
+			echo "<div class='pagination'>";
 			echo @$this->Paginator->prev('« Previous', null, null, array('class' => 'disabled')); 
 			echo @$this->Paginator->numbers();
 			echo @$this->Paginator->next('Next »', null, null, array('class' => 'disabled')); 
-			echo '<div style="float:right;padding:5px;color:#000">'.$this->Paginator->counter().'</div>';
+			echo '<div>'.$this->Paginator->counter().'</div>';
 			echo "<div class='clear'></div>";
 			echo "</div>";
 		}
@@ -359,7 +356,8 @@
 		?>
 		
 		<!-- end grids_of_4 -->
-			  <div class="middle_content">
+        
+			  <!--<div class="middle_content">
     <div class="width1220">
       <div class="width100 product_box">
           <div class="product_list">
@@ -445,7 +443,7 @@
         </div>
     </div>
 	
-</div>
+</div>-->
 	</div>
 
 	

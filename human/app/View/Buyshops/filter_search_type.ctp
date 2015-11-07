@@ -118,12 +118,12 @@
 		
 	    if(!empty($products))
 	    {   
-			echo "<div class='pagination' style='margin-left: 147px;'>";
+			echo "<div class='pagination'>";
 			$this->Paginator->options['url'] = array('controller' => 'Buyshops', 'action' => 'products/'.$id_first);
 			echo @$this->Paginator->prev('« Previous', null, null, array('class' => 'disabled')); 
 			echo @$this->Paginator->numbers();
 			echo @$this->Paginator->next('Next »', null, null, array('class' => 'disabled')); 
-			echo '<div style="float:right;padding:5px;color:#000">'.$this->Paginator->counter().'</div>';
+			echo '<div>'.$this->Paginator->counter().'</div>';
 			echo "<div class='clear'></div>";
 			echo "</div>";
 		}

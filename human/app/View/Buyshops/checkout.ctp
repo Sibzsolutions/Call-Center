@@ -19,7 +19,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/megamenu.js';?>"></script>
 <script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
 <div class="width1220 checkout_box">
-	<div class="" style="float:left">	 
+	<div class="" style="float:left; width:100%;">	 
 		<div class="col-md-9 cart-items">
 			 <h1>My Shopping Bag</h1>
 				
@@ -133,7 +133,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		<div id="total_update">
 		 <div class="col-md-3 cart-total">
 			 <a class="continue" href="<?php echo $this->webroot.'buyshops/index'; ?>">Continue to basket</a>
-			 <div class="price-details">
+			 
+			 <!--<div class="price-details">
 				 <h3>Price Details</h3>
 				 <span>Total</span>
 				 
@@ -141,6 +142,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				 
 				<?php
 				
+				/*
 				$i=0;
 				foreach($products_checkout as $product)
 				{
@@ -151,12 +153,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 					$i++;
 				}
+				*/
 				?>
 				
 				
 				 <?php 
 					
-					echo $total_price;//6200.00
+					//echo $total_price;//6200.00
 				 
 				 ?>
 				
@@ -165,20 +168,20 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				 <span>Discount</span>
 				 <span class="total1">---</span>
 				 <span>Delivery Charges</span>
-				 <span class="total1"><!--150.00 --> --- </span>
+				 <span class="total1"> --- </span>
 				 <div class="clearfix"></div>				 
 			 </div>	
 			 <ul class="total_price">
 			   <li class="last_price"> <h4>TOTAL</h4></li>	
 			   <li class="last_price">
 			   <span>
-			   <?php echo $total_price; //6350.00  ?>
+			   <?php //echo $total_price; //6350.00  ?>
 			   </span></li>
 			   <div class="clearfix"> </div>
-			 </ul>
+			 </ul>-->
 			
 			 <div class="clearfix"></div>
-			 <a class="order" href="<?php echo $this->webroot.'place_order'; ?>">Place Order</a>
+			 <a class="order" href="#<?php //echo $this->webroot.'place_order'; ?>">Place Order</a>
 			 
 			 <!--<div class="total-item">
 				 <h3>OPTIONS</h3>
@@ -193,7 +196,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			}
 			
 			else
-				echo "<br><br>Sorry no item found in your cart";
+				echo "<br><br><div class='width100' style='border: 2px solid #f0f0f0; color: #ff0000; font-size: 21px; margin: 10px 0; padding: 10px 0; text-align: center;'>Sorry no item found in your cart</div>";
 			
 		?>
 	 </div>

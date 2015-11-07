@@ -99,9 +99,70 @@ App::uses('AppController', 'Controller');
 			 $data_first[$key] = $cat;
 			 $data_first[$key]['Category']['sub_type'] = $cat_data_tree;
 		 }
-		 
+		 		 
 		 if(isset($data_first))
 		 $this->set('dynamic_menu', $data_first);		 
+		 
+		 /*
+		 
+		 if(isset($this->request->params['action']))
+		 {	
+			if($this->Session->check('id_first') == 1)
+			{
+				$id_first = $this->Session->read('id_first');
+			}
+			else
+			{
+				$id_first = $this->params['pass'][0];
+				$this->Session->write('id_first', $id_first);
+			}
+			
+			 $category_att = $this->Attribute_category->find('all',array('conditions'=>array('Attribute_category.catid'=>$id_first)));
+			 
+			 foreach($category_att as $cat_key=>$att)
+			 {
+				 $att_master = $this->Attribute_master->find('first',array('conditions'=>array('Attribute_master.id'=>$att['Attribute_category']['attid'])));
+				 
+				 $category_att[$cat_key]['Attribute_category']['Attribute_master'] = $att_master['Attribute_master'];
+				 
+				 $att_values = $this->Attribute_value->find('all',array('conditions'=>array('Attribute_value.attid'=>$att_master['Attribute_master']['id'])));
+				 
+				 $category_att[$cat_key]['Attribute_category']['Attribute_master']['Attribute_Values'] = $att_values;				 
+			 }
+			 
+			 $this->set('category_att', $category_att);
+		 }
+		 
+		 
+		 
+		$product_page_id = $this->request->params['action'];
+		 
+		if($this->Session->check('add_cart_session') == 1)
+		{
+			$add_cart_session = $this->Session->read('add_cart_session');			
+			
+			$data = $this->Session->read('data');			
+			
+			$data_first = $add_cart_session;
+			
+			if(in_array($product_page_id, $data_first))
+			$present = in_array($product_page_id, $data_first);
+			else
+			$present = 0;	
+			
+			if(isset($present))
+			$this->Session->write('present', $present);			
+		}
+		
+		if($this->Auth->user())
+		{
+			$user_data = $this->Auth->user();
+				
+			$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));//,'Cart_master.product_id'=>$product['Produc_master']['id']
+		
+			$this->set('count_add_to_cart', $count_add_to_cart);
+		}
+		*/
 		 
 		if($this->Auth->user())
 		{
@@ -160,7 +221,7 @@ App::uses('AppController', 'Controller');
 			
 			$this->Session->write('count_add_cart_session', $count_add_cart_session);
 		}				
-		
+		 
 	 }
 	 
 	 Public function filter_search_price(){
@@ -509,7 +570,7 @@ App::uses('AppController', 'Controller');
 		
 		foreach($category_data as $key=>$data)
 		{
-			$data['Category']['url'] = $this->webroot.'buyshops/products/'.$data['Category']['id'];
+			$data['Category']['url'] = $this->webroot.'buyshops/products/'.$data['Category']['id'];	
 			
 			$first_cat_data = $data;
 			
@@ -585,7 +646,7 @@ App::uses('AppController', 'Controller');
 			$this->Session->delete('type_id');
 		
 		if($this->Session->check('sort_product_list') == 1)
-		{
+		{			
 			$product_lists = $this->Session->read('sort_product_list');
 			
 			if($_REQUEST['type_id'] == 1)
@@ -594,9 +655,11 @@ App::uses('AppController', 'Controller');
 				
 				$this->paginate = array(
 		
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.id'=>$product_lists)
 				 );
+				 
+				 $products = $this->paginate('Produc_master');		
 			}
 		
 			if($_REQUEST['type_id'] == 2)
@@ -605,10 +668,12 @@ App::uses('AppController', 'Controller');
 				
 				$this->paginate = array(
 		
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('date_added' => 'DESC'), 'conditions'=>array('Produc_master.id'=>$product_lists)
 				 );
 				 
+				 $products = $this->paginate('Produc_master');		
+				
 			}
 		
 			if($_REQUEST['type_id'] == 3)
@@ -617,9 +682,12 @@ App::uses('AppController', 'Controller');
 				
 				$this->paginate = array(
 		
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('prodprice' => 'DESC'), 'conditions'=>array('Produc_master.id'=>$product_lists)
 				 );
+				 
+				$products = $this->paginate('Produc_master');		
+				
 			}
 			
 			if($_REQUEST['type_id'] == 4)
@@ -628,9 +696,11 @@ App::uses('AppController', 'Controller');
 				
 				$this->paginate = array(
 		
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('prodprice' => 'ASC'), 'conditions'=>array('Produc_master.id'=>$product_lists)
 				 );
+				
+				$products = $this->paginate('Produc_master');		
 			}
 		}	
 		else
@@ -643,12 +713,27 @@ App::uses('AppController', 'Controller');
 			if($_REQUEST['type_id'] == 1)
 			{
 				//$products = $this->Produc_master->find('all', array('order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$id_first)));
-
+				
 				$this->paginate = array(
 			
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
 				 );
+				 
+				$products = $this->paginate('Produc_master');		
+				
+				if(empty($products))
+				{
+					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+					
+					$this->paginate = array(
+			
+						 'limit' => 8,
+						 'order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
+					);
+					
+					$products = $this->paginate('Produc_master');		
+				}				 
 			}
 			
 			if($_REQUEST['type_id'] == 2)
@@ -657,9 +742,24 @@ App::uses('AppController', 'Controller');
 
 				$this->paginate = array(
 		
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('date_added' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
 				 );
+
+				$products = $this->paginate('Produc_master');		
+				
+				if(empty($products))
+				{
+					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+					
+					$this->paginate = array(
+			
+						 'limit' => 8,
+						 'order' => array('date_added' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
+					);
+					
+					$products = $this->paginate('Produc_master');		
+				}				 
 			}
 		
 			if($_REQUEST['type_id'] == 3)
@@ -668,9 +768,24 @@ App::uses('AppController', 'Controller');
 
 				$this->paginate = array(
 		
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('prodprice' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
 				 );
+				 
+				 $products = $this->paginate('Produc_master');		
+				 
+				if(empty($products))
+				{
+					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+					
+					$this->paginate = array(
+			
+						 'limit' => 8,
+						 'order' => array('prodprice' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
+					);
+					
+					$products = $this->paginate('Produc_master');		
+				}				 
 			}
 			
 			if($_REQUEST['type_id'] == 4)
@@ -679,13 +794,29 @@ App::uses('AppController', 'Controller');
 				
 				$this->paginate = array(
 	
-					 'limit' => 2,
+					 'limit' => 8,
 					 'order' => array('prodprice' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
 				);
+				
+				$products = $this->paginate('Produc_master');		
+				
+				if(empty($products))
+				{
+					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+					
+					$this->paginate = array(
+			
+						 'limit' => 8,
+						 'order' => array('prodprice' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
+					);
+					
+					$products = $this->paginate('Produc_master');		
+				}				 
+				
 			}		
 		}
 		
-		$products = $this->paginate('Produc_master');		
+		
 		
 		foreach($products as $key=>$product)
 		{
@@ -1029,7 +1160,17 @@ App::uses('AppController', 'Controller');
 	
 	public function search_results() { 
 	
+		if(isset($_REQUEST['search_text']))
 		$search_text = $_REQUEST['search_text'];
+		
+		if($this->Session->check('search_text') == 1)
+		{
+			$search_text = $this->Session->read('search_text');
+		}				
+		else
+		{
+			$this->Session->write('search_text', $search_text);
+		}				
 		
 		if($this->Auth->user())
 		{
@@ -1069,15 +1210,25 @@ App::uses('AppController', 'Controller');
 			
 			//$conditions = array('Produc_master.del_status'=>0, 'Produc_master.prodname LIKE'=>'%'.$search_text.'%');
 			
+			if($this->Session->check('con') == 1)
+			{
+				$con = $this->Session->read('con');
+			}				
+			else
+			{
+				$con = array('Produc_master.del_status'=>0, 'Produc_master.del_status'=>0, 'Produc_master.prodname LIKE'=>'%'.$search_text.'%');
+				$this->Session->write('con', $con);
+			}				
+
 			$this->paginate = array(
 		
-				 'limit' => 2,
-				 'conditions'=>array('Produc_master.del_status'=>0, 'Produc_master.del_status'=>0, 'Produc_master.prodname LIKE'=>'%'.$search_text.'%')
+				 'limit' => 8,
+				 'conditions'=> $con
 			);			
 		
-			$products = $this->paginate('Produc_master');
+			$products = $this->paginate('Produc_master');	
 		}
-	
+		if(isset($products))
 		foreach($products as $key=>$product)
 		{
 			$product = $product['Produc_master'];
@@ -1106,6 +1257,7 @@ App::uses('AppController', 'Controller');
 			}
 		}
 		
+		if(isset($products))
 		$this->set('products', $products);
 		
 		if($this->Auth->user())
@@ -1351,7 +1503,8 @@ App::uses('AppController', 'Controller');
 				}
 				
 				$this->set('products_checkout', $products_checkout);				
-			}			
+			}	
+			
 		}	
 		
 		if((isset($products_checkout)) && (isset($add_cart_session)))
@@ -1378,6 +1531,9 @@ App::uses('AppController', 'Controller');
 		
 		die();
 		*/
+		
+		
+		
 	}
 	public function contact_us() { 
 

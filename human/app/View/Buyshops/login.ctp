@@ -37,7 +37,7 @@ html {
 	    <div class="register">
 			  <div class="col-md-6 login-right">
 			  	<div class="contact_heading"><strong>REGISTERED</strong> CUSTOMERS</div>
-				<p>If you have an account with us, please log in.</p>
+				<div class="width100 text14_black" style="padding:0 0 20px 0">If you have an account with us, please log in.</div>
 				
 				<?=$this->Form->create('User');?>
 				  <div>
@@ -53,13 +53,13 @@ html {
 					
 				  </div>
 				  <a class="forgot" href="#">Forgot Your Password?</a>
-				  <input type="submit" value="Login" class="button">
+				  <input type="submit" value="Login" class="button" style="margin:0px;">
 			    <?=$this->Form->end()?>
 			   </div>
 			    <div class="col-md-6 login-left">
-			  	 <h3>NEW CUSTOMERS</h3>
-				 <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
-				 <a class="acount-btn" href="<?php echo $this->webroot.'buyshops/register' ?>">Create an Account</a>
+			  	 <div class="contact_heading"><strong>NEW</strong> CUSTOMERS</div>
+				 <div class="width100 text14_black" style="padding:0 0 20px 0">By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</div>
+				 <a class="button" href="<?php echo $this->webroot.'buyshops/register' ?>">Create an Account</a>
 			   </div>	
 			   <div class="clearfix"> </div>
 		</div>

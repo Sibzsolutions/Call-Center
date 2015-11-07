@@ -571,6 +571,7 @@ h2.m_3 {
   border: 5px solid #f7f6f6;
   text-align: center;
   padding-bottom: 1em;
+  margin-bottom:10px;
 }
 .view {
    overflow: hidden;
@@ -761,7 +762,7 @@ ul.footer_social li a i:hover{
 	float:right;
 	color:#555555;
 	font-size:0.8125em;
-	padding:0;
+	padding:10px 0;
 	list-style:none;
 }
 .w_nav li{
@@ -2008,22 +2009,24 @@ a.b-home:hover{
 	display: inline-block;
 	text-transform: uppercase;
 }
-.acount-btn:hover, .login-right input[type="submit"]:hover{
-	background:#000;
-	text-decoration:none;
-	color:#fff;
-}
+
 .login-right form {
 	padding: 1em 0;
 }
 .login-right form div {
-	padding: 0 0 1.5em 0;
+	padding:0 0 20px 0;
 }
 .login-right span {
 	color: #999;
 	font-size:0.85em;
-	padding-bottom: 0.2em;
+	/*padding-bottom: 0.2em;*/
 	display: block;
+}
+/*
+.acount-btn:hover, .login-right input[type="submit"]:hover{
+	background:#000;
+	text-decoration:none;
+	color:#fff;
 }
 .login-right input[type="text"] {
 	border: 1px solid #DDDBDB;
@@ -2032,7 +2035,7 @@ a.b-home:hover{
 	font-size:0.8125em;
 	padding:10px;
 }
-/*.login-right input[type="submit"] {
+.login-right input[type="submit"] {
 	background:#f54d56;
 	color: #FFF;
 	font-size: 0.8em;
@@ -2045,13 +2048,13 @@ a.b-home:hover{
 	text-transform: uppercase;
 	border:none;
 	outline:none;
-}*/
+}
 .login-right input[type="submit"]:hover{
 	background:#000;
 }
 a.forgot {
 	font: 300 14px/25px Lato, sans-serif;
-}
+}*/
 h4.title {
 	color: #000;
 	margin-bottom: 0.5em;
@@ -2085,7 +2088,7 @@ p.cart {
 	display: block;
 }
 .register-top-grid input[type="text"], .register-bottom-grid input[type="text"] {
-	border: 1px solid #EEE;
+	border: 1px solid #ccc;
 	outline-color:#FF5B36;
 	width: 96%;
 	font-size: 1em;
@@ -2175,9 +2178,9 @@ p.cart {
 	border:none;
 	outline:none;
 }
-.register-but input[type="submit"]:hover {
+/*.register-but input[type="submit"]:hover {
 	background:#000;
-}
+}*/
 .register-bottom-grid {
 	margin-top:3em;
 }

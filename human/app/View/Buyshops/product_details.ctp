@@ -176,16 +176,24 @@ html {
 							
 							if($key == 'Color')
 							{	
-								echo '<ul class="color_list">';
+								echo '<ul class="color_list" style="color:#ffffff; font-size:0px;">';
 									
 								echo $key;
+								echo '<div style="color: #000; float: left; font-size: 14px; padding: 8px 0 0; text-align: right; width: auto;">Color:</div>';
 								
 								foreach($att as $key_element=>$att_element)
 								{
 									$att_element = $att_element['Produc_attribute'];
 									?>
 								
-									<li><input value="<?php echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" /><img src="<?php echo $this->webroot.'img/attribute_value/thumb/small_images/'.$att_element['att_value_img']; //image.gif ?>" ></li>
+									<li>
+                                    <label>
+                                    <input value="<?php echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />
+                                    <img src="<?php echo $this->webroot.'img/attribute_value/thumb/small_images/'.$att_element['att_value_img']; //image.gif ?>" >
+                                    <img src="<?php echo $this->webroot.'img/only_human_userside/tick.png'; ?>" style="border: 0px none; width: auto; height: auto; padding: 9px; position: relative; margin: 0px 0px 0px -28px; z-index:499" />
+                                    </label>
+                                    
+                                    </li>
 									
 									<!--<li><a href="#"> <span class="color2"> </span></a></li>
 									<li><a href="#"> <span class="color3"> </span></a></li>

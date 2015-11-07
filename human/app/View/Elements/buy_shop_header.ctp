@@ -12,8 +12,6 @@
       <div class="m_logo"><img src="<?php echo $this->webroot.'img/only_human_userside/mobile_logo.jpg'; ?>" /></div>
       <div class="top_right">
 		
-		
-	  
         <div class="online_store">
           <!--<img src="<?php echo $this->webroot.'img/only_human_userside/online_store.jpg'; ?>" />-->
           <div id="cart" class="cart_box">
@@ -82,8 +80,10 @@
 				<?php 
 					
 					foreach($dynamic_menu as $cat)
-					{						
+					{		
+					
 						?>
+						
 						<!--<li class="active grid"><a class="color1" href="<?php //echo $cat['Category']['url']; ?>"><?php //echo $cat['Category']['catname']; ?></a>-->
 						<li class="active grid" ><a  href="<?php echo $cat['Category']['url']; ?>"><?php echo $cat['Category']['catname']; ?></a>
 						<div class="megapanel main_subcategory">

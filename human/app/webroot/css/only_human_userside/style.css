@@ -671,6 +671,7 @@ hr{
     color: #0866e4;
     font-family: myriadpro-regular;
     font-size: 16px;
+	line-height:normal;
 }
 .simpleCart_shelfItem h6{
     color: #555;
@@ -715,8 +716,11 @@ hr{
     padding: 20px 0;
     width: 100%;
 }
-
 h1{
+	font-size:25px;
+	font-family:myriadpro-regular;
+}
+.width1220 .women h4{
 	font-size:25px;
 	font-family:myriadpro-regular;
 }
@@ -766,6 +770,7 @@ p{
 }
 .checkout_box{
     font-family: myriadpro-regular;
+	min-height:500px;
 }
 .checkout_box .cart-header{
     border: 5px solid #f7f6f6;
@@ -793,8 +798,76 @@ p{
     height: 30px;
     margin: 0 0 0 8px;
     width: 30px;
+	border:1px solid #ccc;
+	padding:1px;
+	z-index:500;
+	position:relative;
 }
-
+.forgot{
+    color: #0866e4;
+    float: right;
+    font-family: myriadpro-regular;
+    font-size: 14px;
+}
+.text14_black{
+    color: #444444;
+    font-family: arial;
+    font-size: 14px;
+	font-weight:normal;
+	text-decoration:none;
+}
+.content_box .view{
+	min-height:300px;
+}
+.content_box h5{
+	min-height:58px;
+}
+.pagination{
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block;
+    margin: 20px 0;
+    padding-left: 0;
+	float:left;
+	width:100%;
+}
+.pagination span{
+    background-color: #f9f9f9;
+    border: 1px solid #e4e4e4;
+    color: #000;
+    float: left;
+    font-family: myriadpro-regular;
+    font-size: 15px;
+    line-height: normal;
+    margin: 0 6px 0 0;
+    padding: 3px 10px;
+    width: auto;
+}
+.pagination div{
+    color: #0866e4;
+    float: left;
+    font-family: myriadpro-regular;
+    font-size: 15px;
+    line-height: normal;
+    margin: 0 6px 0 0;
+    padding: 5px 10px;
+    width: auto;
+}
+.pagination a{
+	color:#0866e4;
+}
+.product_details .price_single .head{
+	width:80%;
+}
+.mask1{
+	display:none;
+}
+.color_list input{
+	display:none;
+}
+.color_list input:checked + img{
+	opacity:0.2;
+}
 
 }
 
@@ -990,7 +1063,9 @@ nav ul li a{
 .checkout_box #total_update .cart-total{
 	width: 100%;
 }
-
+.product_details .price_single .head{
+	width:50%;
+}
 }
 
 @media screen and (max-width: 300px) {

@@ -24,11 +24,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </head>
 <body>
 
-<div class="single_top">
-	 <div class="container"> 
+<div class="middle_content">
+	 <div class="width1220"> 
 	     <div class="register">
 		  	   <div class="register-top-grid">
-					<h3>PERSONAL INFORMATION</h3>
+					<div class="contact_heading" style="width: 100%; margin: 0px;"><strong>PERSONAL</strong> INFORMATION</div>
 					<?=$this->Form->create('User');?>
 					 <div>
 						<span>First Name<label>*</label></span>
@@ -81,7 +81,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				<div class="clearfix"> </div>
 				<div class="register-but">
 				   
-				   <input type="submit" value="submit">
+				   <input type="submit" value="submit" class="button" style="margin:0px;">
 				   <div class="clearfix"> </div>
 				   <?=$this->Form->end()?>
 				   
