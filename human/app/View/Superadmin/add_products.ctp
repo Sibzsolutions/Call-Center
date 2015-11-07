@@ -35,7 +35,7 @@
 
 </script>
   <?=$this->Form->create('Produc_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     <div class="form-group">
     <label>Parent Category</label>
     <select  id="att_select" name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
@@ -144,7 +144,7 @@
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
   </div><!-- /.box-body -->
-  <div class="box-footer">
+  <div class="input_box">
     <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

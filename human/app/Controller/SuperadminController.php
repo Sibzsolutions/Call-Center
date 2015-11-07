@@ -121,7 +121,10 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 	    if ($this->request->is('post')) {
 		
-			 if(($this->Auth->login()) !=1)
+			$session_msg = 1;
+			$this->set('session_msg', $session_msg);
+			
+			if(($this->Auth->login()) !=1)
 			 {
 				 $this->Session->setFlash(
 				  __('Username or password is incorrect'),

@@ -899,6 +899,10 @@ App::uses('AppController', 'Controller');
 	
 	public function products($id) {
 		
+		$category = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
+		
+		$this->set('catname', $category['Category']['catname']);
+		
 		if($this->Auth->user())
 		{
 			$user_data = $this->Auth->user();
@@ -960,7 +964,6 @@ App::uses('AppController', 'Controller');
 				 $category_att[$cat_key]['Attribute_category']['Attribute_master']['Attribute_Values'] = $att_values;				 
 			 }
 			 
-			 
 			 $this->set('category_att', $category_att);
 		 }
 	
@@ -971,6 +974,31 @@ App::uses('AppController', 'Controller');
 		
 		$category_all[] = $id_first;
 		
+		//foreach($category_all)
+				
+		foreach($category_all as $key=>$cate_id)
+		{
+			$data = $this->sub_cat($cate_id);
+			
+			$mayur_data[$key] = $data;
+			
+			$key_two = key($mayur_data);
+			
+			$end_key = end($mayur_data[$key_two]);
+			
+			$key_one = key($mayur_data[$key_two]);
+			
+			$key_one = $key_one+1;
+			
+			$mayur_data[$key_two][$key_one] = $cate_id;			
+			
+			$shashi[] = $mayur_data;
+		}
+		
+		$mayur_data = reset($mayur_data);
+		
+		$category_all = $mayur_data;
+				
 		if(isset($category_all))
 		{
 			//$products = $this->Produc_master->find('all', array('conditions'=>array('OR'=>array('Produc_master.catid'=>$category_all), 'Produc_master.del_status'=>0)));		
@@ -980,7 +1008,7 @@ App::uses('AppController', 'Controller');
 				 'limit' => 8,
 				 'conditions'=>array('OR'=>array('Produc_master.catid'=>$category_all), 'Produc_master.del_status'=>0)
 			);
-		
+			
 			$products = $this->paginate('Produc_master');		
 		}	
 		else
@@ -1026,6 +1054,12 @@ App::uses('AppController', 'Controller');
 			}
 		}
 		
+		/*
+		echo "products<pre>";
+		print_r($products);
+		echo "<pre>";
+		*/
+		
 		$this->set('products', $products);
 		
 		if($this->Auth->user())
@@ -1036,6 +1070,24 @@ App::uses('AppController', 'Controller');
 			
 			$this->set('count_add_to_cart', $count_add_to_cart);
 		}				
+	}
+	
+	public function sub_cat($id) {
+		
+		$new_data = array();  
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
+		
+		foreach($category_data as $cat)
+		{
+			$data = $this->sub_cat($cat['Category']['id']);
+			
+			
+			
+			$new_data[] = $cat['Category']['id'];
+		}	
+		
+		return $new_data;
 	}
 	
 	public function product_details($id) {

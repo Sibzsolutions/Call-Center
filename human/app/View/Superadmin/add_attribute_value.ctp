@@ -4,7 +4,7 @@
 	$Admin = new AdminController;
 ?>
   <?=$this->Form->create('Attribute_value', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">    
+  <div class="box-body form_box">    
     <div class="form-group">
     <label>Parent Category</label>
     <select name="data[Attribute_value][attid]" class="form-control select2" style="width: 100%;" multiple="multiple">
@@ -30,7 +30,7 @@
     </div>
     
   </div><!-- /.box-body -->
-  <div class="box-footer">
+  <div class="input_box">
     <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

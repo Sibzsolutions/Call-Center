@@ -142,7 +142,7 @@
 			
 			<div class="width100 filter_box">
 			<div class="left_heading"><?php echo $cat_filter['Attribute_category']['Attribute_master']['attname']; ?></div>
-			<div class="width100">
+			<div class="width100 filter_list_box">
 			<!--<div class="col col-4">
 				<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>kurtas</label>
 			</div>-->
@@ -218,7 +218,10 @@
    
 	<div class="col-md-9 w_content">
 	    <div class="women">
-			<a href="#"><h4>Enthecwear - <span>4449 itemms</span> </h4></a>
+			<a href="#"><h4>
+			
+			<?php echo $catname; //Enthecwear -  ?>
+			<span><?php //echo count($products).' ';itemms ?></span> </h4></a>
 			<ul class="w_nav">
 			<li>Sort : </li>
 			

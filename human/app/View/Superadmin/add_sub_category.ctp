@@ -1,6 +1,6 @@
 <?php ?>
   <?=$this->Form->create('Category', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
+  <div class="box-body form_box">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>        
     <div class="form-group">
       <label for="exampleInputEmail1">Main Category</label>
@@ -106,7 +106,7 @@
     </div>
   </div><!-- /.box-body -->
 
-  <div class="box-footer">
+  <div class="input_box">
     <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

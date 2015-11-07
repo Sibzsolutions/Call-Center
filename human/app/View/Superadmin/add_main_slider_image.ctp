@@ -37,7 +37,7 @@
 </script>
   
   <?=$this->Form->create('Slider_image', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     <div class="form-group">
       <label for="exampleInputEmail1">Image Heading </label>
       <?=$this->Form->input('heading',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Image Heading'));?>
@@ -83,7 +83,7 @@
   
   </div><!-- /.box-body -->
   
-  <div class="box-footer">
+  <div class="input_box">
     <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

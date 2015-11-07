@@ -5,8 +5,7 @@
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
   <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
-    
+  <div class="box-body form_box">
     <div class="form-group">
       <label for="exampleInputEmail1">Offer Name</label>
       <?=$this->Form->input('offername',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Offer Name'));?>
@@ -81,7 +80,7 @@
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
   </div><!-- /.box-body -->
-  <div class="box-footer">
+  <div class="input_box">
     <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

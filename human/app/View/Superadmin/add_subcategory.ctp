@@ -4,7 +4,7 @@
                 </div><!-- /.box-header -->
                 <!-- form start -->
                   <?=$this->Form->create('Category', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-                  <div class="box-body">
+                  <div class="box-body form_box">
                     <div class="form-group">
                       <label for="exampleInputEmail1">Category Name</label>
                       <?=$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));?>

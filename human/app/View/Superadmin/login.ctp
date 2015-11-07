@@ -23,16 +23,16 @@ body {
 	<?=$this->Form->create('User');?>
 
 	<div class="login_input_box" style="padding-top:87px;">
-      <label>Username:</label>
+      <!--<label>Username:</label>-->
       
-	  <?=$this->Form->input('username',array('type'=>'text','required'=>'required','label'=>'','div'=>false));?>
+	  <?=$this->Form->input('username',array('type'=>'text','required'=>'required','label'=>'Username:','div'=>false));?>
 	  <!--<input type="text" name="textfield" id="textfield" />-->
 	  
     </div>
     <div class="login_input_box">
-      <label>Password:</label>
+      <!--<label>Password:</label>-->
 	  
-	  <?=$this->Form->input('password',array('type'=>'password','required'=>'required','label'=>'','div'=>false))?>
+	  <?=$this->Form->input('password',array('type'=>'password','required'=>'required','label'=>'Password:','div'=>false))?>
 	  <!--<input type="text" name="textfield" id="textfield" />-->
 	  
     </div>

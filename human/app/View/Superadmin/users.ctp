@@ -18,24 +18,24 @@
                 <div class="box-header">
                   <!--<h3 class="box-title">Data Table With Full Features</h3>-->
                 </div><!-- /.box-header -->
-                <div class="box-header">
+                <div class="box-header" style="width:100%; float:left">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
 				
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>User Type</th>
-                        <th>Last Login</th>
-                        <th>Status</th>                        
-                        <th>Action</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">First Name</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Last Name</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Username</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Email</th>
+                        <th bgcolor="#00bcd4" class="text14_white"><div style="width:70px">User Type</div></th>
+                        <th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Last Login</div></th>
+                        <th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Action</th>                        
                       </tr>
                     </thead>
                     <tbody>

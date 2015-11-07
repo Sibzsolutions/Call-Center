@@ -1,6 +1,6 @@
 <?php ?>
   <?=$this->Form->create('User', array("role"=>"form"));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     <div class="form-group">
       <label for="exampleInputEmail1">First Name</label>
       <?=$this->Form->input('usrfname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter First Name'));?>
@@ -33,8 +33,8 @@
     
   </div><!-- /.box-body -->
 
-  <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+  <div class="input_box">
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>
             

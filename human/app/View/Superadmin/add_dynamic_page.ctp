@@ -1,6 +1,6 @@
 <?php ?>
   <?=$this->Form->create('Dynamic_page', array("role"=>"form"));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     <div class="form-group">
       <label for="exampleInputEmail1">Page Name</label>
       <?=$this->Form->input('name',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));?>
@@ -36,7 +36,7 @@
     </div>
   </div><!-- /.box-body -->
 
-  <div class="box-footer">
+  <div class="input_box">
     <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
   </div>
   <?=$this->Form->end()?>

@@ -6,6 +6,9 @@
     font-family: helvetica-neue-medium;
     src: url(helvetica-neue-medium.ttf);
 }
+a{
+	outline:none !important;
+}
 .box-title{
 	display:none;
 }
@@ -60,7 +63,21 @@
     font-weight: normal;
     height: auto;
     padding: 8px;
-    width: 33%;
+    width: 37%;
+}
+.login_input_box input[type="password"]{
+    background-color: #ffffff;
+    border: 0 none;
+    border-radius: 3px;
+    box-shadow: 2px 1px 3px #cacaca inset;
+    color: #565553;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    height: auto;
+    padding: 8px;
+    width: 37%;
 }
 .login_button{
     background-color: #09bafd;
@@ -73,6 +90,10 @@
     font-weight: bold;
     padding: 6px 20px;
 	cursor:pointer;
+	transition:0.5s;
+}
+.login_button:hover{
+    background-color: #0866e4;
 }
 .wrapper{
 	float:left;
@@ -119,8 +140,11 @@
     float: left;
     font-family: MyriadPro-Regular;
     font-size: 14px;
-    padding: 24px 20px;
+    padding: 24px 11px;
     text-decoration: none;
+}
+.main_menu ul li a:hover{
+	color:#00bcd4;
 }
 .content{
 	margin:0px auto;
@@ -283,4 +307,40 @@
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:14px;
 	color:#000;
+}
+.text14_white{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color:#ffffff;
+}
+.top_right{
+	float:right;
+	width:auto;
+	height:auto;
+	padding:20px 20px 0 0;
+}
+.top_right a{
+    color: #fff;
+    float: left;
+    font-family: myriadpro-regular;
+    font-size: 12px;
+    margin: 0 0 0 6px;
+    padding: 5px 10px;
+	text-decoration:none;
+}
+.top_right a:hover{
+	background-color: #05c8e1;
+	color:#ffffff;
+	text-decoration:none;
+}
+.box-body table.dataTable thead > tr > th {
+    padding-right: 20px;
+}
+.form_box .form-group{
+    float: left;
+    margin: 0 20px 20px 0;
+    width: 40%;
+}
+.form_box .form-control{
+	border-radius:0px;
 }
