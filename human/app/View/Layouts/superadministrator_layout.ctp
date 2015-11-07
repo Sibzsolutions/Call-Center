@@ -108,6 +108,8 @@
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="<?php echo $this->webroot.'plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css';?>">
 
+	<link href="<?php echo $this->webroot.'img/local/favicon.ico'; ?>" type="image/x-icon" rel="icon" />
+	
 	<?php
 		
 	//echo $this->Html->meta('icon');

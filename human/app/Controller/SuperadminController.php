@@ -29,9 +29,9 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  * @package       app.Controller
  * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
-class SuperadminController extends AppController {
 
-	
+ class SuperadminController extends AppController {
+
 
 /**
  * This controller does not use a model
@@ -71,7 +71,7 @@ class SuperadminController extends AppController {
 		 $this->Auth->loginRedirect = array('controller'=>'Superadmin','action'=>'index');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login');  
+		 $this->Auth->allow('register','login', 'product_attribute_change');  
 		 
 		 $this->layout="Superadministrator_layout";   
 		 
@@ -348,6 +348,8 @@ class SuperadminController extends AppController {
 		
 		if ($this->request->is('post')) {
 			
+			$this->request->data['Category']['catimg']['name'] = uniqid().$this->request->data['Category']['catimg']['name'];
+			
 			$name = $this->request->data['Category']['catimg']['name'];
 			$tmp_name = $this->request->data['Category']['catimg']['tmp_name'];
 			$type = $this->request->data['Category']['catimg']['type'];
@@ -455,6 +457,9 @@ class SuperadminController extends AppController {
 			
 			if($this->request->data['Category']['catimg']['name'] != '')
 			{
+				
+				$this->request->data['Category']['catimg']['name'] = uniqid().$this->request->data['Category']['catimg']['name'];
+				
 				$name = $this->request->data['Category']['catimg']['name'];
 				$tmp_name = $this->request->data['Category']['catimg']['tmp_name'];
 				$type = $this->request->data['Category']['catimg']['type'];
@@ -557,6 +562,8 @@ class SuperadminController extends AppController {
 		$this->set('main_cat_data', $main_cat_data);
 		
 		if ($this->request->is('post')) {
+			
+			$this->request->data['Category']['catimg']['name'] = uniqid().$this->request->data['Category']['catimg']['name'];
 			
 			$name = $this->request->data['Category']['catimg']['name'];
 			$tmp_name = $this->request->data['Category']['catimg']['tmp_name'];
@@ -698,7 +705,7 @@ class SuperadminController extends AppController {
 	}
 	*/
 	
-		public function product_attribute_change()//$id 
+	public function product_attribute_change()	//$id 
 	{
 		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
 		
@@ -815,6 +822,8 @@ class SuperadminController extends AppController {
 			
 			foreach($this->request->data['Produc_master']['catimg'] as $data)
 			{
+				$data['name'] = uniqid().$data['name'];
+				
 				$name = $data['name'];
 				$tmp_name = $data['tmp_name'];
 				$type = $data['type'];
@@ -940,6 +949,8 @@ class SuperadminController extends AppController {
 			
 				foreach($this->request->data['Produc_master']['produc_images'] as $data)
 				{
+					$data['name'] = uniqid().$data['name'];
+					
 					$name = $data['name'];
 					$tmp_name = $data['tmp_name'];
 					$type = $data['type'];
@@ -1352,6 +1363,7 @@ class SuperadminController extends AppController {
 			
 			$cat_data = $this->Category->find('first', array('conditions' => array('Category.id' => $data_second['catid'])));							
 			
+			if(isset($cat_data['Category']['catname']))
 			$catname = $cat_data['Category']['catname'];
 			
 			$attribute_data[$key]['Attribute_master']['catname'] = $catname;			
@@ -1514,13 +1526,55 @@ class SuperadminController extends AppController {
 		
 		if($this->request->is('post')) {
 			
+			$this->request->data['Attribute_value']['att_value_img']['name'];
+			
+			if($this->request->data['Attribute_value']['att_value_img']['name'] !='')
+			{
+				//$this->request->data['Attribute_value']['att_value_img'] = $this->request->data['Attribute_value']['att_value_img']['name'];
+				
+				$this->request->data['Attribute_value']['att_value_img']['name'] = uniqid().$this->request->data['Attribute_value']['att_value_img']['name'];
+				
+				$name = $this->request->data['Attribute_value']['att_value_img']['name'];
+				$tmp_name = $this->request->data['Attribute_value']['att_value_img']['tmp_name'];
+				$type = $this->request->data['Attribute_value']['att_value_img']['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/attribute_value/'.$name))
+					{ 
+						$url="../webroot/img/attribute_value/".$name;
+						$thumbnail_url="../webroot/img/attribute_value/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,50);
+						
+						$url="../webroot/img/attribute_value/".$name;
+						$thumbnail_url="../webroot/img/attribute_value/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,500);						
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_main_slider_image');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_main_slider_image');	
+				}			
+			}
+			
+			if($this->request->data['Attribute_value']['att_value_img'] !='')
+			$this->request->data['Attribute_value']['att_value_img'] = $this->request->data['Attribute_value']['att_value_img']['name'];
+			
 			$this->Attribute_value->save($this->request->data);
 			
 			$this->redirect('attribute_values/'.$id);	
 		}
 	}
 
-	public function attribute_value_edit($id) 
+	public function attribute_value_edit($id, $redirect_id) 
 	{
 		$attribute_value_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$id)));
 		
@@ -1532,11 +1586,51 @@ class SuperadminController extends AppController {
 				
 		if ($this->request->is('post')) {
 			
+			if($this->request->data['Attribute_value']['att_value_img']['name'] !='')
+			{
+				//$this->request->data['Attribute_value']['att_value_img'] = $this->request->data['Attribute_value']['att_value_img']['name'];
+				
+				$this->request->data['Attribute_value']['att_value_img']['name'] = uniqid().$this->request->data['Attribute_value']['att_value_img']['name'];
+
+				$name = $this->request->data['Attribute_value']['att_value_img']['name'];
+				$tmp_name = $this->request->data['Attribute_value']['att_value_img']['tmp_name'];
+				$type = $this->request->data['Attribute_value']['att_value_img']['type'];
+				$type_data = explode('/', $type);
+				$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/attribute_value/'.$name))
+					{ 
+						$url="../webroot/img/attribute_value/".$name;
+						$thumbnail_url="../webroot/img/attribute_value/thumb/small_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,50);
+						
+						$url="../webroot/img/attribute_value/".$name;
+						$thumbnail_url="../webroot/img/attribute_value/thumb/large_images/".$name;							
+						$this->make_thumb($url,$thumbnail_url,500);						
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('add_main_slider_image');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('add_main_slider_image');	
+				}			
+			}
+			
+			if($this->request->data['Attribute_value']['att_value_img']['name'] !='')
+			$this->request->data['Attribute_value']['att_value_img'] = $this->request->data['Attribute_value']['att_value_img']['name'];
+			else
+			unset($this->request->data['Attribute_value']['att_value_img']);
+			
 			$this->Attribute_value->save($this->request->data);
 			
-			$this->redirect('attribute_values/'.$id);	
-			
-			die();	
+			$this->redirect('attribute_values/'.$redirect_id);	
 		}
 	}		
 	
@@ -1619,14 +1713,12 @@ class SuperadminController extends AppController {
 		
 		if ($this->request->is('post')) {
 			
-			echo "Requested_data<pre>";
-			print_r($this->request->data);
-			echo "<pre>";
-			
 			if($this->request->data['Slider_image']['image']['name'] !='')
 			{
-				$this->request->data['Slider_image']['image_path'] = $this->request->data['Slider_image']['image']['name'];
+				$this->request->data['Slider_image']['image']['name'] = uniqid().$this->request->data['Slider_image']['image']['name'];
 				
+				$this->request->data['Slider_image']['image_path'] = $this->request->data['Slider_image']['image']['name'];
+								
 				$name = $this->request->data['Slider_image']['image']['name'];
 				$tmp_name = $this->request->data['Slider_image']['image']['tmp_name'];
 				$type = $this->request->data['Slider_image']['image']['type'];
@@ -1696,6 +1788,8 @@ class SuperadminController extends AppController {
 			
 			if(isset($this->request->data['Slider_image']['image']))
 			{
+				$this->request->data['Slider_image']['image']['name'] = uniqid().$this->request->data['Slider_image']['image']['name'];
+				
 				$this->request->data['Slider_image']['image_path'] = $this->request->data['Slider_image']['image']['name'];
 				
 				$name = $this->request->data['Slider_image']['image']['name'];

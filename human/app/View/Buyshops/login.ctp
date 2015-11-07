@@ -21,14 +21,24 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <link href="<?php echo $this->webroot.'css/buy_shop/megamenu.css';?>" rel="stylesheet" type="text/css" media="all" />
 <script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/megamenu.js';?>"></script>
 <script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
+
+<!--<style type="text/css">
+html {
+	padding:0px;
+	margin:0px;
+	font-size:0px;
+}
+</style>-->
+
 </head>
 <body>
-<div class="single_top">
-	 <div class="container"> 
+<div class="middle_content">
+	 <div class="width1220"> 
 	    <div class="register">
 			  <div class="col-md-6 login-right">
-			  	<h3>REGISTERED CUSTOMERS</h3>
+			  	<div class="contact_heading"><strong>REGISTERED</strong> CUSTOMERS</div>
 				<p>If you have an account with us, please log in.</p>
+				
 				<?=$this->Form->create('User');?>
 				  <div>
 					<span>Email Address<label>*</label></span>
@@ -43,7 +53,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					
 				  </div>
 				  <a class="forgot" href="#">Forgot Your Password?</a>
-				  <input type="submit" value="Login">
+				  <input type="submit" value="Login" class="button">
 			    <?=$this->Form->end()?>
 			   </div>
 			    <div class="col-md-6 login-left">

@@ -1,11 +1,7 @@
-<!--A Design by W3layouts
-Author: W3layout
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
+<?php ?>
+<script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery-1.11.1.min.js';?>"></script>
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-<link href="<?php echo $this->webroot.'css/buy_shops/bootstrap.css';?>" rel='stylesheet' type='text/css' />
+<!--<link href="<?php echo $this->webroot.'css/buy_shops/bootstrap.css';?>" rel='stylesheet' type='text/css' />-->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!-- Custom Theme files -->
 <link href="<?php echo $this->webroot.'css/buy_shop/style.css';?>" rel='stylesheet' type='text/css' />
@@ -60,18 +56,56 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	
 	});
 </script>
+
+<style type="text/css">
+html {
+	padding:0px;
+	margin:0px;
+	font-size:0px;
+}
+</style>
+
 </head>
 <body>
-
 <div class="single_top">
-	 <div class="container"> 
-	      <div class="single_grid">
+	 <div class="width1220 product_details"> 
+			  <?php 
+				
+			  if($this->Session->check('count_add_cart_session') == 1)
+			  $count_add_cart_session = $this->Session->read('count_add_cart_session');			
+				
+			  if($this->Session->check('count_add_to_cart') == 1)
+			  $count_add_to_cart = $this->Session->read('count_add_to_cart');			
+		  
+			  if($this->Session->check('present') == 1)
+			  $present = $this->Session->read('present');			
+				
+			  //echo "present_above".$present;
+				
+			  //die();
+				
+			  //echo "count_add_cart_session".$count_add_cart_session."<br>";
+				
+			  //echo "count_add_to_cart".$count_add_to_cart."<br>";
+				
+			  if(isset($count_add_to_cart) && isset($count_add_cart_session))
+				$count_last = ($count_add_to_cart+$count_add_cart_session); 			  
+			  elseif(isset($count_add_cart_session))
+				$count_last = $count_add_cart_session; 
+			  elseif(isset($count_add_to_cart))
+				$count_last = $count_add_to_cart; 
+			  else
+				$count_last = 0;
+			  
+			  ?>
+					  
+			<div class="single_grid">
 				<div class="grid images_3_of_2">
 						<ul id="etalage">
 							
 							<?php 
-							
-								foreach($product['images'] as $image)
+
+							foreach($product['images'] as $image)
 								{
 									$image = $image['Produc_image']['imagepath'];
 									
@@ -99,7 +133,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<img class="etalage_thumb_image" src="<?php //echo $this->webroot.'img/buy_shop/s4.jpg';?>" class="img-responsive"  />
 								<img class="etalage_source_image" src="<?php //echo $this->webroot.'img/buy_shop/s4.jpg';?>"class="img-responsive"  />
 							</li>-->
-							
+
 						</ul>
 						 <div class="clearfix"></div>		
 				  </div> 
@@ -109,8 +143,86 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     </ul>
 					<h1><?php echo $product['prodname']; //nibh euismod?></h1>
 					<p><?php echo $product['proddesc']; //Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum ?></p>
-				     <div class="dropdown_top">
-				       <div class="dropdown_left">
+				     <div class="dropdown_top" style="margin:10px 0px;">
+				       
+					   <?php
+					   
+					   foreach($att_array as $key=>$att)
+					   {
+							if($key == 'Size')
+							{
+								?>
+								<div class="dropdown_left">
+									<?php echo $key; ?>
+									<select class="dropdown" tabindex="10" data-settings='{"wrapperClass":"metro1"}'>
+									<option value="0">Select size</option>	
+									<?php
+									
+									foreach($att as $key_element=>$att_element)
+									{
+										$att_element = $att_element['Produc_attribute'];
+										?>
+										<option value="<?php echo $att_element['att_value_id']; ?>"><?php echo $att_element['att_val_name']; ?></option>	
+										<!--<option value="1">M</option>
+										<option value="2">L</option>
+										<option value="3">XL </option>-->
+										<?php
+									}
+									?>
+									</select>
+								</div>
+								<?php
+							}
+							
+							if($key == 'Color')
+							{	
+								echo '<ul class="color_list">';
+									
+								echo $key;
+								
+								foreach($att as $key_element=>$att_element)
+								{
+									$att_element = $att_element['Produc_attribute'];
+									?>
+								
+									<li><input value="<?php echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" /><img src="<?php echo $this->webroot.'img/attribute_value/thumb/small_images/'.$att_element['att_value_img']; //image.gif ?>" ></li>
+									
+									<!--<li><a href="#"> <span class="color2"> </span></a></li>
+									<li><a href="#"> <span class="color3"> </span></a></li>
+									<li><a href="#"> <span class="color4"> </span></a></li>-->
+									
+									<?php
+								}		
+								
+								echo '</ul>';								
+							}
+							if($key == 'Brand')
+							{
+								echo '<ul class="brand_box">';
+									
+								echo $key.':-  ';
+								
+								foreach($att as $key_element=>$att_element)
+								{
+									$att_element = $att_element['Produc_attribute'];
+									
+									?>
+								
+									<!--<input value="<?php //echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />--><?php echo $att_element['att_val_name']; ?>
+									
+									<!--<li><a href="#"> <span class="color2"> </span></a></li>
+									<li><a href="#"> <span class="color3"> </span></a></li>
+									<li><a href="#"> <span class="color4"> </span></a></li>-->
+									
+									<?php
+								}		
+								
+								echo '</ul>';		
+							}
+						}
+					   ?>
+						 
+					   <!--<div class="dropdown_left">
 					     <select class="dropdown" tabindex="10" data-settings='{"wrapperClass":"metro1"}'>
 	            			<option value="0">Select size</option>	
 							<option value="1">M</option>
@@ -128,45 +240,65 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							<li><a href="#"> <span class="color3"> </span></a></li>
 							<li><a href="#"> <span class="color4"> </span></a></li>
 							<li><a href="#"> <span class="color5"> </span></a></li>
-						</ul>
-						 <div class="clearfix"></div>
+						</ul>-->
+						
+
+
+
+						<div class="clearfix"></div>
 			         </div>
 			         <div class="simpleCart_shelfItem">
 			         	<div class="price_single">
-						  <div class="head"><h2><span class="amount item_price"><?php echo $product['prodprice'];//$45.00 ?></span></h2></div>
+						  <div class="head"><h2><span class="amount item_price"><?php echo 'MSRP: $'.$product['prodprice'];//$45.00 ?></span></h2></div>
 						  <div class="head_desc"><a href="#">12 reviews</a><img src="<?php echo $this->webroot.'img/buy_shop/review.png'; ?>" alt=""/></li></div>
 					       <div class="clearfix"></div>
 					     </div>
 						 
-						  <div id="cart">
-						  <?php 						  
-						  if($count_add_to_cart>0)
+						  <?php
+							
+						  if(isset($count_last))
 						  {
-							  ?>
-							  <div class="size_2-right"><a href="#" class="item_add item_add1 btn_5" value="" />Added to Cart </a></div>
-							  <?php
+							  if(($count_last>0) && ($present==1))
+							  {
+								  ?>
+								  <div class="size_2-right"><button id="added_to_cart" class="add_cart_btm">Added to Cart</button></div>
+								  <?php
+							  }
+							  else
+							  {
+								  ?>
+								  <div class="size_2-right"><button id="add_to_cart" class="add_cart_btm">Add To Cart</button></div>
+								  <?php
+							  }
 						  }
 						  else
 						  {
 							  ?>
-							  <div class="size_2-right"><a href="#" id="add_to_cart" class="item_add item_add1 btn_5" value="" />Add to Cart </a></div>
+							  <div class="size_2-right"><button id="add_to_cart" class="add_cart_btm">Add To Cart</button></div>
 							  <?php
 						  }
 						  ?>
-						  </div>
+						  
+						  <div class="size_2-right added_cart"><button id="added_to_cart" class="add_cart_btm">Added to Cart</button></div>
 						  
 					  <script>
 				
 						$(document).ready(function(){
 							
+							$('.added_cart').hide();
+							
 							$('#add_to_cart').click(function(){
+								
+								var page_id = '<?php echo $page_id; ?>';
 								
 								var product_id = '<?php echo $product['id']?>';
 								
-								$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id}, function(result){
+								$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id, page_id: page_id}, function(result){
 								
-									$("#cart").html('<div id="cart"><div class="size_2-right"><a href="#" class="item_add item_add1 btn_5" value="" />Added</a></div></div>');
-								
+									$("#cart").html(result);
+								    $('.added_cart').show();
+									$('#add_to_cart').hide();
+									
 								});
 							});
 						});
@@ -193,26 +325,26 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
 					</ul>
 				</li>
-				<li class="item2"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Additional information</a>
+				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Additional information</a>
 					<ul>
 					    <li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>
 						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
 					</ul>
 				</li>
-				<li class="item3"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Reviews (10)</a>
+				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Reviews (10)</a>
 					<ul>
 						<li class="subitem1"><a href="#">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor </a></li>
 						<li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>
 						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
 					</ul>
 				</li>
-				<li class="item4"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Helpful Links</a>
+				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Helpful Links</a>
 					<ul>
 					    <li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>
 						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
 					</ul>
 				</li>
-				<li class="item5"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Make A Gift</a>
+				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Make A Gift</a>
 					<ul>
 						<li class="subitem1"><a href="#">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor </a></li>
 						<li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>

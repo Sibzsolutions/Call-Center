@@ -1,3 +1,56 @@
+<div class="width1220">
+      <div class="footer_list">
+        <div class="footer_heading"><strong>About Us</strong></div>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Friendly Policies</a></li>
+          <li><a href="#">Legal</a></li>
+          <li><a href="#">Color Disclaimer</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms and Conditions</a></li>
+        </ul>
+      </div>
+      <div class="footer_list">
+        <div class="footer_heading"><strong>Marketing Tools</strong></div>
+        <ul>
+          <li><a href="#">Catalog Download</a></li>
+          <li><a href="#">    Catalog Request</a></li>
+          <li><a href="#">    #HollowaySportswear</a></li>
+          <li><a href="#">Product Videos</a></li>
+          <li><a href="#">Instructional Videos</a></li>
+          <li><a href="#">    Prebuilt Personalized Flyers</a></li>
+          <li><a href="#">    Web Links</a></li>
+          <li><a href="#">    Sizing & Fit Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer_list">
+        <div class="footer_heading"><strong>Decoration</strong></div>
+        <ul>
+          <li><a href="#">    Decoration Techniques</a></li>
+          <li><a href="#">    Stock Decoration Library</a></li>
+          <li><a href="#">    Uniform Decoration Guides</a></li>
+          <li><a href="#">    Knowledge Center</a></li>
+        </ul>
+      </div>
+      <div class="footer_list">
+        <div class="footer_heading"><strong>Connect With Us</strong></div>
+        <ul>
+		  <li><a href="<?php echo $this->webroot.'buyshops/contact_us' ?>">Contact Us</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">YouTube</a></li>
+          <li><a href="<">Contact Info</a></li>
+        </ul>
+      </div>
+      <div class="copyright">&copy; 2015  onlyhumansportswear. All Rights Reserved.</div>
+    </div>
+</div>
+
+<?php
+/*
+?>
 <div class="container">
 	   <div class="footer_top">
 		<div class="col-md-4 box_3">
@@ -57,3 +110,6 @@
 	</div>
 </div>
 	
+	<?php
+	*/
+	?>
