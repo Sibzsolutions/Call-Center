@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2015 at 08:37 AM
+-- Generation Time: Nov 09, 2015 at 09:37 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -610,7 +610,7 @@ CREATE TABLE IF NOT EXISTS `produc_masters` (
   `prodprice` float NOT NULL COMMENT 'Product Price with 2 decimals',
   `isfeatured` int(100) NOT NULL,
   `clearance` int(11) NOT NULL COMMENT '0-- Default No, 1-- Clearance item',
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Date time when added.',
+  `date_added` datetime NOT NULL COMMENT 'Date time when added.',
   `url_alias` text NOT NULL COMMENT 'Complete URL after domain name',
   `prodmtitle` text COMMENT 'Meta Title',
   `prodmdesc` text COMMENT 'Meta Description',
