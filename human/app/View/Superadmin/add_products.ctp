@@ -55,7 +55,7 @@
       <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Product Name'));?>
     </div>
     
-    <div id="att_one">
+    <div id="att_one" class="attribute_box" style="float:left; width:100%">
 	<div  style="display:none">
 	<?php
 	
@@ -73,9 +73,9 @@
           <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
           <?php echo $data_att['Attribute_value']['attvalue']; ?>
           
-          <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" placeholder="Additional Cost"/>
+          <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" placeholder="Additional Cost"/>
           
-          <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"  placeholder="Less Cost"/>
+          <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"  placeholder="Less Cost"/>
           Status
           <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
           <option value="1">Yes</option>
@@ -98,7 +98,7 @@
       <label for="exampleInputEmail1">Product Short Description</label>
       <?=$this->Form->input('prodscdes',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Short Desription'));?>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="clear: both; width: 82%;">
       <label for="exampleInputEmail1">Product Long Description</label>
       <?=$this->Form->input('proddesc',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Logn Description'));?>
     </div>
@@ -145,6 +145,6 @@
     </div>
   </div><!-- /.box-body -->
   <div class="input_box">
-    <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'btn btn-primary'))?>
+    <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>

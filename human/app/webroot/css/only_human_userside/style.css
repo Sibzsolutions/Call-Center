@@ -875,20 +875,24 @@ p{
 	padding:10px 0px;
 }
 .filter_list_box{
-	background-image:url(css_only_human_userside_imgs/blue_bg.jpg);
+	/*background-image:url(css_only_human_userside_imgs/blue_bg.jpg);
 	background-repeat:repeat-x;
 	background-position:left top;
-	background-color:#4ecfff;
+	background-color:#4ecfff;*/
+	background-color:#fff;
 	padding-bottom:20px;
 }
 .filter_list_box .checkbox{
-    color: #fff;
+    color: #555;
     font-family: myriadpro-regular;
     font-size: 14px;
 }
-.filter_list_box .checkbox i{
-	border:1px solid #fff;
+.filter_list_box .checkbox:hover{
+	color:#fff;
 }
+/*.filter_list_box .checkbox i{
+	border:1px solid #fff;
+}*/
 
 
 }

@@ -18,29 +18,29 @@
                 <div class="box-header">
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
-                <div class="box-header">
+                <div class="box-header" style="width:100%; float:left">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_products'; ?>">Add Product</a>
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_products'; ?>">Add Product</a>
                                 
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Short Description</th>
-                        <th>Long Description</th>
-                        <th>Product Price</th>
-                        <th>Clearance</th>
-                        <th>Date Added</th>
-                        <th>Url Aliase</th>
-                        <th>Meta Title</th>
-                        <th>Meta Description</th>
-                        <th>Meta Keywords</th>
-                        <th>Canonicle Url</th>                        
-                        <th>Status</th>                        
-                        <th>Action</th>                        
+                        <th bgcolor="#00bcd4" class="text12_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Name</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Short Description</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Long Description</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Product Price</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Clearance</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Date Added</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Url Aliase</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Meta Title</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Meta Description</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Meta Keywords</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Canonicle Url</th>                        
+                        <th bgcolor="#00bcd4" class="text12_white">Status</th>                        
+                        <th bgcolor="#00bcd4" width="65" class="text12_white" align="center">Action</th>                        
                       </tr>
                     </thead>
                     <tbody>

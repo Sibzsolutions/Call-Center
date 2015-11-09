@@ -80,6 +80,6 @@
   </div><!-- /.box-body -->
 
   <div class="input_box">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>

@@ -14,17 +14,17 @@
       <?=$this->Form->input('meta_keywords',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Keywords'));?>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" style="clear: both; width: 100%;">
       <label for="exampleInputEmail1">Description</label>
       <?=$this->Form->input('meta_description',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Description'));?>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" style="clear: both; width: 100%;">
     <label for="exampleInputEmail1">Page Content</label>
     <?=$this->Form->input('page_content',array('type'=>'textarea', 'id'=>'editor1', 'name'=>'editor1', 'rows'=>'10', 'cols'=>'80', 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Content'));?>
     </div>
                                             
-    <div class="form-group">
+    <div class="form-group" style="clear: both; width: 100%;">
       <label for="exampleInputEmail1">Script</label>
       <?=$this->Form->input('script',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Script'));?>
     </div>
@@ -37,7 +37,7 @@
   </div><!-- /.box-body -->
 
   <div class="input_box">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>
       

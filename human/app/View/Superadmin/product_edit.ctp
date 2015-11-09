@@ -27,9 +27,11 @@
 
 <!-- form start -->
   <?=$this->Form->create('Produc_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
-  
+  <div class="box-body form_box">
+    <div class="form-group">
+    <label>Parent ID</label>
     <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['id']));?>
+    </div>
     
     <div class="form-group">
     <label>Parent Category</label>
@@ -47,14 +49,14 @@
       <?=$this->Form->input('prodname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name', 'value'=>$product_data['prodname']));?>
     </div>
     
-    <div id="att_one">
+    <div id="att_one" class="attribute_box" style="float: left; width: 100%;">
 	
 	<?php
 	  
 	foreach($attribute_data as $data)
 	{		
 	  ?>
-	  <div class="form-group">
+	  <div class="form-group" style="width:30%">
 	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
 	  
       <?php
@@ -67,15 +69,11 @@
 			if($product_select['id'] == $data_att['Attribute_value']['id'])  
 			{
 			  ?>
-                
+                <div class="width100">
               <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
               
 			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
-              
-              <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php echo $product_select['add_cost'] ?>"/>
-              
-              <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php echo $product_select['less_cost'] ?>"/>
-    		  
+              <div style="float:right">
               Status
               <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
               <?php 
@@ -97,7 +95,14 @@
 				  ?>
                   
 		  </select>
+          	  </div>
 
+              <div class="width100">
+              <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
+              
+              <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php echo $product_select['less_cost'] ?>"/>
+    		  </div>
+              </div>
                         
               <br />
   			  
@@ -113,15 +118,12 @@
 		  if($i==0)
 		  {
 			  ?>
+              <div class="width100">
 			  <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
 			  
 			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
-			  
-			  <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]"/>
-			  
-			  <input type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"/>
-			  
-               Status
+			  <div style="float:right">
+              Status
               <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
               <?php 
 	
@@ -141,6 +143,15 @@
 				  }
 				  ?>
                   </select>
+                 
+              </div>
+               <div class="width100">
+			  <input type="text" class="form-control" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]" style="margin-right:5px;"/>
+			  
+			  <input type="text" class="form-control" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"/>
+              </div>
+			  
+              </div>
 			  <br />
 			  
 			  <?php
@@ -205,7 +216,7 @@
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
     </div>
   </div><!-- /.box-body -->
-  <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+  <div class="input_box">
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>

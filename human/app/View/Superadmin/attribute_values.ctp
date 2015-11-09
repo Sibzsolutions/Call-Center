@@ -18,21 +18,21 @@
                 <div class="box-header">
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
-                <div class="box-header">
+                <div class="box-header" style="width:100%; float:left">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_attribute_value/'.$id; ?>">Add Attribute Value</a>
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_attribute_value/'.$id; ?>">Add Attribute Value</a>
                                 
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Id</th>
-                        <th>Attribute Name</th>
-                        <th>Attribute Value name</th>
-						<th>Attribute Image</th>
-                        <th>Status</th>                        
-                        <th>Action</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Attribute Name</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Attribute Value name</th>
+						<th bgcolor="#00bcd4" class="text14_white">Attribute Image</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Action</th>                        
                       </tr>
                     </thead>
                     <tbody>

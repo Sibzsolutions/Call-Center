@@ -42,7 +42,7 @@ App::uses('AppController', 'Controller');
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -841,6 +841,44 @@ App::uses('AppController', 'Controller');
 	public function index() {
 		
 		$this->layout='';
+		
+		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1)));
+		
+		foreach($products as $key=>$product)
+		{
+			$product = $product['Produc_master'];
+			
+			if(isset($add_cart))			
+			{
+				if(in_array($product['id'], $add_cart))
+				$products[$key]['Produc_master']['add_to_cart'] = 1;
+				else
+				$products[$key]['Produc_master']['add_to_cart'] = 0;	
+			}
+			else
+				$products[$key]['Produc_master']['add_to_cart'] = 0;	
+			
+			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+                'id' => 'DESC'
+            )));
+			
+			foreach($product_images as $image)
+			{
+				$image = $image['Produc_image'];		
+				
+				if($image['isdefault']==1)
+				$products[$key]['Produc_master']['images']['Default'] = $image;
+				else
+				$products[$key]['Produc_master']['images']['all'] = $image;				
+			}
+		}
+		
+		
+		$this->set('product_slider', $products);
+		
+		$home_page_data = $this->Home_page_box->find('first');
+		
+		$this->set('home_page_data', $home_page_data);
 		
 		$slider_images = $this->Slider_image->find('all', array('conditions'=>array('Slider_image.del_status'=>0)));
 		

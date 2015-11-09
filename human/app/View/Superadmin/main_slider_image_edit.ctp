@@ -28,7 +28,7 @@
 <!-- form start -->
   <?=$this->Form->create('Slider_image', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
 	
-    <div class="box-body">
+    <div class="box-body form_box">
     <?=$this->Form->input('id',array('type'=>'hidden','class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'placeholder'=>'Enter Image Heading', 'value'=>$slider_images_data['Slider_image']['id']));?>
 
    <div class="form-group">
@@ -53,6 +53,7 @@
 		
 	?>
 	</div>
+	<div style="float:left; width:100%">
 	<?php
 		
 	if($slider_images_data['Slider_image']['cat_id'] !='')
@@ -92,6 +93,9 @@
 		<?php	
 	}
 	?>
+    </div>
+    
+    
 	<div class="form-group" id="categories_dropdown_div">
       <label for="exampleInputEmail1">Categories</label>
 	  <select class ="form-control" name="data[Slider_image][category_id]">
@@ -145,7 +149,7 @@
 	</select>
 	</div>
 	
-    <div class="form-group">
+    <div class="form-group" style="clear:both">
       <label for="exampleInputEmail1">Status</label>
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
@@ -153,8 +157,8 @@
   </div><!-- /.box-body -->
 
   
-  <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+  <div class="input_box">
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>
   

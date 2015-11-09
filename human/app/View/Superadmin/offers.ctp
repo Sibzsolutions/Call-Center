@@ -18,24 +18,24 @@
                 <div class="box-header">
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
-                <div class="box-header">
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_offer'; ?>">Add Offer</a>
+                <div class="box-header" style="width:100%; float:left">
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_offer'; ?>">Add Offer</a>
                 </div><!-- /.box-header -->
-                <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                <div class="box-body" style="width:100%">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Id</th>
-                        <th>Offer Name</th>
-                        <th>Offer Category Id</th>
-                        <th>Offer Product Id</th>
-                        <th>Offer Description</th>
-                        <th>Discount</th>
-                        <th>Free Shipping</th>
-                        <th>Offer Start Date</th>
-                        <th>Offer End Date</th>
-                        <th>Status</th>                        
-                        <th>Action</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Offer Name</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Offer Category Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Offer Product Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Offer Description</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Discount</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Free Shipping</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Offer Start Date</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Offer End Date</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Action</th>                        
                       </tr>
                     </thead>
                     <tbody>

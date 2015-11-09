@@ -19,7 +19,7 @@
       <?=$this->Form->input('attvalue',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Attribute Name'));?>
     </div>        
 	
-	<div class="form-group">
+	<div class="form-group" style="clear:both; float:left;">
       <label for="exampleInputEmail1">Attribute Image</label>
       <?=$this->Form->input('att_value_img',array('type'=>'file', 'label'=>'','div'=>false,  'placeholder'=>'Enter Attribute Image', 'multiple'));//, 'name'=>'data[Category][catimg][]?>
     </div>
@@ -31,6 +31,6 @@
     
   </div><!-- /.box-body -->
   <div class="input_box">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>

@@ -1,7 +1,7 @@
 <?php ?>
 
   <?=$this->Form->create('Dynamic_page', array("role"=>"form"));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     <div class="form-group">
       <label for="exampleInputEmail1">Page Id</label>
       <?=$this->Form->input('id',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Id', 'value'=>$dynamic_page_data['id']));?>
@@ -24,7 +24,7 @@
       <?=$this->Form->input('meta_description',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Meta Description', 'value'=>$dynamic_page_data['meta_description']));?>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" style="clear: both; width: 100%;">
       <label for="exampleInputEmail1">Page Content</label>
       <?=$this->Form->input('page_content',array('type'=>'textarea', 'id'=>'editor1', 'name'=>'editor1', 'rows'=>'10', 'cols'=>'80', 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Content', 'value'=>$dynamic_page_data['page_content']));?>
 
@@ -32,7 +32,7 @@
       ?>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" style="clear: both; width: 100%;">
       <label for="exampleInputEmail1">Script</label>
       <?=$this->Form->input('script',array('type'=>'textarea','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Script', 'value'=>$dynamic_page_data['script']));?>
     </div>
@@ -53,8 +53,8 @@
     </div>-->
   </div><!-- /.box-body -->
 
-  <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+  <div class="input_box">
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>
 

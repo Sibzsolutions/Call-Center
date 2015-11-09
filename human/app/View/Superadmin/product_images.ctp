@@ -19,21 +19,20 @@
                 <div class="box-header">
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
-                <div class="box-header">
-                
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
+                <div class="box-header" style="width:100%; float:left">                
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Image Id</th>
-                        <th>Product Name</th>
-                        <th>Image Path</th>
-                        <th>Image Alter</th>
-                        <th>Is Default</th>
-                        <th>Order</th>                        
-                        <th>Status</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Image Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Product Name</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Image Path</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Image Alter</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Is Default</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Order</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Status</th>                        
                       </tr>
                     </thead>
                     <tbody>
@@ -48,7 +47,7 @@
                         <td>
                         <img src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product_image['imagepath']; ?>" />
 						</td>
-                        <td><input type="text" id="saved_imgalt_text_<?php echo $product_image['id']; ?>" value="<?php echo $product_image['imgalt']; ?>" /><input type="button" id="saved_imgalt_button_<?php echo $product_image['id']; ?>" value="save" style="background-color:#0165a1; border:1px solid #0165a1; color: #fff; margin:0 0 0 -1px;"  />
+                        <td><input type="text" id="saved_imgalt_text_<?php echo $product_image['id']; ?>" value="<?php echo $product_image['imgalt']; ?>" class="form-control" /><input type="button" id="saved_imgalt_button_<?php echo $product_image['id']; ?>" value="save" style="float:right" class="login_button"  />
                         
                         <div style="width:20px; height:20px; float:left">
                         <div id="saved_imgalt_button_data_<?php echo $product_image['id'];?>"></div>

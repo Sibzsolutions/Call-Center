@@ -19,24 +19,24 @@
 		<div class="box-header">
 		  <h3 class="box-title">Data Table With Full Features</h3>
 		</div><!-- /.box-header -->
-		<div class="box-header">
+		<div class="box-header" style="width:100%; float:left">
 		
-		<a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_main_slider_image'; ?>">Add slider Image</a>
+		<a class="login_button" href="<?php echo $this->webroot.'superadmin/add_main_slider_image'; ?>">Add slider Image</a>
 						
 		</div><!-- /.box-header -->
 		<div class="box-body">
-		  <table id="example1" class="table table-bordered table-striped">
+		  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
 			<thead>
 			  <tr>
-				<th>Id</th>
-				<th>Image Heading </th>
-				<th>Short Description</th>
-				<th>Long Description</th>
-				<th>Category</th>
-				<th>Product</th>
-				<th>Image</th>
-				<th>Status</th>                        
-				<th>Action</th>                        
+				<th bgcolor="#00bcd4" class="text14_white">Id</th>
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:121px">Image Heading </div></th>
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:141px">Short Description</div></th>
+				<th bgcolor="#00bcd4" class="text14_white">Long Description</th>
+				<th bgcolor="#00bcd4" class="text14_white">Category</th>
+				<th bgcolor="#00bcd4" class="text14_white">Product</th>
+				<th bgcolor="#00bcd4" class="text14_white">Image</th>
+				<th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:72px">Action</div></th>                        
 			  </tr>
 			</thead>
 			<tbody>

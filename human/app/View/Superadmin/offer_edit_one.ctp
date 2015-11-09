@@ -6,7 +6,7 @@
 ?>
   <!-- form start -->
   <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     
     <div class="form-group">
       <label for="exampleInputEmail1">Offer Name</label>
@@ -157,7 +157,7 @@
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['del_status']));?>
     </div>
   </div><!-- /.box-body -->
-  <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+  <div class="input_box">
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>

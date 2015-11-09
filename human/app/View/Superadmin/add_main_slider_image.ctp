@@ -56,27 +56,31 @@
       <?=$this->Form->input('image_path',array('type'=>'file','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Select Slider Images', 'name'=>'data[Slider_image][image]'));?>
     </div>
 	
-	<div class="form-group">
+	<div class="form-group" style="clear:both;">
       <label for="exampleInputEmail1">Category</label><!-- 'class'=>'form-control', -->
       <?=$this->Form->input('Category',array('id'=>'category_click','type'=>'checkbox', 'label'=>'','div'=>false));?>
+      
+      <div class="form-group" id="categories_dropdown_div" style="float:left; width:100%">
+      <label for="exampleInputEmail1">Categories</label>
+      <?=$this->Form->input('category_id',array('type'=>'select', 'options'=>$categories_dropdown, 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    </div>
+      
     </div>
 	
 	<div class="form-group">
       <label for="exampleInputEmail1">Product</label><!-- 'class'=>'form-control', -->
       <?=$this->Form->input('Product',array('id'=>'product_click','type'=>'checkbox','label'=>'','div'=>false));?>
-    </div>
-	
-	<div class="form-group" id="categories_dropdown_div">
-      <label for="exampleInputEmail1">Categories</label>
-      <?=$this->Form->input('category_id',array('type'=>'select', 'options'=>$categories_dropdown, 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
-    </div>
-	
-	<div class="form-group" id="products_dropdown_div">
+      <div class="form-group" id="products_dropdown_div" style="float:left; width:100%">
       <label for="exampleInputEmail1">Products</label>
       <?=$this->Form->input('product_id',array('type'=>'select', 'options'=>$products_dropdown, 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
+    </div>
 	
-    <div class="form-group">
+	
+	
+	
+	
+    <div class="form-group" style="clear:both">
       <label for="exampleInputEmail1">Status</label>
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
@@ -84,7 +88,7 @@
   </div><!-- /.box-body -->
   
   <div class="input_box">
-    <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'btn btn-primary'))?>
+    <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>
   

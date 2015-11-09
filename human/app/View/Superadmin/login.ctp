@@ -12,6 +12,9 @@ body {
 }
 </style>
 <link href="<?php echo $this->webroot.'css/local/style.css';?>" rel="stylesheet" type="text/css" />
+
+<link href="<?php echo $this->webroot.'img/local/favicon.ico'; ?>" type="image/x-icon" rel="icon" />
+
 </head>
 
 <body>

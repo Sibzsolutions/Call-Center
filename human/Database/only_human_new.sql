@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2015 at 12:30 PM
+-- Generation Time: Nov 09, 2015 at 08:37 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `catmkeywords` text COMMENT 'Meta Keywords',
   `catcanonical` text COMMENT 'if any - canonical URL can be entered here.',
   `del_status` int(11) NOT NULL COMMENT '0-Active, 1-Inactive, 2-Deleted'
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1 COMMENT='Category Master table storing all category related info.';
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1 COMMENT='Category Master table storing all category related info.';
 
 --
 -- Dumping data for table `categories`
@@ -218,7 +218,7 @@ INSERT INTO `categories` (`id`, `catname`, `catdesc`, `catimg`, `parentid`, `url
 (38, 'Mens Jeans', 'This is the Mens Jeans category description.', 'wrjn1721mindigo-wrangler-32-275x340-imae9qufeqemkgn6.jpeg', 12, 'This is the url aliase of Mens Jeans', 'Mens Jeans Meta Title', 'Mens Jeans Meta Description', 'Mens Jeans Meta Keywords', 'Mens Jeans canonical url', 0),
 (39, 'Sport Wear', 'This is the Sport Wear category description.', '83521501-black-puma-m-275x340-imae873yxwwch2xn.jpeg', 12, 'This is the url aliase of Sport Wear ', 'Sport Wear Meta Title', 'Sport Wear Meta Description', 'Sport Wear Meta Keywords', 'Sport Wear canonical url', 0),
 (40, 'Trousers', 'This is the Trousers category description.', '100051546green-hugo-boss-33-275x340-imaefhz3dd7rwzyz.jpeg', 12, 'This is the url aliase of Trousers', 'Trousers Meta Title', 'Trousers Meta Keywords', 'Trousers Meta Keywords', 'Trousers canonical url', 0),
-(41, 'Casual', 'This is the Casual category description.', 'combo01-ghpc-44-275x340-imae6gzgjfgkseqy.jpeg', 12, 'This is the url aliase of Casual', 'Casual Meta Title', 'Casual Meta Description', 'Casual Meta Keywords', 'Casual canonical url', 0);
+(41, 'Casual', 'This is the Casual category description.', 'combo01-ghpc-44-275x340-imae6gzgjfgkseqy.jpeg', 12, 'This is the url aliase of Casual', 'Casual Meta Title', 'Casual Meta Description', 'Casual Meta Keywords', 'Casual canonical url', 1);
 
 -- --------------------------------------------------------
 
@@ -260,7 +260,30 @@ INSERT INTO `dynamic_pages` (`id`, `name`, `meta_title`, `meta_keywords`, `meta_
 (2, 'Shopping', 'This is the Shopping page meta title.', 'This is the shopping page meta keywords.', 'This is the shopping page meta description.', '<p>This is the shopping page content.</p>\r\n', '<script>alert("This is the shopping page.")</script>', 1),
 (3, 'Carrier', 'This is the Carrier meta title.', 'This is the Carrier meta keywords.', 'This is the Carrier meta descritpion.', '<p>This is the Carrier page content.</p>\r\n', '<script>alert("This is the carrier page.");</script>', 1),
 (4, 'Support', 'This is the Support page meta title.', 'This is the Support page meta keywords.', 'This is the Support page meta description.', '<p>This is the Support page.</p>\r\n', '<script>alert("This is the support page.");</script>', 1),
-(5, 'About Us', 'This is the About Us page meta title.', 'This is the About Us page meta keywords.', 'This is the About Us page meta description.', '<p>This is the&nbsp;This is the About Us page page content.</p>\r\n', 'alert("This is the about us page");', 0);
+(5, 'About Us', 'This is the About Us page meta title.', 'This is the About Us page meta keywords.', 'This is the About Us page meta description.', '<p>This is the&nbsp;This is the About Us page page content.</p>\r\n', 'alert("This is the about us page");', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_page_boxes`
+--
+
+CREATE TABLE IF NOT EXISTS `home_page_boxes` (
+`id` int(11) NOT NULL,
+  `first_shortdesc` varchar(200) NOT NULL,
+  `first_longdesc` varchar(500) NOT NULL,
+  `first_imagepath` varchar(200) NOT NULL,
+  `second_shortdesc` varchar(200) NOT NULL,
+  `second_longdesc` varchar(500) NOT NULL,
+  `second_imagepath` varchar(200) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `home_page_boxes`
+--
+
+INSERT INTO `home_page_boxes` (`id`, `first_shortdesc`, `first_longdesc`, `first_imagepath`, `second_shortdesc`, `second_longdesc`, `second_imagepath`) VALUES
+(7, 'ELEGANT ', 'And Modern Style', '56403686aaa51img1.jpg', 'Support', 'Top Customer Accounts and login', '56403686bfe2eimg2.jpg');
 
 -- --------------------------------------------------------
 
@@ -371,7 +394,7 @@ CREATE TABLE IF NOT EXISTS `produc_attributes` (
   `add_cost` float DEFAULT NULL COMMENT 'Additional Cost',
   `less_cost` float DEFAULT NULL COMMENT 'Less Cost',
   `del_status` int(11) NOT NULL COMMENT '0-Active, 1-Inactive, 2-Deleted'
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=latin1 COMMENT='Show which attribute has what value for a product. ';
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=latin1 COMMENT='Show which attribute has what value for a product. ';
 
 --
 -- Dumping data for table `produc_attributes`
@@ -506,10 +529,10 @@ INSERT INTO `produc_attributes` (`id`, `prodid`, `attvid`, `add_cost`, `less_cos
 (141, 18, 28, 20, 10, 1),
 (142, 18, 30, 20, 10, 1),
 (143, 18, 32, 20, 10, 1),
-(144, 19, 23, 20, 10, 1),
-(145, 19, 28, 20, 10, 1),
-(146, 19, 30, 20, 10, 1),
-(147, 19, 32, 20, 10, 1);
+(148, 19, 23, 20, 10, 1),
+(149, 19, 28, 20, 10, 1),
+(150, 19, 30, 20, 10, 1),
+(151, 19, 32, 20, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -585,6 +608,7 @@ CREATE TABLE IF NOT EXISTS `produc_masters` (
   `prodscdes` text NOT NULL COMMENT 'Short Description',
   `proddesc` text NOT NULL COMMENT 'Long Description',
   `prodprice` float NOT NULL COMMENT 'Product Price with 2 decimals',
+  `isfeatured` int(100) NOT NULL,
   `clearance` int(11) NOT NULL COMMENT '0-- Default No, 1-- Clearance item',
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Date time when added.',
   `url_alias` text NOT NULL COMMENT 'Complete URL after domain name',
@@ -599,26 +623,26 @@ CREATE TABLE IF NOT EXISTS `produc_masters` (
 -- Dumping data for table `produc_masters`
 --
 
-INSERT INTO `produc_masters` (`id`, `catid`, `prodname`, `prodscdes`, `proddesc`, `prodprice`, `clearance`, `date_added`, `url_alias`, `prodmtitle`, `prodmdesc`, `prodmkeywords`, `prodcanonical`, `del_status`) VALUES
-(1, 36, 'Top Notch Solid Men''s Henley T-Shirt', 'This is the Top Notch Solid Men''s Henley T-Shirt product short description.', 'This is the Top Notch Solid Men''s Henley T-Shirt product long description.', 399, 0, '2015-11-06 12:33:50', 'This is the Top Notch Solid Men''s Henley T-Shirt product url aliase.', 'This is the Top Notch Solid Men''s Henley T-Shirt product Meta Title.', 'This is the Top Notch Solid Men''s Henley T-Shirt product Description.', 'This is the Top Notch Solid Men''s Henley T-Shirt product Meta keywords.', 'This is the Top Notch Solid Men''s Henley T-Shirt product canonical url.', 0),
-(2, 36, 'TSX Solid Men''s Polo T-Shirt', 'This is the TSX Solid Men''s Polo T-Shirt product short description.', 'This is the TSX Solid Men''s Polo T-Shirt product long description.', 599, 0, '2015-11-06 14:36:57', 'TSX Solid Men''s Polo url alias', 'TSX Solid Men''s Polo Meta Title', 'TSX Solid Men''s Polo Meta Description', 'TSX Solid Men''s Polo Meta Keywords', 'TSX Solid Men''s Polo canonical url', 0),
-(3, 36, 'Adidas Printed Men''s Round Neck T-Shirt', 'This is the Adidas Printed Men''s Round Neck T-Shirt product short description.', 'This is the Adidas Printed Men''s Round Neck T-Shirt product long description.', 899, 1, '2015-11-06 15:07:36', 'Adidas Printed Men''s Round Neck T-Shirt url alias', 'Adidas Printed Men''s Round Neck T-Shirt Meta Title', 'Adidas Printed Men''s Round Neck T-Shirt Meta Description', 'Adidas Printed Men''s Round Neck T-Shirt Meta Keywords', 'Adidas Printed Men''s Round Neck T-Shirt Meta Keywords', 0),
-(4, 36, 'adidas Striped Men''s Round Neck T-Shirt', 'This is the adidas Striped Men''s Round Neck T-Shirt product short description.', 'This is the adidas Striped Men''s Round Neck T-Shirt product long description.', 2000, 1, '2015-11-06 15:29:16', 'adidas Striped Men''s Round Neck T-Shirt url alias', 'adidas Striped Men''s Round Neck T-Shirt Meta Title', 'adidas Striped Men''s Round Neck T-Shirt Meta Description', 'adidas Striped Men''s Round Neck T-Shirt Meta Keywords', 'adidas Striped Men''s Round Neck T-Shirt Meta Keywords', 0),
-(5, 36, 'Puma Printed Men''s Round Neck T-Shirt', 'This is the Puma Printed Men''s Round Neck T-Shirt product short description.', 'This is the Puma Printed Men''s Round Neck T-Shirt product long description.', 1199, 0, '2015-11-06 15:33:18', 'Puma Printed Men''s Round Neck T-Shirt Url Alias', 'Puma Printed Men''s Round Neck T-Shirt Meta Title', 'Puma Printed Men''s Round Neck T-Shirt Meta Description', 'Puma Printed Men''s Round Neck T-Shirt meta Keyword', 'Puma Printed Men''s Round Neck T-Shirt canonical url', 0),
-(6, 36, 'G12', 'This is the G12 product short description.', 'This is the G12 product long description.', 299, 0, '2015-11-06 15:50:04', 'G12 Url alias', 'G12 Meta Title', 'G12 Meta description', 'G12 Meta keywords', 'G12 Meta canonical url', 0),
-(7, 36, 'Difference of Opinion Printed Men''s Round Neck T-Shirt', 'This is the Difference of Opinion Printed Men''s Round Neck T-Shirt short description.', 'This is the Difference of Opinion Printed Men''s Round Neck T-Shirt long description.', 799, 0, '2015-11-06 16:49:36', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Url Alias', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Meta Title', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Meta Description', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Meta Keywords', 'Difference of Opinion Printed Men''s Round Neck T-Shirt canonical url', 0),
-(8, 36, 'Zovi Solid Men''s Round Neck T-Shirt', 'Zovi Solid Men''s Round Neck T-Shirt', 'Zovi Solid Men''s Round Neck T-Shirt', 899, 0, '2015-11-06 16:52:00', 'Zovi Solid Men''s Round Neck T-Shirt Url Alias', 'Zovi Solid Men''s Round Neck T-Shirt Meta Title', 'Zovi Solid Men''s Round Neck T-Shirt Meta Description', 'Zovi Solid Men''s Round Neck T-Shirt Meta keyword', 'Zovi Solid Men''s Round Neck T-Shirt canonical url', 0),
-(9, 36, 'Jockey Solid Men''s Round Neck T-Shirt', 'This is Jockey Solid Men''s Round Neck T-Shirt short description', 'This is the Jockey Solid Men''s Round Neck T-Shirt logn description', 1299, 0, '2015-11-06 16:56:08', 'Jockey Solid Men''s Round Neck T-Shirt Url Alias', 'Jockey Solid Men''s Round Neck T-Shirt Meta Title', 'Jockey Solid Men''s Round Neck T-Shirt Meta Description', 'Jockey Solid Men''s Round Neck T-Shirt meta Keywords', 'Jockey Solid Men''s Round Neck T-Shirt canonical url', 0),
-(10, 36, 'Lee Printed Men''s Round Neck T-Shirt', 'This is the Lee Printed Men''s Round Neck T-Shirt product short description', 'This is the Lee Printed Men''s Round Neck T-Shirt product long description', 1899, 0, '2015-11-06 17:02:23', 'Lee Printed Men''s Round Neck T-Shirt Url Alias', 'Lee Printed Men''s Round Neck T-Shirt Meta Title', 'Lee Printed Men''s Round Neck T-Shirt canonical url', 'Lee Printed Men''s Round Neck T-Shirt Meta Keywords', 'Lee Printed Men''s Round Neck T-Shirt canonical url', 0),
-(11, 36, 'Gritstones Solid Men''s Round Neck T-Shirt', 'Gritstones Solid Men''s Round Neck T-Shirt', 'Gritstones Solid Men''s Round Neck T-Shirt', 1499, 0, '2015-11-06 17:05:01', 'Gritstones Solid Men''s Round Neck T-Shirt Url Alias', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Title', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Description', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Keywords', 'Gritstones Solid Men''s Round Neck T-Shirt canonical url', 0),
-(12, 36, 'Pepe Printed Men''s Round Neck T-Shirt', 'This is the Pepe Printed Men''s Round Neck T-Shirt product short description', 'This is the Pepe Printed Men''s Round Neck T-Shirt product long description', 2899, 0, '2015-11-06 17:07:43', 'Pepe Printed Men''s Round Neck T-Shirt Url Alias', 'Pepe Printed Men''s Round Neck T-Shirt Meta Title', 'Pepe Printed Men''s Round Neck T-Shirt Meta Description', 'Pepe Printed Men''s Round Neck T-Shirt Meta Keywords', 'Pepe Printed Men''s Round Neck T-Shirt cannonical url', 0),
-(13, 36, 'Gritstones Solid Men''s Round Neck T-Shirt', 'This is the Gritstones Solid Men''s Round Neck T-Shirt product short description', 'This is the Gritstones Solid Men''s Round Neck T-Shirt product long description', 3999, 0, '2015-11-06 17:12:39', 'Gritstones Solid Men''s Round Neck T-Shirt Url Alias', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Title', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Description', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Keywords', 'Gritstones Solid Men''s Round Neck T-Shirt canonical url', 0),
-(14, 36, 'Adidas Solid Men''s Round Neck T-Shirt', 'This is the Reebok Solid Men''s Round Neck T-Shirt product short description', 'This is the Reebok Solid Men''s Round Neck T-Shirt product long description', 1299, 0, '2015-11-06 17:15:01', 'Reebok Solid Men''s Round Neck T-Shirt Url Alias', 'Reebok Solid Men''s Round Neck T-Shirt Meta Title', 'Reebok Solid Men''s Round Neck T-Shirt Meta Description', 'Reebok Solid Men''s Round Neck T-Shirt Meta Keywords', 'Reebok Solid Men''s Round Neck T-Shirt canonical url', 0),
-(15, 8, 'Samsung Galaxy', 'This is the Samsung Galaxy product short description', 'This is the Samsung Galaxy product long description', 7999, 0, '2015-11-06 18:01:24', 'Samsung Galaxy Url Alias', 'Samsung Galaxy Meta Title', 'Samsung Galaxy Meta Description', 'Samsung Galaxy Meta Keywords', 'Samsung Galaxy canonical url', 0),
-(16, 8, 'Micromax Canvas 2', 'This is the Micromax Canvas 2 product short description', 'This is the Micromax Canvas 2 product long description', 10999, 0, '2015-11-06 18:04:45', 'Micromax Canvas 2 Url Alias', 'Micromax Canvas 2 Meta Title', 'Micromax Canvas 2 Meta Description', 'Micromax Canvas 2 Meta Keywords', 'Micromax Canvas 2 canonical url', 0),
-(17, 8, 'Moto-x', 'This is the Moto-x product short description', 'This is the Moto-x product long description', 1249, 0, '2015-11-06 18:08:16', 'Moto-x product Url Alias', 'Moto-x product Meta Title', 'Moto-x product Meta Description', 'Moto-x product Meta Keywords', 'Moto-x product Canonical Url', 0),
-(18, 8, 'Samsung J5', 'This is the Samsung J5 product short description', 'This is the Samsung J5 product long description', 10999, 0, '2015-11-06 18:10:35', 'Samsung J5 Url Alias', 'Samsung J5 Meta Title', 'Samsung J5 Meta Description', 'Samsung J5 Meta Keywords', 'Samsung J5 canonical url', 0),
-(19, 8, 'Asus A19', 'This is the Asus A19 product short description', 'This is the Asus A19 product long description', 12999, 0, '2015-11-06 18:13:08', 'Asus A19 Url Alias', 'Asus A19 Meta Title', 'Asus A19 Meta Description', 'Asus A19 Meta Keywords', 'Asus A19 canonical url', 0);
+INSERT INTO `produc_masters` (`id`, `catid`, `prodname`, `prodscdes`, `proddesc`, `prodprice`, `isfeatured`, `clearance`, `date_added`, `url_alias`, `prodmtitle`, `prodmdesc`, `prodmkeywords`, `prodcanonical`, `del_status`) VALUES
+(1, 36, 'Top Notch Solid Men''s Henley T-Shirt', 'This is the Top Notch Solid Men''s Henley T-Shirt product short description.', 'This is the Top Notch Solid Men''s Henley T-Shirt product long description.', 399, 0, 0, '2015-11-06 12:33:50', 'This is the Top Notch Solid Men''s Henley T-Shirt product url aliase.', 'This is the Top Notch Solid Men''s Henley T-Shirt product Meta Title.', 'This is the Top Notch Solid Men''s Henley T-Shirt product Description.', 'This is the Top Notch Solid Men''s Henley T-Shirt product Meta keywords.', 'This is the Top Notch Solid Men''s Henley T-Shirt product canonical url.', 0),
+(2, 36, 'TSX Solid Men''s Polo T-Shirt', 'This is the TSX Solid Men''s Polo T-Shirt product short description.', 'This is the TSX Solid Men''s Polo T-Shirt product long description.', 599, 1, 0, '2015-11-06 14:36:57', 'TSX Solid Men''s Polo url alias', 'TSX Solid Men''s Polo Meta Title', 'TSX Solid Men''s Polo Meta Description', 'TSX Solid Men''s Polo Meta Keywords', 'TSX Solid Men''s Polo canonical url', 0),
+(3, 36, 'Adidas Printed Men''s Round Neck T-Shirt', 'This is the Adidas Printed Men''s Round Neck T-Shirt product short description.', 'This is the Adidas Printed Men''s Round Neck T-Shirt product long description.', 899, 1, 1, '2015-11-06 15:07:36', 'Adidas Printed Men''s Round Neck T-Shirt url alias', 'Adidas Printed Men''s Round Neck T-Shirt Meta Title', 'Adidas Printed Men''s Round Neck T-Shirt Meta Description', 'Adidas Printed Men''s Round Neck T-Shirt Meta Keywords', 'Adidas Printed Men''s Round Neck T-Shirt Meta Keywords', 0),
+(4, 36, 'adidas Striped Men''s Round Neck T-Shirt', 'This is the adidas Striped Men''s Round Neck T-Shirt product short description.', 'This is the adidas Striped Men''s Round Neck T-Shirt product long description.', 2000, 1, 1, '2015-11-06 15:29:16', 'adidas Striped Men''s Round Neck T-Shirt url alias', 'adidas Striped Men''s Round Neck T-Shirt Meta Title', 'adidas Striped Men''s Round Neck T-Shirt Meta Description', 'adidas Striped Men''s Round Neck T-Shirt Meta Keywords', 'adidas Striped Men''s Round Neck T-Shirt Meta Keywords', 0),
+(5, 36, 'Puma Printed Men''s Round Neck T-Shirt', 'This is the Puma Printed Men''s Round Neck T-Shirt product short description.', 'This is the Puma Printed Men''s Round Neck T-Shirt product long description.', 1199, 0, 0, '2015-11-06 15:33:18', 'Puma Printed Men''s Round Neck T-Shirt Url Alias', 'Puma Printed Men''s Round Neck T-Shirt Meta Title', 'Puma Printed Men''s Round Neck T-Shirt Meta Description', 'Puma Printed Men''s Round Neck T-Shirt meta Keyword', 'Puma Printed Men''s Round Neck T-Shirt canonical url', 0),
+(6, 36, 'G12', 'This is the G12 product short description.', 'This is the G12 product long description.', 299, 1, 0, '2015-11-06 15:50:04', 'G12 Url alias', 'G12 Meta Title', 'G12 Meta description', 'G12 Meta keywords', 'G12 Meta canonical url', 0),
+(7, 36, 'Difference of Opinion Printed Men''s Round Neck T-Shirt', 'This is the Difference of Opinion Printed Men''s Round Neck T-Shirt short description.', 'This is the Difference of Opinion Printed Men''s Round Neck T-Shirt long description.', 799, 1, 0, '2015-11-06 16:49:36', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Url Alias', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Meta Title', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Meta Description', 'Difference of Opinion Printed Men''s Round Neck T-Shirt Meta Keywords', 'Difference of Opinion Printed Men''s Round Neck T-Shirt canonical url', 0),
+(8, 36, 'Zovi Solid Men''s Round Neck T-Shirt', 'Zovi Solid Men''s Round Neck T-Shirt', 'Zovi Solid Men''s Round Neck T-Shirt', 899, 0, 0, '2015-11-06 16:52:00', 'Zovi Solid Men''s Round Neck T-Shirt Url Alias', 'Zovi Solid Men''s Round Neck T-Shirt Meta Title', 'Zovi Solid Men''s Round Neck T-Shirt Meta Description', 'Zovi Solid Men''s Round Neck T-Shirt Meta keyword', 'Zovi Solid Men''s Round Neck T-Shirt canonical url', 0),
+(9, 36, 'Jockey Solid Men''s Round Neck T-Shirt', 'This is Jockey Solid Men''s Round Neck T-Shirt short description', 'This is the Jockey Solid Men''s Round Neck T-Shirt logn description', 1299, 1, 0, '2015-11-06 16:56:08', 'Jockey Solid Men''s Round Neck T-Shirt Url Alias', 'Jockey Solid Men''s Round Neck T-Shirt Meta Title', 'Jockey Solid Men''s Round Neck T-Shirt Meta Description', 'Jockey Solid Men''s Round Neck T-Shirt meta Keywords', 'Jockey Solid Men''s Round Neck T-Shirt canonical url', 0),
+(10, 36, 'Lee Printed Men''s Round Neck T-Shirt', 'This is the Lee Printed Men''s Round Neck T-Shirt product short description', 'This is the Lee Printed Men''s Round Neck T-Shirt product long description', 1899, 0, 0, '2015-11-06 17:02:23', 'Lee Printed Men''s Round Neck T-Shirt Url Alias', 'Lee Printed Men''s Round Neck T-Shirt Meta Title', 'Lee Printed Men''s Round Neck T-Shirt canonical url', 'Lee Printed Men''s Round Neck T-Shirt Meta Keywords', 'Lee Printed Men''s Round Neck T-Shirt canonical url', 0),
+(11, 36, 'Gritstones Solid Men''s Round Neck T-Shirt', 'Gritstones Solid Men''s Round Neck T-Shirt', 'Gritstones Solid Men''s Round Neck T-Shirt', 1499, 1, 0, '2015-11-06 17:05:01', 'Gritstones Solid Men''s Round Neck T-Shirt Url Alias', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Title', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Description', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Keywords', 'Gritstones Solid Men''s Round Neck T-Shirt canonical url', 0),
+(12, 36, 'Pepe Printed Men''s Round Neck T-Shirt', 'This is the Pepe Printed Men''s Round Neck T-Shirt product short description', 'This is the Pepe Printed Men''s Round Neck T-Shirt product long description', 2899, 0, 0, '2015-11-06 17:07:43', 'Pepe Printed Men''s Round Neck T-Shirt Url Alias', 'Pepe Printed Men''s Round Neck T-Shirt Meta Title', 'Pepe Printed Men''s Round Neck T-Shirt Meta Description', 'Pepe Printed Men''s Round Neck T-Shirt Meta Keywords', 'Pepe Printed Men''s Round Neck T-Shirt cannonical url', 0),
+(13, 36, 'Gritstones Solid Men''s Round Neck T-Shirt', 'This is the Gritstones Solid Men''s Round Neck T-Shirt product short description', 'This is the Gritstones Solid Men''s Round Neck T-Shirt product long description', 3999, 0, 0, '2015-11-06 17:12:39', 'Gritstones Solid Men''s Round Neck T-Shirt Url Alias', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Title', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Description', 'Gritstones Solid Men''s Round Neck T-Shirt Meta Keywords', 'Gritstones Solid Men''s Round Neck T-Shirt canonical url', 0),
+(14, 36, 'Adidas Solid Men''s Round Neck T-Shirt', 'This is the Reebok Solid Men''s Round Neck T-Shirt product short description', 'This is the Reebok Solid Men''s Round Neck T-Shirt product long description', 1299, 0, 0, '2015-11-06 17:15:01', 'Reebok Solid Men''s Round Neck T-Shirt Url Alias', 'Reebok Solid Men''s Round Neck T-Shirt Meta Title', 'Reebok Solid Men''s Round Neck T-Shirt Meta Description', 'Reebok Solid Men''s Round Neck T-Shirt Meta Keywords', 'Reebok Solid Men''s Round Neck T-Shirt canonical url', 0),
+(15, 8, 'Samsung Galaxy', 'This is the Samsung Galaxy product short description', 'This is the Samsung Galaxy product long description', 7999, 1, 0, '2015-11-06 18:01:24', 'Samsung Galaxy Url Alias', 'Samsung Galaxy Meta Title', 'Samsung Galaxy Meta Description', 'Samsung Galaxy Meta Keywords', 'Samsung Galaxy canonical url', 0),
+(16, 8, 'Micromax Canvas 2', 'This is the Micromax Canvas 2 product short description', 'This is the Micromax Canvas 2 product long description', 10999, 1, 0, '2015-11-06 18:04:45', 'Micromax Canvas 2 Url Alias', 'Micromax Canvas 2 Meta Title', 'Micromax Canvas 2 Meta Description', 'Micromax Canvas 2 Meta Keywords', 'Micromax Canvas 2 canonical url', 0),
+(17, 8, 'Moto-x', 'This is the Moto-x product short description', 'This is the Moto-x product long description', 1249, 0, 0, '2015-11-06 18:08:16', 'Moto-x product Url Alias', 'Moto-x product Meta Title', 'Moto-x product Meta Description', 'Moto-x product Meta Keywords', 'Moto-x product Canonical Url', 0),
+(18, 8, 'Samsung J5', 'This is the Samsung J5 product short description', 'This is the Samsung J5 product long description', 10999, 1, 0, '2015-11-06 18:10:35', 'Samsung J5 Url Alias', 'Samsung J5 Meta Title', 'Samsung J5 Meta Description', 'Samsung J5 Meta Keywords', 'Samsung J5 canonical url', 0),
+(19, 8, 'Asus A19', 'This is the Asus A19 product short description', 'This is the Asus A19 product long description', 12999, 1, 1, '2015-11-06 18:13:08', 'Asus A19 Url Alias', 'Asus A19 Meta Title', 'Asus A19 Meta Description', 'Asus A19 Meta Keywords', 'Asus A19 Meta Keywords', 0);
 
 -- --------------------------------------------------------
 
@@ -750,7 +774,7 @@ INSERT INTO `users` (`id`, `usrfname`, `usrlname`, `username`, `password`, `emai
 (46, 'shashikantchobheqqp', 'shashikantchobheqqp', 'shashikantchobheqqp', '86481632cdd6a4894541b057f9634d83e1278438', 'shashikantchobheqqp@gmail.com', 2, '2015-10-28 07:08:49', 0),
 (47, 'shashikant', 'chobhe', 'mayur009', '9fc1782374018edc2bca4dd15c80e475a3355960', 'mayur009@gmail.com', 2, '2015-10-29 05:50:46', 0),
 (48, 'mayur', 'mayur', 'mayur45@gmail.com', '0be922c8b8ab83b46e7caec7ef6edc157b9e2c7b', '', 1, '2015-10-30 12:35:13', 0),
-(49, 'Shashikant', 'Chobhe', 'superadmin11', '065fa7cda0dc953d8d3ff58740470919c6ecc38a', 'superadmin@gmail.com', 2, '2015-11-04 14:01:42', 0);
+(49, 'Shashikant', 'Chobhe', 'superadmin11', 'c097ff177944712bed6d63b5c2c0f5648ae12ac9', 'superadmin@gmail.com', 2, '2015-11-04 14:01:42', 0);
 
 -- --------------------------------------------------------
 
@@ -846,6 +870,12 @@ ALTER TABLE `contact_uses`
 -- Indexes for table `dynamic_pages`
 --
 ALTER TABLE `dynamic_pages`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `home_page_boxes`
+--
+ALTER TABLE `home_page_boxes`
  ADD PRIMARY KEY (`id`);
 
 --
@@ -960,7 +990,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Auto incremented key',AUTO_INCREMENT=44;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Auto incremented key',AUTO_INCREMENT=42;
 --
 -- AUTO_INCREMENT for table `contact_uses`
 --
@@ -971,6 +1001,11 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `dynamic_pages`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `home_page_boxes`
+--
+ALTER TABLE `home_page_boxes`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `images`
 --
@@ -1000,7 +1035,7 @@ MODIFY `ostatusid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Auto Incremented Val
 -- AUTO_INCREMENT for table `produc_attributes`
 --
 ALTER TABLE `produc_attributes`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Auto incremented key',AUTO_INCREMENT=148;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Auto incremented key',AUTO_INCREMENT=152;
 --
 -- AUTO_INCREMENT for table `produc_images`
 --

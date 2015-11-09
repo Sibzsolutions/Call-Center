@@ -2,7 +2,7 @@
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
 
                   <?=$this->Form->create('Site_setting', array("role"=>"form"));?>
-                  <div class="box-body">
+                  <div class="box-body form_box">
                   
                   <?=$this->Form->input('id',array('type'=>'hidden','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Site Url',  'value'=>$site_setting['Site_setting']['id']));?>
                   
@@ -63,7 +63,7 @@
                     </div>-->
                   </div><!-- /.box-body -->
 
-                  <div class="box-footer">
-           		    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+                  <div class="input_box">
+           		    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
                   </div>
                   <?=$this->Form->end()?>

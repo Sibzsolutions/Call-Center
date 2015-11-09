@@ -19,23 +19,23 @@
                 <div class="box-header">
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
-                <div class="box-header">
+                <div class="box-header" style="width:100%; float:left">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_dynamic_page' ?>">Add New Page</a>
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_dynamic_page' ?>">Add New Page</a>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table width="100%" border="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Id</th>
-                        <th>Page Name</th>
-                        <th>Meta title</th>
-                        <th>Meta Keyword</th>
-                        <th>Meta Description</th>
-                        <th>Page Content</th>
-                        <th>Script</th>
-                        <th>Status</th>                        
-                        <th>Action</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white"><div style="width:90px">Page Name</div></th>
+                        <th bgcolor="#00bcd4" class="text14_white">Meta title</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Meta Keyword</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Meta Description</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Page Content</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Script</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Action</th>                        
                       </tr>
                     </thead>
                     <tbody>

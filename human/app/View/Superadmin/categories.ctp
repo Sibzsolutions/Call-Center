@@ -18,29 +18,29 @@
                 <div class="box-header">
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
-                <div class="box-header">
+                <div class="box-header" style="width:100%; float:left">
                 
-                <a class="btn btn-primary" href="<?php echo $this->webroot.'superadmin/add_category' ?>">Add Category</a>
+                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_category' ?>">Add Category</a>
                 
                 <!--<a class="btn btn-primary" href="<?php //echo $this->webroot.'admin/add_sub_category' ?>">Add Sub Category</a>-->
                 
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Image</th>
-                        <th>Parent_id</th>
-                        <th>Url Aliase</th>
-                        <th>Meta Title</th>
-                        <th>Meta Description</th>
-                        <th>Meta Keywords</th>
-                        <th>Canonicle Url</th>                        
-                        <th>Status</th>                        
-                        <th>Action</th>                        
+                        <th bgcolor="#00bcd4" class="text12_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Name</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Description</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Image</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Parent_id</th>
+                        <th bgcolor="#00bcd4" class="text12_white"><div style="width:84px">Url Aliase</div></th>
+                        <th bgcolor="#00bcd4" class="text12_white"><div style="width:63px">Meta Title</div></th>
+                        <th bgcolor="#00bcd4" class="text12_white"><div style="width:109px">Meta Description</div></th>
+                        <th bgcolor="#00bcd4" class="text12_white"><div style="width:100px">Meta Keywords</div></th>
+                        <th bgcolor="#00bcd4" class="text12_white"><div style="width:93px">Canonicle Url</div></th>                        
+                        <th bgcolor="#00bcd4" class="text12_white">Status</th>                        
+                        <th bgcolor="#00bcd4" class="text12_white"><div style="width:46px">Action</div></th>                        
                       </tr>
                     </thead>
                     <tbody>
@@ -54,7 +54,7 @@
                         <td><?php echo $category_data['catname']; ?></td>
                         <td><?php echo $category_data['catdesc']; ?></td>
                         <td>
-                        <img src="<?php echo $this->webroot.'img/category/thumb/small_images/'.$category_data['catimg']; ?>"/>
+                        <img src="<?php echo $this->webroot.'img/category/thumb/small_images/'.$category_data['catimg']; ?>" style="max-width:100px"/>
                         </td>
                         <td><?php echo $category_data['parent_name']; ?></td>
                         <td><?php echo $category_data['url_alias']; ?></td>

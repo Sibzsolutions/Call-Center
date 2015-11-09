@@ -6,7 +6,7 @@
 ?>
 
   <?=$this->Form->create('Category', array("role"=>"form", 'enctype'=>'multipart/form-data'));?>
-  <div class="box-body">
+  <div class="box-body form_box">
     
     <div class="form-group">
       <label for="exampleInputEmail1">Category Id</label>
@@ -74,7 +74,7 @@
       echo $category_data['catimg'];
       ?>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="clear:both">
       <label for="exampleInputEmail1">Url Alias</label>
       <?=$this->Form->input('url_alias',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Login', 'value'=>$category_data['url_alias']));?>
     </div>
@@ -114,7 +114,7 @@
     </div>-->
   </div><!-- /.box-body -->
 
-  <div class="box-footer">
-    <?=$this->Form->button('Saved',array('class'=>'btn btn-primary'))?>
+  <div class="input_box">
+    <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>
   <?=$this->Form->end()?>

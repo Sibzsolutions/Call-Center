@@ -38,7 +38,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box');
 
 /**
  * Displays a view
@@ -1851,6 +1851,97 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		if($this->Slider_image->save($slider_image_data))
 		$this->redirect('main_slider_images');					
 	}
-					
 	
+	public function home_page_box() 
+	{
+		$home_boxes_data = $this->Home_page_box->find('first');
+		
+		$this->set('home_boxes_data', $home_boxes_data['Home_page_box']);		
+		
+		if ($this->request->is('post')) {
+			
+			
+			if($this->request->data['Home_page_box']['first_imagepath']['name'] !='')
+			{
+				$first_name = uniqid().$this->request->data['Home_page_box']['first_imagepath']['name'];
+				$first_tmp_name = $this->request->data['Home_page_box']['first_imagepath']['tmp_name'];
+				$first_type = $this->request->data['Home_page_box']['first_imagepath']['type'];
+				$first_type_data = explode('/', $first_type);
+				$first_arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($first_type_data[1], $first_arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($first_tmp_name, WWW_ROOT . 'img/home_page_box/'.$first_name))
+					{ 
+						$url="../webroot/img/home_page_box/".$first_name;
+						$thumbnail_url="../webroot/img/home_page_box/thumb/small_images/".$first_name;							
+						$this->make_thumb($url,$thumbnail_url,300);
+						
+						$url="../webroot/img/home_page_box/".$first_name;
+						$thumbnail_url="../webroot/img/home_page_box/thumb/large_images/".$first_name;							
+						$this->make_thumb($url,$thumbnail_url,1000);
+						
+						$this->request->data['Home_page_box']['first_imagepath'] = $first_name;
+						
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('home_page_box');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('home_page_box');	
+				}				
+			}
+			else
+			unset($this->request->data['Home_page_box']['first_imagepath']);				
+			
+			if($this->request->data['Home_page_box']['second_imagepath']['name'] !='')
+			{
+				$second_name = uniqid().$this->request->data['Home_page_box']['second_imagepath']['name'];
+				$second_tmp_name = $this->request->data['Home_page_box']['second_imagepath']['tmp_name'];
+				$second_type = $this->request->data['Home_page_box']['second_imagepath']['type'];
+				$second_type_data = explode('/', $second_type);
+				$second_arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+				if(in_array($second_type_data[1], $second_arr_ext)) //Restriction to the uploaded images
+				{
+					//Uploadation code for images
+					if(move_uploaded_file($second_tmp_name, WWW_ROOT . 'img/home_page_box/'.$second_name))
+					{ 
+						$url="../webroot/img/home_page_box/".$second_name;
+						$thumbnail_url="../webroot/img/home_page_box/thumb/small_images/".$second_name;							
+						$this->make_thumb($url,$thumbnail_url,300);
+						
+						$url="../webroot/img/home_page_box/".$second_name;
+						$thumbnail_url="../webroot/img/home_page_box/thumb/large_images/".$second_name;							
+						$this->make_thumb($url,$thumbnail_url,1000);
+						
+						$this->request->data['Home_page_box']['second_imagepath'] = $second_name;
+					}
+					else
+					{
+						$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+						$this->redirect('home_page_box');	
+					}
+				}
+				else
+				{
+					$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+					$this->redirect('home_page_box');	
+				}
+			}
+			else
+			unset($this->request->data['Home_page_box']['second_imagepath']);
+
+			if($this->Home_page_box->save($this->request->data))
+				$this->redirect('home_page_box');																						
+		}		
+	}	
+	
+
 }
+
+?>
