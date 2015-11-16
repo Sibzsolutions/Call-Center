@@ -20,7 +20,7 @@
                   <h3 class="box-title">Data Table With Full Features</h3>
                 </div><!-- /.box-header -->
                 <div class="box-header" style="width:100%; float:left">                
-                <a class="login_button" href="<?php echo $this->webroot.'superadmin/add_user' ?>">Add User</a>
+                <!--<a class="login_button" href="<?php //echo $this->webroot.'superadmin/add_user' ?>">Add User</a>-->
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">

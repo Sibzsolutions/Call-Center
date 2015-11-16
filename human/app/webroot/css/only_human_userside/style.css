@@ -125,10 +125,14 @@ nav{
 	height:auto;
 }
 .banner{
+	background-image: url(css_only_human_userside_imgs/banner_bg.jpg);
+	background-repeat:no-repeat;
+	background-position:center top;
 	background-color:#08bbfd;
 	float:left;
 	width:100%;
 	height:auto;
+	min-height:565px;
 }
 .middle_content{
 	float:left;
@@ -484,7 +488,7 @@ nav{
 }
 .refine_box a:hover{
     color: #fff;
-    background-color: #f08c00;
+    background-color: #0866e4;
 }
 .inner_banner2{
 	float:right;
@@ -890,13 +894,33 @@ p{
 .filter_list_box .checkbox:hover{
 	color:#fff;
 }
-/*.filter_list_box .checkbox i{
-	border:1px solid #fff;
-}*/
-
+#slider1 .overview li span{
+	width:100%;
+	text-align:center;
+	float:left;
+	min-height:230px;
+}
+#slider1 .overview .pro_heading{
+	padding:10px 0 0 0;
+	min-height:50px;
+}
+.product_box .size_2 .size_2-right{
+	width:100%
+}
+.product_box .size_2 .size_2-right .item_add{
+	margin:0px;
+}
+.product_box .add32{
+	background-color:#f08c00;
+}
 
 }
 
+@media screen and (max-width: 1024px) {
+.main_menu ul li a{
+	padding:21px 9px 20px;
+}
+}
 @media screen and (max-width: 950px) {
 .logo{
 	width:100%;
@@ -1092,6 +1116,17 @@ nav ul li a{
 .product_details .price_single .head{
 	width:50%;
 }
+.banner{
+	background-size:cover;
+}
+.slider_box{
+	width:100%;
+}
+.slider_box .slider_heading1{
+	font-size:40px;
+	padding-top:20px;
+}
+
 }
 
 @media screen and (max-width: 300px) {

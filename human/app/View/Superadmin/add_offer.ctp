@@ -1,7 +1,7 @@
 <?php 
 
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
   <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
@@ -17,7 +17,7 @@
     <option value="0">All</option>
 	<?php
     
-    $Admin -> category_tree(0);	
+    $Superadmin -> category_tree(0);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     ?>
@@ -29,7 +29,7 @@
     <option value="0">All</option>
 	<?php
     
-    $Admin -> product_tree(0);	
+    $Superadmin -> product_tree(0);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     ?>

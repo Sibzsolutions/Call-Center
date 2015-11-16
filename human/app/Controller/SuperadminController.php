@@ -71,10 +71,9 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		 $this->Auth->loginRedirect = array('controller'=>'Superadmin','action'=>'index');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login', 'product_attribute_change');  
+		 $this->Auth->allow('register','login', 'product_attribute_change', 'change_slider_img_order', 'category_tree_one', 'product_attribute_change_edit');  
 		 
-		 $this->layout="Superadministrator_layout";   
-		 
+		 //$this->layout="Superadministrator_layout";    
 		 
 		 $userdata = $this->Auth->user();
 		
@@ -97,10 +96,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		 $this->set('dynamic_page_data',$dynamic_page_data);
 	}
 	
-	function register() 
+	public function register() 
 	{
-		//$this->layout='';
-		
 		if($this->request->data)
 		{
 			$this->request->data['User']['usrtype'] = 2;
@@ -144,7 +141,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	}
 	public function index() {
 		
-		$this->layout="superadministrator_layout";
+		//$this->layout="superadministrator_layout";
 	}	
 	
 	public function site_setting() 
@@ -272,7 +269,9 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function categories() 
 	{
-		$categories_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
+		$categories_data = $this->Category->find('all', array('conditions'=>array('Category.del_status'=>0), 'order' => array('id' => 'DESC')));
+		
+		//$categories_data = $this->Category->find('all', array('conditions'=>array('Category.del_status'=>0), 'order' => array('id' => 'DESC')));
 		
 		foreach($categories_data as $key=>$data)
 		{
@@ -318,7 +317,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 	function category_tree($catid, $selected_id){
 		
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid)));
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid, 'Category.del_status'=>0)));
 		
 		foreach($category_data as $data)
 		{
@@ -334,6 +333,27 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
 			 
 			 $this->category_tree($data['id'], $selected_id);
+		}
+	}
+	
+	function category_tree_one($catid, $selected_id, $sele){
+		
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid, 'Category.del_status'=>0)));
+		
+		foreach($category_data as $data)
+		{
+			 $data = $data['Category'];
+			 if(isset($sele))
+			 {
+				 if($sele == $data['id'])
+				 echo '<option selected="selected" value="'.$data['id'].'">'.$data['catname'].'</option>';
+				 else
+				 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
+			 }
+			 else
+			 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
+			 
+			 $this->category_tree_one($data['id'], $selected_id);
 		}
 	}
 
@@ -444,23 +464,20 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
 		
-		$attribute_data_cat = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $category_data['Category']['id'])));
-		
-		foreach($attribute_data_cat as $cat)
-		{
+			$attribute_data_cat = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $category_data['Category']['id'])));
+			
+			foreach($attribute_data_cat as $cat)
 			$cat_id['attid'][] = $cat['Attribute_category']['attid'];
-		}
-		
-		if(isset($cat_id))
-		$this->set('cat_id', $cat_id);
-		
-		$this->set('category_data', $category_data['Category']);
-				
-		if ($this->request->is('post')) {
+			
+			if(isset($cat_id))
+			$this->set('cat_id', $cat_id);
+			
+			$this->set('category_data', $category_data['Category']);		
+			
+			if ($this->request->is('post')) {
 			
 			if($this->request->data['Category']['catimg']['name'] != '')
 			{
-				
 				$this->request->data['Category']['catimg']['name'] = uniqid().$this->request->data['Category']['catimg']['name'];
 				
 				$name = $this->request->data['Category']['catimg']['name'];
@@ -609,7 +626,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 	public function products() 
 	{
-		$products_data = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		$products_data = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.del_status'=>0), 'order' => array('id' => 'DESC')));
 		
 		$this->set('products_data', $products_data);
 		
@@ -739,7 +756,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	}
 	
 	public function product_attribute_change_edit()
-	{
+	{		
 		$product_id = $_REQUEST['product_id'];
 		
 		$cat_id = $_REQUEST['cat_id'];
@@ -800,7 +817,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		$this->set('attribute_data', $attribute_data);
 		
 		if ($this->request->is('post')) {
-			
+						
 			$this->Produc_master->save($this->request->data);
 			
 			$last_inserted_id = $this->Produc_master->getLastInsertId();
@@ -1355,7 +1372,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function attributes() 
 	{
-		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
+		$attribute_data = $this->Attribute_master->find('all', array('conditions'=>array('Attribute_master.del_status'=>0), 'order' => array('id' => 'DESC')));
 		
 		foreach($attribute_data as $key=>$data)
 		{
@@ -1476,11 +1493,11 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		$id_data = explode(',', $selected_id);		
 		
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid)));
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid, 'Category.del_status'=>0)));
 		
 		foreach($category_data as $data)
 		{
-			$data = $data['Category'];
+			 $data = $data['Category'];
 			
 			 $i=0;
 			 foreach($id_data as $id_one)
@@ -1637,6 +1654,18 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		}
 	}		
 	
+	public function change_slider_img_order($image_id, $value)
+	{
+		$slider_data['Slider_image']['id'] = $image_id;
+		$slider_data['Slider_image']['picture_order'] = $value;
+		
+		if($this->Slider_image->save($slider_data))
+		echo "yes";
+		else
+		echo "no";	
+		
+		die();		
+	}
 	public function attribute_value_status_change($id, $redirect_id) 
 	{
 		$attribute_value_data = $this->Attribute_value->find('first', array('conditions'=>array('attribute_value.id'=>$id)));
@@ -1652,7 +1681,18 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 	public function main_slider_images() 
 	{
-		$slider_images = $this->Slider_image->find('all', array('order' => array('id' => 'DESC')));
+		$slider_images = $this->Slider_image->find('all',  array('conditions'=>array('Slider_image.del_status'=>0), 'order' => array('id' => 'DESC')));
+		
+		$slider_count = count($slider_images);
+		
+		$i=1;
+		while($i<=$slider_count)
+		{
+			$count_slider_data[$i] = $i;
+			$i++;
+		}
+		
+		$this->set('count_slider', $count_slider_data);
 		
 		foreach($slider_images as $key=>$slider_image)
 		{
@@ -1662,6 +1702,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			{
 				$cat_id = $slider_image['cat_id'];
 				$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$cat_id)));
+				
+				if(isset($category_data['Category']))
 				$slider_images[$key]['Slider_image']['catname'] = $category_data['Category']['catname'];
 			}
 			
@@ -1669,6 +1711,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			{
 				$product_id = $slider_image['product_id'];
 				$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_id)));
+				
+				if(isset($product_data['Produc_master']))
 				$slider_images[$key]['Slider_image']['prodname'] = $product_data['Produc_master']['prodname'];
 			}			
 		}
@@ -1685,12 +1729,23 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	}		
 				
 	public function main_slider_image_edit($id) 
-	{
-		echo "Id".$id;		
+	{		
+		$slider_images = $this->Slider_image->find('all', array('order' => array('id' => 'DESC')));
 		
-		echo "<br>main_slider_image_edit";
+		$slider_count = count($slider_images);
 		
-		$products = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		$i=1;
+		while($i<=$slider_count)
+		{
+			$count_slider_data[$i] = $i;
+			$i++;
+		}
+		
+		$this->set('count_slider', $count_slider_data);
+		
+		$products = $this->Produc_master->find('all', array('order' => array('id' => 'DESC'), 'conditions'=>array('Produc_master.del_status'=>0)));
+		
+		$products_dropdown[0] = 'Select Product';
 		
 		foreach($products as $product)
 		{
@@ -1699,7 +1754,9 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			$products_dropdown[$product['id']] = $product['prodname'];			
 		}
 		
-		$category_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
+		$category_data = $this->Category->find('all', array('order' => array('id' => 'DESC'), 'conditions'=>array('Category.del_status'=>0)));
+		
+		$categories_dropdown[0] = 'Select Category';
 		
 		foreach($category_data as $category)
 		{
@@ -1754,10 +1811,24 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			}
 			
 			if($this->request->data['Slider_image']['Category'] == 1)
-			$this->request->data['Slider_image']['cat_id'] = $this->request->data['Slider_image']['category_id'];
+			{
+				if($this->request->data['Slider_image']['category_id'] == 0)
+					$this->request->data['Slider_image']['cat_id']='';
+				else
+					$this->request->data['Slider_image']['cat_id'] = $this->request->data['Slider_image']['category_id'];
+			}
+			else
+				$this->request->data['Slider_image']['cat_id']='';
 			
 			if($this->request->data['Slider_image']['Product'] == 1)
-			$this->request->data['Slider_image']['product_id'] = $this->request->data['Slider_image']['product_id'];
+			{
+				if($this->request->data['Slider_image']['product_id'] == 0)
+					unset($this->request->data['Slider_image']['product_id']);
+				else
+					$this->request->data['Slider_image']['product_id'] = $this->request->data['Slider_image']['product_id'];
+			}
+			else
+				$this->request->data['Slider_image']['product_id']='';
 			
 			$this->Slider_image->save($this->request->data);
 			
@@ -1767,7 +1838,22 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 					
 	public function add_main_slider_image() 
 	{
+		$slider_images = $this->Slider_image->find('all', array('order' => array('id' => 'DESC')));
+		
+		$slider_count = count($slider_images);
+		
+		$i=1;
+		while($i<=$slider_count)
+		{
+			$count_slider_data[$i] = $i;
+			$i++;
+		}
+		
+		$this->set('count_slider', $count_slider_data);
+		
 		$products = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
+		
+		$products_dropdown[0] = 'Select Product';
 		
 		foreach($products as $product)
 		{
@@ -1777,6 +1863,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		}
 		
 		$category_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
+		
+		$categories_dropdown[0] = 'Select Category';
 		
 		foreach($category_data as $category)
 		{
@@ -1827,17 +1915,35 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			}
 			
 			if($this->request->data['Slider_image']['Category'] == 1)
-			$this->request->data['Slider_image']['cat_id'] = $this->request->data['Slider_image']['category_id'];
+			{
+				if($this->request->data['Slider_image']['category_id'] == 0)
+					$this->request->data['Slider_image']['cat_id']='';
+				else
+					$this->request->data['Slider_image']['cat_id'] = $this->request->data['Slider_image']['category_id'];
+			}
+			else
+				$this->request->data['Slider_image']['cat_id']='';
 			
 			if($this->request->data['Slider_image']['Product'] == 1)
-			$this->request->data['Slider_image']['product_id'] = $this->request->data['Slider_image']['product_id'];
+			{
+				if($this->request->data['Slider_image']['product_id'] == 0)
+					unset($this->request->data['Slider_image']['product_id']);
+				else
+					$this->request->data['Slider_image']['product_id'] = $this->request->data['Slider_image']['product_id'];
+			}
+			else
+				$this->request->data['Slider_image']['product_id']='';
+			
 			
 			$this->Slider_image->save($this->request->data);
 			
 			$this->redirect('main_slider_images');				
 		}
 	}				
-	
+	public function index_cal() 
+	{
+		
+	}
 	public function main_slider_image_status_change($id) 
 	{
 		$slider_image_data = $this->Slider_image->find('first', array('conditions'=>array('Slider_image.id'=>$id)));

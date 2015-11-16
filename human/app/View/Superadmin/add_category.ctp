@@ -1,6 +1,6 @@
 <?php 
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
 
@@ -13,7 +13,7 @@
     </option>
     <?php
 		
-		$Admin -> category_tree(0);	
+		$Superadmin -> category_tree(0);	
 		echo '</select>';
 		//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
 		

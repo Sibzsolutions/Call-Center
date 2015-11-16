@@ -1,33 +1,37 @@
 /* Tiny Carousel */
 #slider1 {
-    height: 1%;
     margin: 30px 0 0;
     overflow: hidden;
     position: relative;
     padding: 0 50px 10px;
+	width:100%;
+	min-height:370px;
+	float:left;
 }
 
 #slider1 .viewport {
-    height: 125px;
+    height: 350px;
     overflow: hidden;
     position: relative;
+	width:100%;
 }
 
 #slider1 .buttons {
-    background: #C01313;
+    background: #08bbfd none repeat scroll 0 0;
     border-radius: 35px;
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 35px;
-    height: 35px;
     color: #fff;
-    font-weight: bold;
-    text-align: center;
+    display: block;
+    font-family: myriadpro-regular;
+    font-size: 20px;
+    font-weight: normal;
+    height: 35px;
+    left: 0;
     line-height: 35px;
+    position: absolute;
+    text-align: center;
     text-decoration: none;
-    font-size: 22px;
+    top: 50%;
+    width: 35px;
 }
 
 #slider1 .next {
@@ -37,8 +41,8 @@
 }
 
 #slider1 .buttons:hover {
-    color: #C01313;
-    background: #fff;
+    color: #48ceff;
+    background: #0866e4;
 }
 
 #slider1 .disable {
@@ -57,9 +61,9 @@
 
 #slider1 .overview li {
     float: left;
-    margin: 0 20px 0 0;
-    padding: 1px;
-    height: 121px;
-    border: 1px solid #dcdcdc;
-    width: 236px;
+    margin: 0 10px 0 0;
+    padding: 7px;
+    min-height: 300px;
+    border: 1px solid #c6e6f1;
+    width: 215px;
  }

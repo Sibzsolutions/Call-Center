@@ -1,7 +1,7 @@
 <?php 
 	
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 ?>
   <?=$this->Form->create('Attribute_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body form_box">    
@@ -9,9 +9,11 @@
     <label>Parent Category</label>
     <select name="data[Attribute_master][catid]" class="form-control select2" style="width: 100%;">
     <?php    
-    $Admin -> category_tree(0);	
+	
+    $Superadmin -> category_tree(0);	
     echo '</select>';
-    //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		        
+    
+	//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		        
     ?>
     </div>
     <div class="form-group">

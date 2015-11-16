@@ -42,7 +42,7 @@ App::uses('AppController', 'Controller');
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box');
+	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -87,7 +87,10 @@ App::uses('AppController', 'Controller');
 		 
 		 if(isset($dynamic_page_data))	
 		 $this->set('dynamic_page_data',$dynamic_page_data);
-		 
+			
+		 $site_setting = $this->Site_setting->find('first');	
+		 $this->set('site_setting', $site_setting);	
+		
 		 $cat_data = $this->Category->find('all',array('conditions'=>array('Category.del_status'=>0, 'Category.parentid'=>0)));
 		 
 		 foreach($cat_data as $key=>$cat)
@@ -222,10 +225,6 @@ App::uses('AppController', 'Controller');
 			$this->Session->write('count_add_cart_session', $count_add_cart_session);
 		}				
 		 
-	 }
-	 
-	 Public function filter_search_price(){
-	 
 	 }
 	 
 	 Public function filter_search_type(){
@@ -490,6 +489,7 @@ App::uses('AppController', 'Controller');
 							{
 								$search_newa['Produc_master'] = $fin['Produc_master'];
 								
+								if(isset($fin['Produc_master']['id']))
 								$search_newa_new[$fin['Produc_master']['id']] = $search_newa;
 							}
 						}
@@ -842,7 +842,13 @@ App::uses('AppController', 'Controller');
 		
 		$this->layout='';
 		
-		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1)));
+		$category = $this->Category->find('list', array('conditions'=>array('Category.del_status'=>0)));
+		
+		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
+		
+		$cat_data = $this->Category->find('all');
+		
+		$this->set('cat_data', $cat_data);
 		
 		foreach($products as $key=>$product)
 		{
@@ -873,14 +879,17 @@ App::uses('AppController', 'Controller');
 			}
 		}
 		
-		
 		$this->set('product_slider', $products);
 		
 		$home_page_data = $this->Home_page_box->find('first');
 		
 		$this->set('home_page_data', $home_page_data);
 		
-		$slider_images = $this->Slider_image->find('all', array('conditions'=>array('Slider_image.del_status'=>0)));
+		$slider_images = $this->Slider_image->find('all', array('conditions'=>array('Slider_image.del_status'=>0), 'order' => array(
+                'Slider_image.picture_order' => 'ASC'
+            )));
+		
+		
 		
 		$this->set(compact('slider_images'));
 		
@@ -937,8 +946,49 @@ App::uses('AppController', 'Controller');
 	
 	public function products($id) {
 		
+		$category = $this->Category->find('list', array('conditions'=>array('Category.del_status'=>0)));
+
+		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
+		
+		$cat_data = $this->Category->find('all');
+		
+		$this->set('cat_data', $cat_data);
+		
+		foreach($products as $key=>$product)
+		{
+			$product = $product['Produc_master'];
+			
+			if(isset($add_cart))			
+			{
+				if(in_array($product['id'], $add_cart))
+				$products[$key]['Produc_master']['add_to_cart'] = 1;
+				else
+				$products[$key]['Produc_master']['add_to_cart'] = 0;	
+			}
+			else
+				$products[$key]['Produc_master']['add_to_cart'] = 0;	
+			
+			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+                'id' => 'DESC'
+            )));
+			
+			foreach($product_images as $image)
+			{
+				$image = $image['Produc_image'];		
+				
+				if($image['isdefault']==1)
+				$products[$key]['Produc_master']['images']['Default'] = $image;
+				else
+				$products[$key]['Produc_master']['images']['all'] = $image;				
+			}
+		}
+		
+		$this->set('product_slider', $products);
+
+		
 		$category = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
 		
+		if(isset($category['Category']))
 		$this->set('catname', $category['Category']['catname']);
 		
 		if($this->Auth->user())
@@ -1128,9 +1178,48 @@ App::uses('AppController', 'Controller');
 		return $new_data;
 	}
 	
-	public function product_details($id) {
+	public function product_details($id) 
+	{
+		$category = $this->Category->find('list', array('conditions'=>array('Category.del_status'=>0)));
 		
-				$product_page_id = $id;
+		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
+		
+		$cat_data = $this->Category->find('all');
+		
+		$this->set('cat_data', $cat_data);
+		
+		foreach($products as $key=>$product)
+		{
+			$product = $product['Produc_master'];
+			
+			if(isset($add_cart))			
+			{
+				if(in_array($product['id'], $add_cart))
+				$products[$key]['Produc_master']['add_to_cart'] = 1;
+				else
+				$products[$key]['Produc_master']['add_to_cart'] = 0;	
+			}
+			else
+				$products[$key]['Produc_master']['add_to_cart'] = 0;	
+			
+			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+                'id' => 'DESC'
+            )));
+			
+			foreach($product_images as $image)
+			{
+				$image = $image['Produc_image'];		
+				
+				if($image['isdefault']==1)
+				$products[$key]['Produc_master']['images']['Default'] = $image;
+				else
+				$products[$key]['Produc_master']['images']['all'] = $image;				
+			}
+		}
+		
+		$this->set('product_slider', $products);
+		
+		$product_page_id = $id;
 		
 		$this->set('page_id', $id);
 		
@@ -1239,17 +1328,18 @@ App::uses('AppController', 'Controller');
 			$this->set('count_add_to_cart', $count_add_to_cart);
 		}
 		
+		if(isset($product['Produc_master']))
 		$product_image = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['Produc_master']['id'])));
 		
 		if(isset($product_image))
 		$product['Produc_master']['images'] = $product_image;
 		
-		$this->set('product', $product['Produc_master']);				
-	
+		if(isset($product['Produc_master']))		
+		$this->set('product', $product['Produc_master']);					
 	}
 	
-	public function search_results() { 
-	
+	public function search_results() 
+	{ 
 		if(isset($_REQUEST['search_text']))
 		$search_text = $_REQUEST['search_text'];
 		
@@ -1635,6 +1725,56 @@ App::uses('AppController', 'Controller');
 			$this->redirect('contact_us');			
 		}
 	}	
+	
+	public function myaccount() { 
+	
+		$userdata = $this->Auth->user();	
+		$this->set('userdata', $userdata);
+		
+		if ($this->request->is('post')) {
+			
+			$data = $this->User->find('first', array('conditions'=>array('User.id'=> $userdata['id'])));
+			
+			$password = $data['User']['password'];
+			
+			$myPassword = $this->request->data['User']['password'];
+			
+			$hashedPassword = Security::hash($myPassword, null, true); //Password Hashing/Encryption
+			
+			if($password != $hashedPassword)
+			{
+				$this->Session->setFlash(__('please enter the correct present password... '));
+				
+				$this->redirect(array(
+				'action' => 'myaccount'
+				));
+			}
+			else
+			{
+				$this->request->data['User']['password'] = $this->request->data['User']['new_password'];
+				$this->request->data['User']['id'] = $userdata['id'];
+				
+				$this->User->set($this->request->data);
+				if ($this->User->validates()) {
+					
+					$this->User->save();
+				}
+				/*
+				else 
+				{
+					$errors = $this->User->validationErrors;
+					
+					echo "Errors<pre>";
+					print_r($errors);
+					echo "<pre>";
+					die();
+					// handle errors
+				}
+				*/				
+			}
+		}		
+	}
+
 	
 }
 ?>

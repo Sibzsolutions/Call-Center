@@ -1,5 +1,4 @@
-<?php
-?>
+<?php ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
 <!-- Bootstrap 3.3.5 -->
 <link rel="stylesheet" href="<?php echo $this->webroot.'bootstrap/css/bootstrap.min.css';?>">
@@ -35,6 +34,7 @@
 				<th bgcolor="#00bcd4" class="text14_white">Category</th>
 				<th bgcolor="#00bcd4" class="text14_white">Product</th>
 				<th bgcolor="#00bcd4" class="text14_white">Image</th>
+				<th bgcolor="#00bcd4" class="text14_white">Picture Order</th>
 				<th bgcolor="#00bcd4" class="text14_white">Status</th>                        
 				<th bgcolor="#00bcd4" class="text14_white"><div style="width:72px">Action</div></th>                        
 			  </tr>
@@ -62,8 +62,44 @@
 				<td>
 				<img src="<?php echo $this->webroot.'img/slider/thumb/small_images/'.$slider_image['image_path']; ?>"/>
 				</td>
+				
+				<td>
+				<?=$this->Form->input('picture_order',array('type'=>'select', 'onchange'=>'change_picture_order('.$slider_image['id'].',this.value)', 'options'=>$count_slider, 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,'default'=>$slider_image['picture_order']));?>
+				
+				<div style="width:20px; height:20px; float:left">
+                 <div id="status_<?=$slider_image['id']?>"></div>
+                </div>
+				</td>
+					
+				<script>
+   
+				   function change_picture_order(image_id,value)
+				   {
+					  alert(image_id);
+					   
+					  alert(value);
+					  
+					  $('#status_'+image_id).show();
+					  $('#status_'+image_id).html('<img src="http://propelle.co/images/loading_small.gif">');
+					  $.post("<?=$this->webroot?>Superadmin/change_slider_img_order/"+image_id+"/"+value,
+						
+						function(data,status){
+						
+						 alert(data);
+							
+						 if(data=='yes')
+						 {
+						  $('#status_'+image_id).html('<img src="http://www.customotion.com/green_check_small.png">');
+						  $('#status_'+image_id).hide(2500);
+						 }
+						});
+				   }   	
+					
+				</script>
+				
+				
 				<td><?php if($slider_image['del_status'] == 0) echo "Active"; else echo "Deactive"; ?></td>
-				<td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/main_slider_image_edit/'.$slider_image['id']; ?>"><i class="fa fa-file-picture-o"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/main_slider_image_edit/'.$slider_image['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/main_slider_image_status_change/'.$slider_image['id']; ?>"><i class="fa fa-exchange"></i></a>
+				<td><!--&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php //echo $this->webroot.'superadmin/main_slider_image_edit/'.$slider_image['id']; ?>"><i class="fa fa-file-picture-o"></i></a>-->&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/main_slider_image_edit/'.$slider_image['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/main_slider_image_status_change/'.$slider_image['id']; ?>"><i class="fa fa-exchange"></i></a>
 				
 				<!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'superadmin/user_delete/'.$category_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
 				</td>

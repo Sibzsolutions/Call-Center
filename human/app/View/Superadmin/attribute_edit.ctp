@@ -2,7 +2,7 @@
 
 	
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 ?>
 <!-- form start -->
   <?=$this->Form->create('Attribute_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
@@ -19,7 +19,7 @@
     <select name="data[Attribute_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
-        $Admin -> category_tree(0, $attribute_data['Attribute_category']['catid']);	
+        $Superadmin -> category_tree(0, $attribute_data['Attribute_category']['catid']);	
         echo '</select>';
         //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
         

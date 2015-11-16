@@ -1,7 +1,7 @@
 <?php 
 
-	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	App::import('Controller', 'Superadmins');
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
@@ -13,7 +13,7 @@
 		
 		var cat_type_data = $('#att_select').val();
 		
-		$.post("<?=$this->webroot?>Admin/product_attribute_change_edit", {
+		$.post("<?=$this->webroot?>Superadmin/product_attribute_change_edit", {
 												 cat_id : cat_type_data ,
 												 product_id : '<?php echo $page_id; ?>'},
 		
@@ -148,6 +148,11 @@
 	  ?>
 	</select>
 	</div>
+	
+	<div class="form-group" style="clear:both">
+      <label for="exampleInputEmail1">Priority</label>
+		<?=$this->Form->input('picture_order',array('type'=>'select', 'options'=>$count_slider, 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,'default'=>$slider_images_data['Slider_image']['picture_order']));?>	
+	</div><!-- /.box-body -->
 	
     <div class="form-group" style="clear:both">
       <label for="exampleInputEmail1">Status</label>

@@ -1,7 +1,7 @@
 <?php 
 	
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 ?>
 <!-- form start -->
   <?=$this->Form->create('Attribute_value', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
@@ -18,7 +18,7 @@
     <select name="data[Attribute_value][attid]" class="form-control select2" style="width: 100%;">
     <?php
         
-	$Admin -> attribute_tree(0, $attribute_value_data['Attribute_master']['id']);	
+	$Superadmin -> attribute_tree(0, $attribute_value_data['Attribute_master']['id']);	
 	echo '</select>';
 	//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
         

@@ -18,21 +18,21 @@
 <link rel="stylesheet" href="<?php echo $this->webroot.'css/buy_shop/etalage.css';?>">
 <script src="<?php echo $this->webroot.'js/buy_shop/jquery.etalage.min.js';?>"></script>
 <script>
-			jQuery(document).ready(function($){
+	jQuery(document).ready(function($){
 
-				$('#etalage').etalage({
-					thumb_image_width: 300,
-					thumb_image_height: 400,
-					source_image_width: 900,
-					source_image_height: 1200,
-					show_hint: true,
-					click_callback: function(image_anchor, instance_id){
-						alert('Callback example:\nYou clicked on an image with the anchor: "'+image_anchor+'"\n(in Etalage instance: "'+instance_id+'")');
-					}
-				});
+		$('#etalage').etalage({
+			thumb_image_width: 300,
+			thumb_image_height: 400,
+			source_image_width: 900,
+			source_image_height: 1200,
+			show_hint: true,
+			click_callback: function(image_anchor, instance_id){
+				alert('Callback example:\nYou clicked on an image with the anchor: "'+image_anchor+'"\n(in Etalage instance: "'+instance_id+'")');
+			}
+		});
 
-			});
-		</script>
+	});
+</script>
 <!--initiate accordion-->
 <script type="text/javascript">
 	$(function() {
@@ -98,7 +98,7 @@ html {
 				$count_last = 0;
 			  
 			  ?>
-					  
+					
 			<div class="single_grid">
 				<div class="grid images_3_of_2">
 						<ul id="etalage">
@@ -136,7 +136,8 @@ html {
 
 						</ul>
 						 <div class="clearfix"></div>		
-				  </div> 
+				  </div>
+					
 				  <div class="desc1 span_3_of_2">
 				  	<ul class="back">
                 	  <li><i class="back_arrow"> </i>Back to <a href="index.html">Men's Clothing</a></li>
@@ -185,7 +186,7 @@ html {
 								{
 									$att_element = $att_element['Produc_attribute'];
 									?>
-								
+									
 									<li>
                                     <label>
                                     <input value="<?php echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />
@@ -227,6 +228,62 @@ html {
 								
 								echo '</ul>';		
 							}
+							
+							if(($key !='Brand') && ($key !='Size') && ($key !='Color'))
+							{
+								
+								echo '<div style="width:100px">'; 
+								
+								echo '<ul class="brand_box">';
+								
+								
+
+
+								
+								?>
+								
+							<li>
+								<?php
+								
+								$att_count = count($att);
+								$i=0;
+								foreach($att as $key_element=>$att_element)
+								{
+									if($i==0)
+										echo $key;
+									
+									$i++;
+									
+									$att_element = $att_element['Produc_attribute'];
+									
+									?>
+									
+									<li>
+                                    <label>
+									<?php 
+									
+									echo $att_element['att_val_name']; 
+									
+									if($att_count>1)
+									{
+										?>
+										<input value="<?php echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />                                    
+										<?php
+									}
+									else
+									{
+										echo $att_element['att_value_id'];                                     
+									}
+									?>
+                                    </label>
+                                    </li>
+									
+									<?php
+								}		
+								echo '<div>';
+								echo '</ul>';								
+							}
+							
 						}
 					   ?>
 						 
@@ -257,7 +314,7 @@ html {
 			         </div>
 			         <div class="simpleCart_shelfItem">
 			         	<div class="price_single">
-						  <div class="head"><h2><span class="amount item_price"><?php echo 'MSRP: $'.$product['prodprice'];//$45.00 ?></span></h2></div>
+						  <div class="head"><h2><span class="amount item_price"><?php echo '$'.$product['prodprice'];//$45.00 ?></span></h2></div>
 						  <div class="head_desc"><a href="#">12 reviews</a><img src="<?php echo $this->webroot.'img/buy_shop/review.png'; ?>" alt=""/></li></div>
 					       <div class="clearfix"></div>
 					     </div>
@@ -328,9 +385,37 @@ html {
 			 <ul class="menu_drop">
 				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png'; ?>">Description</a>
 					<ul>
-						<li class="subitem1"><a href="#">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor </a></li>
-						<li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>
-						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
+						<li class="subitem1"><a href="#">
+						<?php 
+						
+						echo "Product Name:- ".$product['prodname'];
+						
+						echo "<br><br>Short Description:- ".$product['prodscdes'];
+						
+						echo "<br><br>Long Description:- ".$product['proddesc']."<br><br>"; 
+						
+					    foreach($att_array as $key=>$att)
+					    {
+							if(($key !='Brand') && ($key !='Size') && ($key !='Color'))
+							{
+								$att_count = count($att);
+								foreach($att as $key_element=>$att_element)
+								{
+									$att_element = $att_element['Produc_attribute'];
+
+									if($att_count<=1)
+									echo $key.':-  '.$att_element['att_val_name']."<br><br>";                                     ; 
+								}		
+							}
+						}
+						
+						?>
+						
+						<!--Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor </a>-->
+						
+						</li>
+						<!--<li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>
+						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>-->
 					</ul>
 				</li>
 				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Additional information</a>
@@ -361,12 +446,14 @@ html {
 				</li>
 	 		</ul>
    </div>
-   <h3 class="m_2">Related Products</h3>
-	     <div class="container">
+   
+	<!--<h3 class="m_2">Related Products</h3>-->
+   
+	     <!--<div class="container">
           		<div class="box_3">
           			<div class="col-md-3">
           				<div class="content_box"><a href="single.html">
-			   	          <img src="<?php echo $this->webroot.'img/buy_shop/pic6.jpg'; ?>" class="img-responsive" alt="">
+			   	          <img src="<?php //echo $this->webroot.'img/buy_shop/pic6.jpg'; ?>" class="img-responsive" alt="">
 				   	   </a>
 				   </div>
 				    <h4><a href="single.html">Contrary to popular belief</a></h4>
@@ -374,7 +461,7 @@ html {
 			        </div>
           			<div class="col-md-3">
           				<div class="content_box"><a href="single.html">
-			   	          <img src="<?php echo $this->webroot.'img/buy_shop/pic2.jpg'; ?>" class="img-responsive" alt="">
+			   	          <img src="<?php //echo $this->webroot.'img/buy_shop/pic2.jpg'; ?>" class="img-responsive" alt="">
 				   	   </a>
 				   </div>
 				    <h4><a href="single.html">Contrary to popular belief</a></h4>
@@ -382,7 +469,7 @@ html {
 			        </div>
           			<div class="col-md-3">
           				<div class="content_box"><a href="single.html">
-			   	          <img src="<?php echo $this->webroot.'img/buy_shop/pic4.jpg'; ?>" class="img-responsive" alt="">
+			   	          <img src="<?php //echo $this->webroot.'img/buy_shop/pic4.jpg'; ?>" class="img-responsive" alt="">
 				   	   </a>
 				   </div>
 				    <h4><a href="single.html">Contrary to popular belief</a></h4>
@@ -390,7 +477,7 @@ html {
 			        </div>
           			<div class="col-md-3">
           				<div class="content_box"><a href="single.html">
-			   	          <img src="<?php echo $this->webroot.'img/buy_shop/pic5.jpg'; ?>" class="img-responsive" alt="">
+			   	          <img src="<?php //echo $this->webroot.'img/buy_shop/pic5.jpg'; ?>" class="img-responsive" alt="">
 				   	   </a>
 				   </div>
 				    <h4><a href="single.html">Contrary to popular belief</a></h4>
@@ -398,5 +485,10 @@ html {
 			        </div>
 			        <div class="clearfix"> </div>
           		</div>
-          	</div>
+          	</div>-->
+			
+		<?php echo $this->element('featured_slider'); ?>
+	
         </div>
+		
+	

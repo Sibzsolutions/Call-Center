@@ -1,10 +1,10 @@
 <?php 
 	
-	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	App::import('Controller', 'Superadmin');
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
-
+  
   <?=$this->Form->create('Category', array("role"=>"form", 'enctype'=>'multipart/form-data'));?>
   <div class="box-body form_box">
     
@@ -17,9 +17,10 @@
     <label>Parent Category</label>
     
     <select name="data[Category][parentid]" class="form-control select2" style="width: 100%;">
+
     <?php
 		
-	$Admin -> category_tree(0, $category_data['parentid']);	
+	$Superadmin -> category_tree_one(0, $category_data['parentid'], $category_data['id']);	
 	echo '</select>';
 	//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
 		

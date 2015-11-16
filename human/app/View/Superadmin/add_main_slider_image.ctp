@@ -1,7 +1,7 @@
 <?php 
 		
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 
 ?>
@@ -77,7 +77,10 @@
     </div>
 	
 	
-	
+	<div class="form-group" style="clear:both">
+      <label for="exampleInputEmail1">Priority</label>
+		<?=$this->Form->input('picture_order',array('type'=>'select', 'options'=>$count_slider, 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>	
+	</div><!-- /.box-body -->
 	
 	
     <div class="form-group" style="clear:both">

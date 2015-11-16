@@ -1,7 +1,7 @@
 <?php 
 
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
@@ -37,7 +37,7 @@
     <select id="att_select"  name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
-        $Admin -> category_tree(0, $product_data['catid']);	
+        $Superadmin -> category_tree(0, $product_data['catid']);	
         echo '</select>';
     ?>
     </div>

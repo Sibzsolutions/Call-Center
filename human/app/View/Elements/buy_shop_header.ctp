@@ -48,17 +48,14 @@
         </div>
         <div class="top_menu">
 		  
-		  
-		  <a href="#">Blog</a>
 		  <a href="<?php echo $this->webroot.'buyshops/checkout'; ?>">Checkout</a>
-		  <a href="#">English</a>
-		  <a href="#">USD</a>
 		  <a href="<?php echo $this->webroot.'buyshops/contact_us'; ?>">Contact Us</a>		  
 			<?php
 					
 				if(AuthComponent::user()):
 				?>
 				<a href="<?php echo $this->webroot.'buyshops/myaccount'; ?>">My Account</a>
+				<!--<a href="#">My Account</a>-->
 				<a href="#">My Wishlist</a>
 				<a href="<?php echo $this->webroot.'buyshops/logout'; ?>">Logout</a>
 				<?php
@@ -80,10 +77,8 @@
 				<?php 
 					
 					foreach($dynamic_menu as $cat)
-					{		
-					
-						?>
-						
+					{							
+						?>						
 						<!--<li class="active grid"><a class="color1" href="<?php //echo $cat['Category']['url']; ?>"><?php //echo $cat['Category']['catname']; ?></a>-->
 						<li class="active grid" ><a  href="<?php echo $cat['Category']['url']; ?>"><?php echo $cat['Category']['catname']; ?></a>
 						<div class="megapanel main_subcategory">

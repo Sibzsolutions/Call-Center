@@ -38,9 +38,9 @@
 			
 			<li><a href="<?php echo $this->webroot.'Superadmin/main_slider_images'; ?>">Manage Slider Images</a></li>
 			
-			<li><a href="<?php echo $this->webroot.'Superadmin/home_page_box'; ?>">Home Page Box</a></li>
+			<!--<li><a href="<?php //echo $this->webroot.'Superadmin/home_page_box'; ?>">Home Page Box</a></li>-->
 			
-			<li><a href="<?php echo $this->webroot.'Superadmin/footer_slider'; ?>">Footer Slider Images</a></li>
+			<!--<li><a href="<?php //echo $this->webroot.'Superadmin/footer_slider'; ?>">Footer Slider Images</a></li>-->
 			
 		  </ul>
 		  <div class="setting_icon">

@@ -1,7 +1,7 @@
 <?php 
 		
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
@@ -42,7 +42,7 @@
     <option value="N/A">Choose Parent Category</option>
 	<?php
     
-    $Admin -> category_tree(0, 0);	
+    $Superadmin -> category_tree(0, 0);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
         
@@ -111,6 +111,10 @@
       <?=$this->Form->input('prodprice',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Product Price'));?>
     </div>
     <div class="form-group">
+      <label for="exampleInputEmail1">Is Featured</label>
+      <?=$this->Form->input('isfeatured',array('type'=>'select', 'options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    </div>
+	<div class="form-group">
       <label for="exampleInputEmail1">Clearance</label>
             <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
       <?php //echo $this->Form->input('clearance',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance'));?>

@@ -1,7 +1,7 @@
 <?php 
 
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
@@ -39,7 +39,7 @@
     <select id="att_select"  name="data[Produc_master][catid]" class="form-control select2" style="width: 100%;">
     <?php
         
-        $Admin -> category_tree(0, $product_data['catid']);	
+        $Superadmin -> category_tree(0, $product_data['catid']);	
         echo '</select>';
     ?>
     </div>
@@ -177,7 +177,11 @@
       <label for="exampleInputEmail1">Product Price</label>
       <?=$this->Form->input('prodprice',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Title', 'value'=>$product_data['prodprice']));?>
     </div>
-    <div class="form-group">
+	<div class="form-group">
+      <label for="exampleInputEmail1">Is Featured</label>
+      <?=$this->Form->input('isfeatured',array('type'=>'select', 'options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'value'=>$product_data['isfeatured']));?>
+    </div>
+	<div class="form-group">
       <label for="exampleInputEmail1">Clearance</label>
 	  <?=$this->Form->input('clearance',array('type'=>'select', 'options'=>array(1=>'Yes', 0=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     <?php //echo $this->Form->input('clearance',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Clearance'));?>

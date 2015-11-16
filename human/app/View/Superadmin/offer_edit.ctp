@@ -1,6 +1,6 @@
 <?php 	
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 ?>
   <?=$this->Form->create('Offer_master', array('role'=>'form', 'enctype'=>'multipart/form-data'));?>
   <div class="box-body form_box">
@@ -21,7 +21,7 @@
     <option value="0">All</option>
 	<?php
     
-	$Admin -> offer_category_tree(0, $offer_data['offercat']);	
+	$Superadmin -> offer_category_tree(0, $offer_data['offercat']);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		    
 	?>
@@ -33,7 +33,7 @@
     <option value="0">All</option>
 	<?php
     
-    $Admin -> offer_product_tree(0, $offer_data['offerprod']);	
+    $Superadmin -> offer_product_tree(0, $offer_data['offerprod']);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     ?>

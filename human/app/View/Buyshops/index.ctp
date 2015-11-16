@@ -13,7 +13,7 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 <!DOCTYPE HTML>
-<html>
+<html> 
 <head>
 <title>Buy_shop an E-Commerce online Shopping Category Flat Bootstarp responsive Website Template| Home :: w3layouts</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -222,18 +222,61 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
   <section class="slider">
     <div class="flexslider">
       <ul class="slides">
-        <?php foreach($slider_images as $image) { ?>
-        <li style="background-image:url(<?php echo $this->webroot.'img/slider/'.$image['Slider_image']['image_path']; ?>); background-repeat:no-repeat; min-height:565px; width:100%; background-size:cover">
-          <div class="main_banner2">
-            <div class=slider_box>
-              <div class=slider_heading1><?php echo $image['Slider_image']['heading']; ?></div>
-              <div class=slider_heading2><?php echo $image['Slider_image']['short_desc']; ?></div>
-              <div class=slider_content><?php echo $image['Slider_image']['long_desc']; ?></div>
-            </div>
-            <div class="slider_img"></div>
-          </div>
-        </li>
-        <?php } ?>
+        <?php 
+		
+		foreach($slider_images as $image) 
+		{ 
+		
+			if(($image['Slider_image']['product_id'] !='') || ($image['Slider_image']['cat_id'] !=''))
+			{
+				if(($image['Slider_image']['product_id'] !=''))
+				{
+					?>
+					<li style="background-image:url(<?php echo $this->webroot.'img/slider/'.$image['Slider_image']['image_path']; ?>); background-repeat:no-repeat; min-height:565px; width:100%; background-size:cover">
+					  <div class="main_banner2" onclick="window.location.href='<?php echo $this->webroot.'buyshops/product_details/'.$image['Slider_image']['product_id']; ?>'" style="cursor:pointer">
+						<div class=slider_box>
+						  <div class=slider_heading1><?php echo $image['Slider_image']['heading']; ?></div>
+						  <div class=slider_heading2><?php echo $image['Slider_image']['short_desc']; ?></div>
+						  <div class=slider_content><?php echo $image['Slider_image']['long_desc']; ?></div>
+						</div>
+						<div class="slider_img"></div>
+					  </div>
+					</li>
+					<?php
+				}
+				else
+				{
+					?>
+					<li style="background-image:url(<?php echo $this->webroot.'img/slider/'.$image['Slider_image']['image_path']; ?>); background-repeat:no-repeat; min-height:565px; width:100%; background-size:cover">
+					  <div class="main_banner2" onclick="window.location.href='<?php echo $this->webroot.'buyshops/products/'.$image['Slider_image']['cat_id']; ?>'" style="cursor:pointer">
+						<div class=slider_box>
+						  <div class=slider_heading1><?php echo $image['Slider_image']['heading']; ?></div>
+						  <div class=slider_heading2><?php echo $image['Slider_image']['short_desc']; ?></div>
+						  <div class=slider_content><?php echo $image['Slider_image']['long_desc']; ?></div>
+						</div>
+						<div class="slider_img"></div>
+					  </div>
+					</li>
+					<?php
+				}
+			}
+			else
+			{
+				?>
+				<li style="background-image:url(<?php echo $this->webroot.'img/slider/'.$image['Slider_image']['image_path']; ?>); background-repeat:no-repeat; min-height:565px; width:100%; background-size:cover">
+				  <div class="main_banner2">
+					<div class=slider_box>
+					  <div class=slider_heading1><?php echo $image['Slider_image']['heading']; ?></div>
+					  <div class=slider_heading2><?php echo $image['Slider_image']['short_desc']; ?></div>
+					  <div class=slider_content><?php echo $image['Slider_image']['long_desc']; ?></div>
+					</div>
+					<div class="slider_img"></div>
+				  </div>
+				</li>
+				<?php
+			}
+		} 
+		?>
       </ul>
     </div>
   </section>
@@ -258,20 +301,179 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <div class="width1220">
       <div class="blog_box">
         <?php $home_page_data = $home_page_data['Home_page_box'];?>
-		<div class="blog_list">
-          <div class="blog_list_img"><img src="<?php echo $this->webroot.'img/home_page_box/thumb/small_images/'.$home_page_data['first_imagepath']; ?>" /></div>
+		
+		<?php 
+		$i=0;
+		foreach($cat_data as $data)
+		{
+			if($i<3)
+			{
+				if(($i==1) || ($i==2))
+				{
+				?>
+				<a href="<?php echo $this->webroot.'buyshops/products/'.$data['Category']['id']; ?>">
+				<div class="blog_list">
+				  <div class="blog_list_img"><img src="<?php echo $this->webroot.'img/category/'.$data['Category']['catimg']; ?>" /></div>
+				  <div class="blog_list_content">
+				   <?php 
+					
+					  if(strlen($data['Category']['catname'])<=10)
+					  {
+						echo $data['Category']['catname'];
+					  }
+					  else
+					  {
+						$page_content = substr($data['Category']['catname'],0,10) . '...';
+						echo $page_content;
+					  }
+				  
+				    ?> <!--Elegant--> <br /><span>
+				   				   
+				    <?php 
+					
+					 if(strlen($data['Category']['catdesc'])<=10)
+					  {
+						//echo $data['Category']['catdesc'];
+					  }
+					  else
+					  {
+						$page_content = substr($data['Category']['catdesc'],0,10) . '...';
+						//echo $page_content;
+					  }
+					
+					//echo $data['Category']['catdesc']; 
+					
+				  ?><!--AND MODERN STYLE--></span>
+				  </div>
+				</div>
+				</a>
+				<?php
+				}
+			}			
+			$i++;
+		}
+		?>
+		
+		<!--<div class="blog_list">
+          <div class="blog_list_img"><img src="<?php //echo $this->webroot.'img/home_page_box/thumb/small_images/'.$home_page_data['first_imagepath']; ?>" /></div>
           <div class="blog_list_content">
-           <?php echo $home_page_data['first_shortdesc']; ?> <!--Elegant--> <br /><span><?php echo $home_page_data['first_longdesc']; ?><!--AND MODERN STYLE--></span>
+           <?php //echo $home_page_data['first_shortdesc']; ?> <br /><span><?php //echo $home_page_data['first_longdesc']; ?></span>
           </div>
         </div>
         
 		<div class="blog_list">
-          <div class="blog_list_img"><img src="<?php echo $this->webroot.'img/home_page_box/thumb/small_images/'.$home_page_data['second_imagepath']; ?>" /></div>
+          <div class="blog_list_img"><img src="<?php //echo $this->webroot.'img/home_page_box/thumb/small_images/'.$home_page_data['second_imagepath']; ?>" /></div>
           <div class="blog_list_content">
-            <?php echo $home_page_data['second_shortdesc']; ?><!--Support--> <br /><span><?php echo $home_page_data['second_longdesc']; ?><!--Top customer accounts <br />and logins--></span>
+            <?php //echo $home_page_data['second_shortdesc']; ?> <br /><span><?php //echo $home_page_data['second_longdesc']; ?></span>
           </div>
-        </div>
+        </div>-->
+		
+		
+		
       </div>
+      
+    <link rel="stylesheet" href="<?php echo $this->webroot.'css/footer_slider/tinycarousel.css'; ?>" type="text/css" media="screen"/>
+
+	<!-- build:js jquery.tinycarousel.js -->
+	<script type="text/javascript" src="<?php echo $this->webroot.'js/footer_slider/jquery.tinycarousel.js'; ?>"></script>
+    <!-- /build -->
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$('#slider1').tinycarousel();
+		});
+	</script>
+	
+	<div id="slider1">
+		<a class="buttons prev" href="#">&#60;</a>
+		<div class="viewport">
+			<ul class="overview">
+				<?php
+								
+				foreach($product_slider as $product)
+				{
+					?>
+					
+					
+					<?php
+					if(isset($product['Produc_master']['images']['Default']['imagepath']))
+					{
+						?>
+						
+						<li>
+						<a class="pro_heading" href="<?php echo $this->webroot.'buyshops/product_details/'.$product['Produc_master']['id']; //single.html?>"> 
+						<span><img style="max-width: 200px; max-height: 230px; display:inline" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['Produc_master']['images']['Default']['imagepath'];?>" class="img-responsive" alt=""/></span>
+						<?php
+					}
+					else
+					{
+						?>
+						<li>
+						<a class="pro_heading" href="<?php echo $this->webroot.'buyshops/product_details/'.$product['Produc_master']['id']; //single.html?>"> 
+						<span><img style="max-width: 200px; max-height: 230px; display:inline" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['Produc_master']['images']['all']['imagepath'];?>" class="img-responsive" alt=""/></span>
+						<?php
+					}
+					?>
+					<div class="pro_heading">
+					<strong>
+					
+					<?php 
+					
+					  if(strlen($product['Produc_master']['prodname'])<=40)
+					  {
+						echo $product['Produc_master']['prodname'];
+					  }
+					  else
+					  {
+						$page_content = substr($product['Produc_master']['prodname'],0,40) . '...';
+						echo $page_content;
+					  }
+					
+					?>
+					
+					</strong></div>
+					<div class="pro_price">
+					<?php 
+					
+					  if(strlen($product['Produc_master']['prodprice'])<=40)
+					  {
+						echo "$".$product['Produc_master']['prodprice'];
+					  }
+					  else
+					  {
+						$page_content = substr($product['Produc_master']['prodprice'],0,40) . '...';
+						echo "$".$page_content;
+					  }
+					  
+					?>
+					</div>
+					<?php 
+												  
+					  if(strlen($product['Produc_master']['prodscdesc'])<=40)
+					  {
+						echo $product['Produc_master']['prodscdesc'];
+					  }
+					  else
+					  {
+						$page_content = substr($product['Produc_master']['prodscdesc'],0,40) . '...';
+						echo $page_content;
+					  }
+					
+					?>
+					</a>
+					</li>
+				<?php
+				}
+				?>
+				
+				<!--<li><img src="<?php //echo $this->webroot.'img/footer_slider/picture6.jpg';?>" /></li>
+				<li><img src="<?php //echo $this->webroot.'img/footer_slider/picture1.jpg';?>" /></li>-->
+				
+			</ul>
+		</div>
+		<a class="buttons next" href="#">&#62;</a>
+	</div>
+
       
 	  <!--<div class="blog_box">
         <div class="heading18"><strong>NEW PRODUCTS</strong></div>
@@ -303,59 +505,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </div>
   </div>
   
-  	<link rel="stylesheet" href="<?php echo $this->webroot.'css/footer_slider/tinycarousel.css'; ?>" type="text/css" media="screen"/>
-
-	<!-- build:js jquery.tinycarousel.js -->
-	<script type="text/javascript" src="<?php echo $this->webroot.'js/footer_slider/jquery.tinycarousel.js'; ?>"></script>
-    <!-- /build -->
-	<script type="text/javascript">
-		$(document).ready(function()
-		{
-			$('#slider1').tinycarousel();
-		});
-	</script>
-	
-	<div id="slider1">
-		<a class="buttons prev" href="#">&#60;</a>
-		<div class="viewport">
-			<ul class="overview">
-				<?php
-								
-				foreach($product_slider as $product)
-				{
-					if(isset($product['Produc_master']['images']['Default']['imagepath']))
-					{
-						?>
-						<li>
-						<img style="max-width: 190px; max-height: 250px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['Produc_master']['images']['Default']['imagepath'];?>" class="img-responsive" alt=""/>
-						<?php echo $product['Produc_master']['prodname'];?>
-						<?php echo $product['Produc_master']['prodprice'];?>
-						<?php echo $product['Produc_master']['prodscdesc'];?>
-						</li>
-						<?php
-					}
-					else
-					{
-						?>
-						<li>
-						<img style="max-width: 190px; max-height: 250px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['Produc_master']['images']['all']['imagepath'];?>" class="img-responsive" alt=""/>
-						<?php echo $product['Produc_master']['prodname'];?>
-						<?php echo $product['Produc_master']['prodprice'];?>
-						<?php echo $product['Produc_master']['prodscdesc'];?>
-						</li>
-						<?php
-					}
-				}
-				?>
-				
-				<!--<li><img src="<?php //echo $this->webroot.'img/footer_slider/picture6.jpg';?>" /></li>
-				<li><img src="<?php //echo $this->webroot.'img/footer_slider/picture1.jpg';?>" /></li>-->
-				
-			</ul>
-		</div>
-		<a class="buttons next" href="#">&#62;</a>
-	</div>
-
+  	
   
 <div class="footer">
 <?php echo $this->element('buy_shop_footer');?>

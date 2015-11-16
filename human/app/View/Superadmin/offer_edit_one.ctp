@@ -1,7 +1,7 @@
 <?php 
 	
 	App::import('Controller', 'Admins');
-	$Admin = new AdminController;
+	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
 ?>
   <!-- form start -->
@@ -18,7 +18,7 @@
     <select multiple="multiple" name="data[Offer_master][catid][]" class="form-control select2" style="width: 100%;">
     <option value="0">All</option>
 	<?php
-    $Admin -> offer_category_tree(0, $offer_data['offercat']);	
+    $Superadmin -> offer_category_tree(0, $offer_data['offercat']);	
     echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     
@@ -31,7 +31,7 @@
     <option value="0">All</option>-->
 	<?php
     
-    $Admin -> offer_product_tree(0, $offer_data['prod']);	
+    $Superadmin -> offer_product_tree(0, $offer_data['prod']);	
     //echo '</select>';
     //$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
     ?>

@@ -1,9 +1,5 @@
 <script src="<?php echo $this->webroot."plugins/jQuery/jQuery-2.1.4.min.js"; ?>"></script>
-<?php
-	
-	echo "This is the index page";
-	
-?>
+<?php ?>
 
 <div class="calender_box"><img src="<?php echo $this->webroot.'img/local/calender_img.jpg';?>" /></div>
   <div class="feed_Box">

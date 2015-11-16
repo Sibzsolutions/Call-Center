@@ -34,11 +34,13 @@
 <link rel="stylesheet" href="<?php echo $this->webroot; ?>css/home_slider/templatemo_style.css" type="text/css" media="screen" />
 
 
- <div class="width1220">  
+<!-- <div class="width1220">  
       <div class="inner_heading" style="padding: 0px">
         <div class="refine_box">
+		
           <div class="refine_heading">Refine Your Search</div>
-          <div class="width100">
+          
+		  <div class="width100">
             <a href="#">Basic Color</a>
           </div>
           <div class="width100">
@@ -56,23 +58,27 @@
           <div class="width100">
             <a href="#">Product Features </a>
           </div>
+		  
         </div>
-        <div class="inner_banner2"><img src="<?php echo $this->webroot.'img/only_human_userside/inner_banner.jpg';?>" /></div>
+        
       </div>
-    </div>
+    </div>-->
 
 <div class="width1220">
 <div class="refine_box">
-<!-- start sidebar -->
-		<div class="width100">
-			<div class="refine_heading">All</div>
+	
+		<!-- start sidebar -->
+		
+		<!--<div class="width100">
+				<div class="refine_heading">All</div>
 				<div class="width100"><a href="women.html">women</a></div>
 				<div class="width100"><a href="#">new arrivals</a></div>
 				<div class="width100"><a href="#">trends</a></div>
 				<div class="width100"><a href="#">boys</a></div>
 				<div class="width100"><a href="#">girls</a></div>
 				<div class="width100"><a href="#">sale</a></div>
-		</div>
+		
+		</div>-->
 
 		<?php 
 		
@@ -215,7 +221,7 @@
 		
 		
    </div>
-   
+   <div class="inner_banner2"><img src="<?php echo $this->webroot.'img/only_human_userside/inner_banner.jpg';?>" /></div>
 	<div class="col-md-9 w_content">
 	    <div class="women">
 			<a href="#"><h4>
@@ -298,6 +304,13 @@
 			
 			foreach($products as $product)
 			{
+				if(isset($product['id']))
+				{
+					?>
+					<a class="pro_heading" href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; //single.html?>"> 
+					<?php
+				}
+				
 				$product = $product['Produc_master'];
 				
 				if ($i==1) {
@@ -309,7 +322,7 @@
 				
 				?>
 				  <div class="grid1_of_4 simpleCart_shelfItem">
-						<div class="product_box"><a href="<?php echo $this->webroot.'buy_shops/product_details/'.$product['id']; //single.html?>">
+						<div class="product_box"><a href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; //single.html?>">
 						  <div class="view view-fifth">
 							
 							<?php
@@ -329,9 +342,9 @@
 							 	<div class="mask1">
 									<div class="info"> </div>
 								</div>
-							  </a>
+							  
 						   </div>
-							<a class="pro_heading" href="<?php echo $this->webroot.'buy_shops/product_details/'.$product['id']; //single.html?>"> 
+							
 							<strong>
 							
 							<?php 
@@ -359,13 +372,15 @@
 							?></div>
 							
 							 <div class="pro_price">
-								<strong><?php echo 'MSRP: $'.$product['prodprice']; // $187.95 ?></strong>
-							   <!--<select class="item_Size">
+								<strong><?php echo '$'.$product['prodprice']; // $187.95 ?></strong>
+								
+							    <!--<select class="item_Size">
 								<option value="Small">L</option>
 								<option value="Medium">S</option>
 								<option value="Large">M</option>	
 								<option value="Large">XL</option>	
 								</select>-->
+								
 								<div class="clearfix"></div>
 							  </div>
 							  
@@ -455,7 +470,7 @@
 				});
 
 				</script>
-				
+				</a>
 			<?php
 
 			}		
@@ -485,3 +500,5 @@
    <div class="clearfix"></div>
    <!-- end content -->
  </div>
+
+ <?php echo $this->element('featured_slider'); ?>

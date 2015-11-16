@@ -2564,9 +2564,9 @@ ul.icon1.sub-icon1.profile_img {
   padding-top: 10px;
   margin-top: 10px;
 }
-.banner {
+/*.banner {
 	min-height: 400px;
-}
+}*/
 .banner_desc {
   padding-top: 7em;
 }
@@ -2702,9 +2702,9 @@ ul.single_social li {
 .col-xs-7 {
   margin-top: -6px;
 }
-.banner {
+/*.banner {
   min-height: 350px;
-}
+}*/
 .banner_desc h1 {
   font-size: 2.5em;
 }
@@ -2925,9 +2925,9 @@ li.middle {
   padding: 8px 20px;
   font-size: 0.85em;
 }
-.banner {
+/*.banner {
   min-height:150px;
-}
+}*/
 .banner_desc {
   padding-top: 4em;
 }
