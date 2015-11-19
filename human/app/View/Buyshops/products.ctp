@@ -65,7 +65,7 @@
     </div>-->
 
 <div class="width1220">
-<div class="refine_box">
+<div class="refine_box" style="">
 	
 		<!-- start sidebar -->
 		
@@ -152,7 +152,9 @@
 			<!--<div class="col col-4">
 				<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>kurtas</label>
 			</div>-->
+
 			<?php
+
 			foreach($cat_filter['Attribute_category']['Attribute_master']['Attribute_Values'] as $att_element)
 			{
 				$att_element = $att_element['Attribute_value'];
@@ -204,21 +206,17 @@
 								
 				<?php 
 			}
+
 			?>
 			
 			</div>
 			</div>
 			
 			<?php
-		}
-		
-		?>
-		
-		<?php
-		
+			
+			}
 		}
 		?>
-		
 		
    </div>
    <div class="inner_banner2"><img src="<?php echo $this->webroot.'img/only_human_userside/inner_banner.jpg';?>" /></div>
@@ -360,8 +358,8 @@
 								$page_content = substr($product['prodname'],0,40) . '...';
 								echo $page_content;
 							  }
-							  ?>
 
+							?>
 							
 							</strong></a>
 							<div class="width100 text12_black" style="padding:0 0 7px 0">
@@ -408,12 +406,11 @@
 								}
 								else
 								{
-								?>				
-								
+								?>												
                                    <div class="product_cart_box">
                                       <div style="width: 100%; float: left; min-height: 37px;">
                                         <div class="size_2-left"> 
-                                           <input type="text" class="item_quantity quantity_1" value="1" />
+                                           <!--<input type="text" class="item_quantity quantity_1" value="1" />-->
                                         </div>
                                         <div id="green_buy_<?php echo $product['id']; ?>">			 
                                         <div class="size_2-right"><input type="button" class="item_add add32" value="" /></div>
@@ -423,8 +420,7 @@
 								 </div>
 								 <?php 
 								}
-							 ?>
-							 
+							 ?>							 
 						 </div>
 					</div>
 					<?php
@@ -433,13 +429,10 @@
 						
 						?>
 						<div class="clearfix"></div>
-						
-						
 						<?php
 					}
 					
-				$i++;
-				
+				$i++;				
 				?>
 				
 				<script>
@@ -464,8 +457,7 @@
 						 
 						 $("#item_add_add3_<?php echo $product['id']; ?>").addClass("add32");
 						
-						//$('#red_buy_<?php echo $product['id']; ?>').replaceWith($('#green_buy_<?php echo $product['id']; ?>'));
-						
+						//$('#red_buy_<?php echo $product['id']; ?>').replaceWith($('#green_buy_<?php echo $product['id']; ?>'));						
 					});
 				});
 
@@ -484,8 +476,7 @@
 				echo '<div>'.$this->Paginator->counter().'</div>';
 				echo "<div class='clear'></div>";
 				echo "</div>";
-			}								
-			
+			}											
 		?>
 			</div>
 		</div>

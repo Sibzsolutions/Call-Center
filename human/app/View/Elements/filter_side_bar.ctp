@@ -1,5 +1,4 @@
 <?php ?>
-
 <link rel="stylesheet" href="<?php echo $this->webroot.'css/home_slider/normalize.css';?>" />
 <link rel="stylesheet" href="<?php echo $this->webroot.'css/home_slider/ion.rangeSlider.css';?>" />
 <link rel="stylesheet" href="<?php echo $this->webroot.'css/home_slider/ion.rangeSlider.skinFlat.css';?>" />
@@ -39,20 +38,14 @@
 			<?php
 			foreach($cat_filter['Attribute_category']['Attribute_master']['Attribute_Values'] as $att_element)
 			{
-				
-				
 				$att_element = $att_element['Attribute_value'];
 				
 				?>
 
-				
-				
-				
 				<div class="col col-4">
 					<label class="checkbox">
 					<input type="checkbox" id="checkbox_<?php echo $att_element['id'].'_'.$att_element['attid']; ?>" checked="" value = "<?php echo $att_element['id']; ?>"><i></i><?php echo $att_element['attvalue']; ?></label>
 				</div>
-				
 				
 				<script>
 					  
@@ -95,9 +88,6 @@
 					  
 				</script>
 								
-				
-				
-				
 				<?php 
 			}
 			?>
@@ -110,45 +100,45 @@
 		
 		<section  class="sky-form">
 
-					<h4>Price</h4>
-						<div class="row1 scroll-pane">
-							<div class="col col-4">
+		<h4>Price</h4>
+			<div class="row1 scroll-pane">
+				<div class="col col-4">
 
-						<div id="ranged-value" style="margin: 1px 6px; width: 95%;"></div>
+			<div id="ranged-value" style="margin: 1px 6px; width: 95%;"></div>
 
-						<div class="packages_slider">
-							<input type="text" id="range" value="" name="range" />
-						</div>
+			<div class="packages_slider">
+				<input type="text" id="range" value="" name="range" />
+			</div>
 
-						</div>
+			</div>
+			
+			<script>
+			
+			$(function () {
+
+				$("#range").ionRangeSlider({
+					type: 'double',
+					//step: 4,
+
+					min: 100,
+					max: 10000,
+					from: 500,
+					
+					onFinish: function (data) {
 						
-						<script>
-						
-						$(function () {
-
-							$("#range").ionRangeSlider({
-								type: 'double',
-								//step: 4,
-
-								min: 100,
-								max: 10000,
-								from: 500,
-								
-								onFinish: function (data) {
-									
-									$.post("<?php echo $this->webroot; ?>Grt/rating_search_one",
-									{length_min:data.from,length_max:data.to},
-									function(data,status){
-										$('#one_form').html(data);
-									});
-								},
-							});
+						$.post("<?php echo $this->webroot; ?>Grt/rating_search_one",
+						{length_min:data.from,length_max:data.to},
+						function(data,status){
+							$('#one_form').html(data);
 						});
+					},
+				});
+			});
 
-						</script>
+			</script>
 
-							</div>
-						</div>
+				</div>
+			</div>
 
 		</section>
 	  </div>

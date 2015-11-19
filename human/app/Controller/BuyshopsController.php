@@ -42,7 +42,7 @@ App::uses('AppController', 'Controller');
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box');
+	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -61,12 +61,12 @@ App::uses('AppController', 'Controller');
 		 AuthComponent::$sessionKey='onlyhuman';
 		 $this->Auth->fields = array('username' => 'username','password' => 'password');
 		 $this->Auth->authenticate = array('Form' => array('scope'=>array('User.usrtype'=>array('0'))));
-		 $this->Auth->loginAction=array('controller' => 'Buyshops','action' => 'login');
+		 $this->Auth->loginAction=array('controller' => 'Buyshops','action' => 'myaccount');
 		 $this->Auth->logoutRedirect=array('controller' => 'Buyshops','action' => 'login');
-		 $this->Auth->loginRedirect = array('controller'=>'Buyshops','action'=>'index');
+		 $this->Auth->loginRedirect = array('controller'=>'Buyshops','action'=>'myaccount');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results');  
+		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt');  
 		 
 		 $this->layout="buyshops_layout";   
 		 
@@ -103,69 +103,8 @@ App::uses('AppController', 'Controller');
 			 $data_first[$key]['Category']['sub_type'] = $cat_data_tree;
 		 }
 		 		 
-		 if(isset($data_first))
-		 $this->set('dynamic_menu', $data_first);		 
-		 
-		 /*
-		 
-		 if(isset($this->request->params['action']))
-		 {	
-			if($this->Session->check('id_first') == 1)
-			{
-				$id_first = $this->Session->read('id_first');
-			}
-			else
-			{
-				$id_first = $this->params['pass'][0];
-				$this->Session->write('id_first', $id_first);
-			}
-			
-			 $category_att = $this->Attribute_category->find('all',array('conditions'=>array('Attribute_category.catid'=>$id_first)));
-			 
-			 foreach($category_att as $cat_key=>$att)
-			 {
-				 $att_master = $this->Attribute_master->find('first',array('conditions'=>array('Attribute_master.id'=>$att['Attribute_category']['attid'])));
-				 
-				 $category_att[$cat_key]['Attribute_category']['Attribute_master'] = $att_master['Attribute_master'];
-				 
-				 $att_values = $this->Attribute_value->find('all',array('conditions'=>array('Attribute_value.attid'=>$att_master['Attribute_master']['id'])));
-				 
-				 $category_att[$cat_key]['Attribute_category']['Attribute_master']['Attribute_Values'] = $att_values;				 
-			 }
-			 
-			 $this->set('category_att', $category_att);
-		 }
-		 
-		 
-		 
-		$product_page_id = $this->request->params['action'];
-		 
-		if($this->Session->check('add_cart_session') == 1)
-		{
-			$add_cart_session = $this->Session->read('add_cart_session');			
-			
-			$data = $this->Session->read('data');			
-			
-			$data_first = $add_cart_session;
-			
-			if(in_array($product_page_id, $data_first))
-			$present = in_array($product_page_id, $data_first);
-			else
-			$present = 0;	
-			
-			if(isset($present))
-			$this->Session->write('present', $present);			
-		}
-		
-		if($this->Auth->user())
-		{
-			$user_data = $this->Auth->user();
-				
-			$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));//,'Cart_master.product_id'=>$product['Produc_master']['id']
-		
-			$this->set('count_add_to_cart', $count_add_to_cart);
-		}
-		*/
+		if(isset($data_first))
+		$this->set('dynamic_menu', $data_first);		 
 		 
 		if($this->Auth->user())
 		{
@@ -174,12 +113,65 @@ App::uses('AppController', 'Controller');
 			$list_add_to_cart = $this->Cart_master->find('list', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
 			
 			$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
-		
+			
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+			
+			foreach($all_products as $product)
+			{
+				$product = $product['Cart_master'];
+			
+				$product_id[] = $product['product_id'];
+			}
+			
+			$product_id = array_unique($product_id);
+			
+			$count_add_to_cart = count($product_id);
+			
 			$this->set('count_add_to_cart', $count_add_to_cart);		
 			
 			if(isset($count_add_to_cart))
 			$this->Session->write('count_add_to_cart', $count_add_to_cart);			
 		}
+		
+		if($this->Session->check('add_cart_session') == 1)
+		$add_cart_session = $this->Session->read('add_cart_session');						
+	
+		if($this->Auth->user())
+		{
+			$user_data = $this->Auth->user();
+			
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		
+			foreach($all_products as $product)
+			{
+				$product = $product['Cart_master'];
+				
+				$product_id[] = $product['product_id'];
+			}
+		}
+		
+		if(isset($add_cart_session) && isset($product_id))
+		$product_id = array_merge($product_id, $add_cart_session);
+		elseif(isset($add_cart_session))
+		$product_id = $add_cart_session;
+		elseif(isset($product_id))
+		$product_id = $product_id;
+		
+		if(isset($product_id))
+		{
+			if(count($product_id)>1)
+			$add_cart = array_unique($product_id);
+			else
+			$add_cart = $product_id;
+		}
+		
+		if(isset($add_cart))
+		$count_checkout = count($add_cart);
+		else
+		$count_checkout = 0;
+		
+		if(isset($count_checkout))
+		$this->Session->write('count_checkout', $count_checkout);			
 		
 		if(isset($product_data['product_id']))
 		{
@@ -187,7 +179,7 @@ App::uses('AppController', 'Controller');
 			
 			$this->Session->write('data', $data);			
 		}
-
+		
 		if($this->Session->check('add_cart_session') == 1)
 		{
 			$add_cart_session = $this->Session->read('add_cart_session');			
@@ -198,7 +190,7 @@ App::uses('AppController', 'Controller');
 			$data_first = $data;
 			if((isset($add_cart_session)) && (!(isset($data))))
 			$data_first = $add_cart_session;
-		
+			
 			if(isset($product_page_id))
 			if(in_array($product_page_id, $data_first))
 			$present = in_array($product_page_id, $data_first);
@@ -958,16 +950,6 @@ App::uses('AppController', 'Controller');
 		{
 			$product = $product['Produc_master'];
 			
-			if(isset($add_cart))			
-			{
-				if(in_array($product['id'], $add_cart))
-				$products[$key]['Produc_master']['add_to_cart'] = 1;
-				else
-				$products[$key]['Produc_master']['add_to_cart'] = 0;	
-			}
-			else
-				$products[$key]['Produc_master']['add_to_cart'] = 0;	
-			
 			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
                 'id' => 'DESC'
             )));
@@ -985,7 +967,6 @@ App::uses('AppController', 'Controller');
 		
 		$this->set('product_slider', $products);
 
-		
 		$category = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
 		
 		if(isset($category['Category']))
@@ -1025,18 +1006,6 @@ App::uses('AppController', 'Controller');
 		
 		 if(isset($id))
 		 {		 
-			/*
-			if($this->Session->check('id_first') == 1)
-			{
-				$id_first = $this->Session->read('id_first');
-			}
-			else
-			{
-				$id_first = $this->params['pass'][0];
-				$this->Session->write('id_first', $id_first);
-			}
-			*/
-			
 			$id_first = $id;
 			
 			 $category_att = $this->Attribute_category->find('all',array('conditions'=>array('Attribute_category.catid'=>$id_first, 'Attribute_category.del_status'=>0)));
@@ -1111,42 +1080,177 @@ App::uses('AppController', 'Controller');
 		
 			$products = $this->paginate('Produc_master');
 		}
+		
+		if($this->Session->check('add_cart_session') == 1)
+		$add_cart_session = $this->Session->read('add_cart_session');						
 	
-		foreach($products as $key=>$product)
+		if($this->Auth->user())
 		{
-			$product = $product['Produc_master'];
+			$user_data = $this->Auth->user();
 			
-			if(isset($add_cart))			
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		
+			foreach($all_products as $product)
 			{
+				$product = $product['Cart_master'];
 				
-				if(in_array($product['id'], $add_cart))
-				$products[$key]['Produc_master']['add_to_cart'] = 1;
-				else
-				$products[$key]['Produc_master']['add_to_cart'] = 0;	
-			}
-			else
-				$products[$key]['Produc_master']['add_to_cart'] = 0;	
-			
-			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
-                'id' => 'DESC'
-            )));
-			
-			foreach($product_images as $image)
-			{
-				$image = $image['Produc_image'];		
-				
-				if($image['isdefault']==1)
-				$products[$key]['Produc_master']['images']['Default'] = $image;
-				else
-				$products[$key]['Produc_master']['images']['all'] = $image;				
+				$product_id[] = $product['product_id'];
 			}
 		}
 		
-		/*
-		echo "products<pre>";
-		print_r($products);
-		echo "<pre>";
-		*/
+		if(isset($add_cart_session) && isset($product_id))
+		$product_id = array_merge($product_id, $add_cart_session);
+		elseif(isset($add_cart_session))
+		$product_id = $add_cart_session;
+		elseif(isset($product_id))
+		$product_id = $product_id;
+		
+		if(isset($product_id))
+		{
+			if(count($product_id)>1)
+			{				
+				$add_cart = array_unique($product_id);
+				
+				foreach($products as $key=>$product)
+				{
+					$product = $product['Produc_master'];
+					
+					if(isset($add_cart))			
+					{
+						if(in_array($product['id'], $add_cart))
+						$products[$key]['Produc_master']['add_to_cart'] = 1;
+						else
+						$products[$key]['Produc_master']['add_to_cart'] = 0;	
+					}
+					else
+						$products[$key]['Produc_master']['add_to_cart'] = 0;	
+					
+					$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+						'id' => 'DESC'
+					)));
+					
+					foreach($product_images as $image)
+					{
+						$image = $image['Produc_image'];		
+						
+						if($image['isdefault']==1)
+						$products[$key]['Produc_master']['images']['Default'] = $image;
+						else
+						$products[$key]['Produc_master']['images']['all'] = $image;				
+					}
+				}			
+			}
+			else
+			{
+				$add_cart = $product_id;
+				
+				foreach($products as $key=>$product)
+				{
+					$product = $product['Produc_master'];
+					
+					if(isset($add_cart))			
+					{
+						if($product['id'] == $add_cart)
+						$products[$key]['Produc_master']['add_to_cart'] = 1;
+						else
+						$products[$key]['Produc_master']['add_to_cart'] = 0;	
+					}
+					else
+						$products[$key]['Produc_master']['add_to_cart'] = 0;	
+					
+					$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+						'id' => 'DESC'
+					)));
+					
+					foreach($product_images as $image)
+					{
+						$image = $image['Produc_image'];		
+						
+						if($image['isdefault']==1)
+						$products[$key]['Produc_master']['images']['Default'] = $image;
+						else
+						$products[$key]['Produc_master']['images']['all'] = $image;				
+					}
+				}
+			}
+		}
+		else
+		{
+			foreach($products as $key=>$product)
+			{
+				$product = $product['Produc_master'];
+				
+				if(isset($add_cart))			
+				{
+					if($product['id'] == $add_cart)
+					$products[$key]['Produc_master']['add_to_cart'] = 1;
+					else
+					$products[$key]['Produc_master']['add_to_cart'] = 0;	
+				}
+				else
+					$products[$key]['Produc_master']['add_to_cart'] = 0;	
+				
+				$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+					'id' => 'DESC'
+				)));
+				
+				foreach($product_images as $image)
+				{
+					$image = $image['Produc_image'];		
+					
+					if($image['isdefault']==1)
+					$products[$key]['Produc_master']['images']['Default'] = $image;
+					else
+					$products[$key]['Produc_master']['images']['all'] = $image;				
+				}
+			}
+		}
+		$i=1;
+		foreach($products as $key=>$product)
+		{
+			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+			
+			if($offer_master_cat_data !='')
+			{
+				foreach($offer_master_cat_data as $lowest_price_cat)
+				{
+					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+				}
+				
+				$max_discount_cat = max($low_cat);
+				
+				unset($low_cat);				
+			}
+			
+			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+			
+			if($offer_master_data !='')
+			{
+				foreach($offer_master_data as $lowest_price)
+				{
+					$low[] = $lowest_price['Offer_master']['discount'];
+				}
+				if(isset($low))
+				$max_discount = max($low);
+				
+				unset($low);
+			}
+			
+			if(isset($max_discount_cat) && isset($max_discount))
+				$final_max_discount = max($max_discount_cat, $max_discount);
+			elseif(isset($max_discount_cat))
+				$final_max_discount = $max_discount_cat;
+			elseif(isset($max_discount))
+				$final_max_discount = $max_discount;
+								
+			unset($max_discount_cat);	 
+			unset($max_discount);
+						
+			$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
+						
+			unset($final_max_discount);
+			$i++;
+		}
 		
 		$this->set('products', $products);
 		
@@ -1180,6 +1284,10 @@ App::uses('AppController', 'Controller');
 	
 	public function product_details($id) 
 	{
+		$reviews = $this->Review_master->find('all', array('conditions'=>array('Review_master.approval'=>1, 'Review_master.prodid'=>$id)));
+		
+		$this->set('reviews', $reviews);
+		
 		$category = $this->Category->find('list', array('conditions'=>array('Category.del_status'=>0)));
 		
 		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
@@ -1191,16 +1299,6 @@ App::uses('AppController', 'Controller');
 		foreach($products as $key=>$product)
 		{
 			$product = $product['Produc_master'];
-			
-			if(isset($add_cart))			
-			{
-				if(in_array($product['id'], $add_cart))
-				$products[$key]['Produc_master']['add_to_cart'] = 1;
-				else
-				$products[$key]['Produc_master']['add_to_cart'] = 0;	
-			}
-			else
-				$products[$key]['Produc_master']['add_to_cart'] = 0;	
 			
 			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
                 'id' => 'DESC'
@@ -1268,38 +1366,6 @@ App::uses('AppController', 'Controller');
 		
 		$this->set('att_array', $att_array);
 		
-		/*
-		$i=0;
-		foreach($product_att as $key=>$attribute)
-		{
-			echo "attribute<pre>";
-			print_r($attribute);
-			echo "<pre>";
-			
-			$attribute = $attribute['Produc_attribute'];
-			
-			$att_value = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attribute['attvid'])));
-			
-			echo "att_value<pre>";
-			print_r($att_value);
-			echo "<pre>";
-			
-			die();
-			
-			$product_att[$key]['Produc_attribute']['Attribute_value'][$key] = $att_value;
-			
-			$att_master = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$att_value['Attribute_value']['attid'])));
-			
-			$product_att[$key]['Produc_attribute']['Attribute_value'][$key]['Attribute_value']['Attribute_master'][] = $att_master;			
-		}
-		
-		echo "Product_att<pre>";
-		print_r($product_att);
-		echo "<pre>";
-		
-		die();
-		*/
-		
 		$product = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
 		
 		if($this->Session->check('add_cart_session') == 1)
@@ -1333,6 +1399,85 @@ App::uses('AppController', 'Controller');
 		
 		if(isset($product_image))
 		$product['Produc_master']['images'] = $product_image;
+		
+		$wishlist_details = $this->Wishlist_detail->find('all', array('conditions'=>array('Wishlist_detail.prodid'=>$product['Produc_master']['id'])));
+		
+		foreach($wishlist_details as $details)
+		$master_id[] = $details['Wishlist_detail']['master_id'];			
+		
+		if(isset($master_id) && isset($user_data['id']))
+		$wishlist_master = $this->Wishlist_master->find('all', array('conditions'=>array('Wishlist_master.id'=>$master_id, 'Wishlist_master.usrid'=>$user_data['id'])));
+		
+		if(isset($wishlist_master))
+		foreach($wishlist_master as $master)
+		$wishlist_master_id[] = $master['Wishlist_master']['id'];			
+		
+		if(isset($wishlist_master_id))
+		$wishlist_details = $this->Wishlist_detail->find('all', array('conditions'=>array('Wishlist_detail.master_id'=>$wishlist_master_id)));
+		
+		foreach($wishlist_details as $final_details)
+		$wishlist_details_prodid[] = $final_details['Wishlist_detail']['prodid'];			
+		
+		if(isset($wishlist_details_prodid))
+		{
+			if(in_array($product['Produc_master']['id'], $wishlist_details_prodid))
+			$product['Produc_master']['wishlist_id'] = 1;
+			else
+			$product['Produc_master']['wishlist_id'] = 0;	
+		}
+		else
+			$product['Produc_master']['wishlist_id'] = 0;	
+		
+		if($this->Session->check('add_cart_session') == 1)
+		$add_cart_session = $this->Session->read('add_cart_session');						
+		
+		if($this->Auth->user())
+		{
+			$user_data = $this->Auth->user();
+			
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		
+			foreach($all_products as $productaa)
+			{
+				$producta = $productaa['Cart_master'];
+				$product_id[] = $producta['product_id'];
+			}
+		}
+		
+		if(isset($add_cart_session) && isset($product_id))
+		$product_id = array_merge($product_id, $add_cart_session);
+		elseif(isset($add_cart_session))
+		$product_id = $add_cart_session;
+		elseif(isset($product_id))
+		$product_id = $product_id;
+		
+		if(isset($product_id))
+		{
+			if(count($product_id)>1)
+			{				
+				$add_cart = array_unique($product_id);
+				
+				if(isset($add_cart))			
+				{
+					if(in_array($product['Produc_master']['id'], $add_cart))
+					$product['Produc_master']['add_to_cart'] = 1;
+					else
+					$product['Produc_master']['add_to_cart'] = 0;	
+				}
+				else
+					$product['Produc_master']['add_to_cart'] = 0;						
+			}
+		}
+		else
+			$product['Produc_master']['add_to_cart'] = 0;						
+		
+		/*
+		echo "product<pre>";
+		print_r($product);
+		echo "<pre>";
+		
+		die();
+		*/
 		
 		if(isset($product['Produc_master']))		
 		$this->set('product', $product['Produc_master']);					
@@ -1450,11 +1595,45 @@ App::uses('AppController', 'Controller');
 		}				
 	}
 	
-	public function add_to_cart() { 
+	public function add_to_cart_wishlist() { 
 		
+		$product_data = $_REQUEST;
+		
+		if($this->Auth->user())
+		{
+			$user_data = $this->Auth->user();
+			
+			$add_to_cart['Cart_master']['user_id'] = $user_data['id'];
+			
+			$add_to_cart['Cart_master']['product_id'] = $product_data['product_id'];
+			
+			if($this->Cart_master->save($add_to_cart))
+				echo "yes";
+			else
+				echo "no";
+		}
+		
+		die();
+	}
+	
+	public function add_to_cart() 
+	{ 
 		$this->layout='';
 		
 		$product_data = $_REQUEST;
+		
+		$product_checkout[$product_data['product_id']] = $product_data['product_id'];
+		
+		if($this->Session->check('add_cart_session') == 1)
+		{
+			$add_cart_session = $this->Session->read('add_cart_session');							
+			
+			$add_cart_sessiona = array_merge($product_checkout, $add_cart_session);
+			
+			$this->Session->write('add_cart_session', $add_cart_sessiona);													
+		}
+		else
+		$this->Session->write('add_cart_session', $product_checkout);							
 		
 		if($this->Session->check('page_id') == 1)
 			$product_page_id = $this->Session->read('page_id');	
@@ -1466,6 +1645,9 @@ App::uses('AppController', 'Controller');
 		else
 			$this->Session->delete('page_id');				
 		
+		if($this->Session->check('add_cart_session') == 1)
+			$add_cart_session = $this->Session->read('add_cart_session');						
+		
 		if($this->Auth->user())
 		{
 			$user_data = $this->Auth->user();
@@ -1476,50 +1658,34 @@ App::uses('AppController', 'Controller');
 			
 			$this->Cart_master->save($add_to_cart);		
 			
-			$list_add_to_cart = $this->Cart_master->find('list', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
-			
-			$count_add_to_cart = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
 		
-			$this->set('count_add_to_cart', $count_add_to_cart);		
-			
-			if(isset($count_add_to_cart))
-			$this->Session->write('count_add_to_cart', $count_add_to_cart);			
+			foreach($all_products as $product)
+			{
+				$product = $product['Cart_master'];
+				
+				$product_id[] = $product['product_id'];
+			}
 		}
 		
-		$data[$product_data['product_id']] = $product_data['product_id'];
+		if(isset($add_cart_session) && isset($product_id))
+		$product_id = array_merge($product_id, $add_cart_session);
+		elseif(isset($add_cart_session))
+		$product_id = array_merge($add_cart_session);
+		elseif(isset($product_id))
+		$product_id = array_merge($product_id);
 		
-		$this->Session->write('data', $data);			
-		
-		if($this->Session->check('add_cart_session') == 1)
+		if(isset($product_id))
 		{
-			$add_cart_session = $this->Session->read('add_cart_session');			
+			$add_cart = array_unique($product_id);			
+			echo count($add_cart);
 			
-			$data_first = $add_cart_session + $data;
 			
-			if(isset($product_page_id))
-			if(in_array($product_page_id, $data_first))
-			$present = in_array($product_page_id, $data_first);
-			else
-			$present = 0;	
-			
-			if(isset($present))
-			$this->Session->write('present', $present);
-			
-			$this->Session->write('add_cart_session', $data_first);
 		}
 		else
-		{
-			$this->Session->write('add_cart_session', $data);
-		}
+			echo "0";
 		
-		$add_cart_session_pr = $this->Session->read('add_cart_session');			
-		
-		if(isset($add_cart_session_pr))
-		{
-			$count_add_cart_session = count($add_cart_session_pr);
-			
-			$this->Session->write('count_add_cart_session', $count_add_cart_session);
-		}				
+		die();
 	}
 	
 	public function register() 
@@ -1553,7 +1719,7 @@ App::uses('AppController', 'Controller');
 				 );
 			 }
 			 else
-			 $this->redirect('index');			 
+			 $this->redirect('myaccount');			 
 		}
 	}
 	
@@ -1562,34 +1728,34 @@ App::uses('AppController', 'Controller');
 		return $this->redirect($this->Auth->logout());
 	}
 	
-	public function checkout() {
-	
+	public function checkout() 
+	{
 		if($this->Session->check('add_cart_session') == 1)
-		{
-			$add_cart_session = $this->Session->read('add_cart_session');						
-		}
-	
+		$add_cart_session = $this->Session->read('add_cart_session');						
+		
 		if($this->Auth->user())
 		{
 			$user_data = $this->Auth->user();
+			
 			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
 		
-		foreach($all_products as $product)
-		{
-			$product = $product['Cart_master'];
-			
-			$product_id[] = $product['product_id'];
-		}
+			foreach($all_products as $product)
+			{
+				$product = $product['Cart_master'];
+				
+				$product_id[] = $product['product_id'];
+			}
 		}
 		
 		if(isset($add_cart_session) && isset($product_id))
 		$product_id = array_merge($product_id, $add_cart_session);
-	
-		if(isset($add_cart_session))
-		$product_id = $add_cart_session;
+		elseif(isset($add_cart_session))
+		$product_id = array_merge($add_cart_session);
+		elseif(isset($product_id))
+		$product_id = array_merge($product_id);
 		
 		if(isset($product_id))
-		$product_id = $product_id;
+		$product_id = array_unique($product_id);
 		
 		if(isset($product_id))
 		{
@@ -1621,99 +1787,95 @@ App::uses('AppController', 'Controller');
 		}
 	}
 	
+	public function remove_from_wishlist() { 
+		
+		if($this->Auth->user())
+		{			
+			$user_data = $this->Auth->user();
+			
+			$wishlist_product = $this->Wishlist_master->find('first', array('conditions'=>array('Wishlist_master.id'=>$_REQUEST['wishlist_master_id'], 'Wishlist_master.usrid'=>$user_data['id'])));
+			
+			$wishlist_product['Wishlist_master']['del_status'] = 1;
+			
+			if($this->Wishlist_master->save($wishlist_product))
+				echo "Saved";
+			else
+				echo "Not saved";
+		}
+		
+		die();				
+	}
+	
 	public function remove_from_cart() { 
 		
 		if($this->Session->check('add_cart_session') == 1)
 		{
 			$add_cart_session = $this->Session->read('add_cart_session');						
 			
-			unset($add_cart_session[$_REQUEST['product_id']]);
+			foreach($add_cart_session as $key=>$value)
+			{
+				if($value == $_REQUEST['product_id'])
+					unset($add_cart_session[$key]);
+			}
 			
-			$this->Session->write('add_cart_session', $add_cart_session);						
-		}
-		
-		$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.product_id'=>$_REQUEST['product_id'])));
-		
-		foreach($all_products as $prods)
-		{
-			$prods = $prods['Cart_master'];
-			
-			$rmv_cart['Cart_master']['id'] = $prods['id'];
-			$rmv_cart['Cart_master']['del_status'] = 1;
-			
-			$this->Cart_master->create();
-			$this->Cart_master->save($rmv_cart);
+			$this->Session->write('add_cart_session', $add_cart_session);			
 		}
 		
 		if($this->Auth->user())
 		{			
 			$user_data = $this->Auth->user();
 			
-			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0, 'Cart_master.product_id'=>$_REQUEST['product_id'])));
 			
+			$all_products_count_db = count($all_products);
+			
+			if($all_products !='')
+			foreach($all_products as $product)
+			{
+				$prods = $product['Cart_master'];
+				
+				$rmv_cart['Cart_master']['id'] = $prods['id'];
+				$rmv_cart['Cart_master']['del_status'] = 1;
+				
+				if($all_products_count_db>1)
+					$this->Cart_master->save($rmv_cart);				
+				else
+				{
+					$this->Cart_master->create();
+					$this->Cart_master->save($rmv_cart);				
+				}									
+			}
+		}
+		
+		if($this->Session->check('add_cart_session') == 1)
+		$add_cart_session = $this->Session->read('add_cart_session');						
+		
+		if($this->Auth->user())
+		{
+			$user_data = $this->Auth->user();
+			
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		
 			foreach($all_products as $product)
 			{
 				$product = $product['Cart_master'];
 				
 				$product_id[] = $product['product_id'];
 			}
-			
-			if(isset($product_id))
-			{
-				$product_checkout = array();
-				
-				$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.id'=>$product_id)));
-				
-				foreach($products as $product)
-				$products_checkout[] = $product['Produc_master'];
-				
-				foreach($products_checkout as $key=>$product)
-				{
-					$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id'])));
-					
-					foreach($product_images as $image)
-					{
-						$image = $image['Produc_image'];		
-						
-						if($image['isdefault']==1)
-						$products_checkout[$key]['images']['Default'] = $image;
-						else
-						$products_checkout[$key]['images']['all'] = $image;				
-					}
-				}
-				
-				$this->set('products_checkout', $products_checkout);				
-			}	
-			
-		}	
+		}
 		
-		if((isset($products_checkout)) && (isset($add_cart_session)))
-		$count_one = (count($add_cart_session) + count($products_checkout));	
-		elseif((isset($products_checkout)) && (!isset($add_cart_session)))
-		$count_one = count($products_checkout);
-		elseif((!isset($products_checkout)) && (isset($add_cart_session)))
-		$count_one = count($add_cart_session);
-		else
-		$count_one = 0;			
+		if(isset($add_cart_session) && isset($product_id))
+		$product_id = array_merge($product_id, $add_cart_session);
+		elseif(isset($add_cart_session))
+		$product_id = array_merge($add_cart_session);
+		elseif(isset($product_id))
+		$product_id = array_merge($product_id);
 		
-		$this->set('count_one', $count_one);
-		/*
-		if(isset($products_checkout))
-		echo "products_checkout<pre>";
-		print_r($products_checkout);
-		echo "<pre>";
+		$product_id = array_unique($product_id);
 		
-		$add_cart_session = $this->Session->read('add_cart_session');						
+		echo count($product_id);
 		
-		echo "add_cart_session<pre>";
-		print_r($add_cart_session);
-		echo "<pre>";
-		
-		die();
-		*/
-		
-		
-		
+		die();						
 	}
 	public function contact_us() { 
 
@@ -1774,7 +1936,191 @@ App::uses('AppController', 'Controller');
 			}
 		}		
 	}
-
+	
+	public function wishlist_mgt() 
+	{
+		$userdata = $this->Auth->user();	
+		
+		if($userdata)
+		{
+			$wishlist_data['Wishlist_master']['usrid'] = $userdata['id'];
+			$wishlist_data['Wishlist_master']['prodid'] = $_REQUEST['product_id'];			
+			$wishlist_data['Wishlist_master']['datecreated'] = date('Y-m-d H:i:s',time());
+			$wishlist_data['Wishlist_master']['lastupdated'] = date('Y-m-d H:i:s',time());
+			
+			$this->Wishlist_master->save($wishlist_data);			
+						
+			$master_id = $this->Wishlist_master->getLastInsertId();
+			
+			$wishlist_data_detail['Wishlist_detail']['master_id'] = $master_id;			
+			$wishlist_data_detail['Wishlist_detail']['prodid'] = $_REQUEST['product_id'];			
+			$wishlist_data_detail['Wishlist_detail']['datecreated'] = date('Y-m-d H:i:s',time());
+			$wishlist_data_detail['Wishlist_detail']['dateupdated'] = date('Y-m-d H:i:s',time());
+			
+			if($this->Wishlist_detail->save($wishlist_data_detail))
+			echo "yes";
+			else
+			echo "no";		
+		}
+		else
+		echo "no";		
+		
+		die();
+		
+	}
+	
+	public function review_mgt() 
+	{ 
+		$userdata = $this->Auth->user();	
+		
+		if($userdata)
+		{
+			$review_data['Review_master']['user_id'] = $userdata['id'];
+			$review_data['Review_master']['review_txt'] = $_REQUEST['review_text'];
+			$review_data['Review_master']['prodid'] = $_REQUEST['product_id'];
+			
+			if($this->Review_master->save($review_data))
+			echo "yes";
+			else
+			echo "no";		
+		}
+		else
+		echo "no";		
+	
+		die();
+	}
+	
+	public function my_wishlist() 
+	{
+		$userdata = $this->Auth->user();	
+				
+		$wishlist_all = $this->Wishlist_master->find('all', array('conditions'=>array('Wishlist_master.del_status'=>0, 'Wishlist_master.usrid'=>$userdata['id'])));
+		
+		foreach($wishlist_all as $key=>$wishlist)
+		{		
+			$wishlist_details = $this->Wishlist_detail->find('first', array('conditions'=>array('Wishlist_detail.master_id'=>$wishlist['Wishlist_master']['id'])));
+			
+			if(isset($wishlist_details)!='')
+			{
+				if(isset($wishlist_details['Wishlist_detail']))
+				$cart_product = $this->Cart_master->find('count', array('conditions'=>array('Cart_master.product_id'=>$wishlist_details['Wishlist_detail']['prodid'], 'Cart_master.user_id'=>$userdata['id'])));
+				
+				if(isset($wishlist_details['Wishlist_detail']))
+				$product_master = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$wishlist_details['Wishlist_detail']['prodid'])));
+				
+				if($this->Session->check('add_cart_session') == 1)
+				$add_cart_session = $this->Session->read('add_cart_session');						
+		
+				if($this->Auth->user())
+				{
+					$user_data = $this->Auth->user();
+					
+					$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+					
+					foreach($all_products as $product)
+					{
+						$product = $product['Cart_master'];
+						
+						$product_id[] = $product['product_id'];
+					}
+					
+					if(isset($add_cart_session) && isset($product_id))
+					$product_id = array_merge($product_id, $add_cart_session);
+					elseif(isset($add_cart_session))
+					$product_id = $add_cart_session;
+					elseif(isset($product_id))
+					$product_id = $product_id;
+					
+					if(isset($product_id))
+					{
+						if(count($product_id)>1)
+						{				
+							$add_cart = array_unique($product_id);
+							
+							$product = $product_master['Produc_master'];
+								
+							if(isset($add_cart))			
+							{
+								if(in_array($product['id'], $add_cart))
+									$product_master['Produc_master']['add_to_cart'] = 1;								
+								else
+									$product_master['Produc_master']['add_to_cart'] = 0;
+							}
+							else
+								$product_master['Produc_master']['add_to_cart'] = 0;
+						}
+					}				
+				}
+				
+				if(isset($wishlist_details['Wishlist_detail']))
+				$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$wishlist_details['Wishlist_detail']['prodid'])));
+				
+				foreach($product_images as $image)
+				{
+					$image = $image['Produc_image'];		
+					
+					if($image['isdefault']==1)
+					$products_checkout['Default'] = $image;
+					else
+					$products_checkout['all'] = $image;				
+				}
+				
+				$wishlist_details['Wishlist_detail']['prod_details'] = $product_master['Produc_master'];
+				
+				$wishlist_details['Wishlist_detail']['images'] = $products_checkout;
+				
+				$wishlist_all[$key]['Wishlist_detail'] = $wishlist_details['Wishlist_detail'];
+			}			
+		}
+		
+		$this->set('wishlist', $wishlist_all);		
+	
+	}
+	
+	public function buy_product($id) 
+	{
+		$product_data = $this->Produc_master->find('first', array('Produc_master.id' =>$id));
+		
+		echo "product_data<pre>";
+		print_r($product_data);
+		echo "<pre>";
+		
+		die();
+	}
+	
+	public function coupon_mgt() 
+	{
+		if(isset($_REQUEST['total_price']))
+		$prodprice = $_REQUEST['total_price'];
+		else
+		{
+			$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$_REQUEST['product_id'])));
+			$prodprice = $product_data['Produc_master']['prodprice'];
+		}
+		
+		$coupon_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.coupon_number'=>$_REQUEST['coupon_txt'])));
+		
+		if($coupon_data !='')
+		{
+			if($coupon_data['Coupon_master']['discount_prcnt']!='')
+			{
+				$final_price = ($prodprice-(($coupon_data['Coupon_master']['discount_prcnt']/100)*$prodprice));
+			}
+			else
+			{
+				$final_price = (($prodprice)-$coupon_data['Coupon_master']['discount_price']);
+			}			
+			
+			echo "Discounted_price is ".$final_price;
+		}
+		else
+		{
+			echo "Sorry you entered the wrorng coupon number";
+		}
+		
+		die();				
+	}
+	
 	
 }
 ?>

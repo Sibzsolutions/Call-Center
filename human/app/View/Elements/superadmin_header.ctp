@@ -5,7 +5,7 @@
           <a href="<?php echo $this->webroot.'Superadmin/index'?>">Dashboard</a>
           <a href="<?php echo $this->webroot.'Superadmin/users'?>">User Management</a>
           <a href="<?php echo $this->webroot.'Superadmin/site_setting'?>">Site Setting</a>
-          <a href="#">Manage Reviews</a>
+          <a href="<?php echo $this->webroot.'Superadmin/reviews'?>">Manage Reviews</a>
           <a href="#">Order Management</a>
           <?php
 					
@@ -37,6 +37,8 @@
 			<li><a href="<?php echo $this->webroot.'Superadmin/offers'; ?>">Manage Offers</a></li>
 			
 			<li><a href="<?php echo $this->webroot.'Superadmin/main_slider_images'; ?>">Manage Slider Images</a></li>
+			
+			<li><a href="<?php echo $this->webroot.'Superadmin/coupons'; ?>">Manage Coupons</a></li>
 			
 			<!--<li><a href="<?php //echo $this->webroot.'Superadmin/home_page_box'; ?>">Home Page Box</a></li>-->
 			

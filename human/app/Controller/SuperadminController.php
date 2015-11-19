@@ -38,7 +38,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master');
 
 /**
  * Displays a view
@@ -196,7 +196,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	{
 		if ($this->request->is('post')) {
 			
-			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
+			$this->request->data['User']['last_login'] = date('Y-m-d H:i:s',time());
 			
 			if($this->User->save($this->request->data))
 			$this->redirect('users');
@@ -1121,19 +1121,14 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			$count_data = count($offercat_data);
 			
-			$offerprod_data = explode(',', $data['Offer_master']['offerprod']);
-			
-			$count_data_prod = count($offerprod_data);
-			
 			for($i=0;$i<$count_data;$i++)
 			{
-				
-				if($offercat_data[$i] == 0)
+				if(($offercat_data[$i] == 0) && ($offercat_data[$i] != ''))
 				$category_txt[] = 'All';
 				else
 				{
 					$category_name = $this->Category->find('first', array('conditions' => array('Category.id' => $offercat_data[$i])));
-				
+					
 					if($i==0)
 					{
 						if(isset($category_name['Category']['catname']))
@@ -1162,15 +1157,18 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			unset($category_txt);
 			
+			$offerprod_data = explode(',', $data['Offer_master']['offerprod']);
+			
+			$count_data_prod = count($offerprod_data);
+			
 			for($i=0;$i<$count_data_prod;$i++)
-			{
-				
-				if($offercat_data[$i] == 0)
+			{				
+				if(($offerprod_data[$i] == 0) && ($offerprod_data[$i] != ''))
 				$product_txt[] = 'All';
 				else
 				{
-					if(isset($offercat_data[$i]))
-					$product_name = $this->Produc_master->find('first', array('conditions' => array('Produc_master.id' => $offercat_data[$i])));
+					if(isset($offerprod_data[$i]))
+					$product_name = $this->Produc_master->find('first', array('conditions' => array('Produc_master.id' => $offerprod_data[$i])));
 					if($i==0)
 					{
 						if(isset($product_name['Produc_master']['prodname']))
@@ -1199,6 +1197,14 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			unset($product_txt);
 		}
+		
+		/*
+		echo "offers_data<pre>";
+		print_r($offers_data);
+		echo "<pre>";
+		
+		die();
+		*/
 		
 		$this->set('offers_data', $offers_data);
 	}
@@ -1238,7 +1244,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 				}
 				
 				$offercat = $cate;
-				$this->request->data['Offer_master']['offerprod'] = $offerprod;
+				$this->request->data['Offer_master']['offercat'] = $offercat;
 			}
 			
 			$i=0;
@@ -1263,13 +1269,12 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 							$cate = $cate.$cat_data.',';
 						}
 					}
-									
 					$i++;
 				}
 				
 				$offerprod = $cate;
 				
-				$this->request->data['Offer_master']['offercat'] = $offercat;
+				$this->request->data['Offer_master']['offerprod'] = $offerprod;
 			}
 			
 			if($this->Offer_master->save($this->request->data))
@@ -1317,7 +1322,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 				
 				$offercat = $cate;
 				
-				$this->request->data['Offer_master']['offerprod'] = $offerprod;
+				$this->request->data['Offer_master']['offercat'] = $offercat;
 			}
 			
 			$i=0;
@@ -1348,9 +1353,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 				
 				$offerprod = $cate;
 				
-				$this->request->data['Offer_master']['offercat'] = $offercat;
+				$this->request->data['Offer_master']['offerprod'] = $offerprod;
 			}
-			
 			
 			if($this->Offer_master->save($this->request->data))
 			$this->redirect('offers');
@@ -2047,7 +2051,97 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		}		
 	}	
 	
-
+	public function reviews() 
+	{
+		$reviews = $this->Review_master->find('all', array('conditions'=>array('Review_master.del_status'=>0), 'order' => array(
+                'id' => 'DESC'
+            )));
+		
+		foreach($reviews as $key=>$review)
+		{
+			$user_data = $this->User->find('first', array('conditions'=>array('User.id'=>$review['Review_master']['user_id'])));
+			
+			$product_master = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$review['Review_master']['prodid'])));
+			
+			$reviews[$key]['User'] = $user_data['User'];
+			
+			$reviews[$key]['Produc_master'] = $product_master['Produc_master'];		
+		}
+		
+		$this->set('reviews', $reviews);		
+	}
+	
+	public function review_approved($id) 
+	{
+		$reviews_data = $this->Review_master->find('first', array('conditions'=>array('Review_master.id'=>$id)));
+		
+		if($reviews_data['Review_master']['approval']==1)
+		$reviews_data['Review_master']['approval'] = 0;
+		else
+		$reviews_data['Review_master']['approval'] = 1;
+		
+		if($this->Review_master->save($reviews_data))
+		$this->redirect('reviews');			
+	}
+	
+	public function review_status_change($id) 
+	{
+		$review_data = $this->Review_master->find('first', array('conditions'=>array('Review_master.id'=>$id)));
+		
+		if($review_data['Review_master']['del_status'] == 1)
+		$review_data['Review_master']['del_status'] = 0;
+		else
+		$review_data['Review_master']['del_status'] = 1;
+		
+		if($this->Review_master->save($review_data))
+		$this->redirect('reviews');		
+	}
+	
+	public function coupon_status_change($id) 
+	{
+		$coupon_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.id'=>$id)));
+		
+		if($coupon_data['Coupon_master']['del_status'] == 1)
+			$coupon_data['Coupon_master']['del_status'] = 0;
+		else
+			$coupon_data['Coupon_master']['del_status'] = 1;
+		
+		if($this->Coupon_master->save($coupon_data))
+		$this->redirect('coupons');		
+	}
+	
+	public function coupon_edit($id) 
+	{
+		echo "Id".$id;
+		echo "Shashikant is in the edit coupon functionality";
+		
+		$coupons_data = $this->Coupon_master->find('first', array('conditions'=>array('coupon_master.id'=>$id)));
+		
+		$this->set('coupon_data', $coupons_data['Coupon_master']);		
+	}
+	
+	public function add_coupon() 
+	{
+		if ($this->request->is('post')) {
+			
+			$randnum_number = mt_rand();
+			
+            $this->request->data['Coupon_master']['coupon_number'] = $randnum_number;
+			
+			if($this->Coupon_master->save($this->request->data))
+				$this->redirect('coupons');
+		}	
+	}
+	
+	public function coupons() 
+	{
+		$coupons = $this->Coupon_master->find('all', array('conditions'=>array('Coupon_master.del_status'=>0)));
+		$this->set('coupons', $coupons);		
+	}
+	
+	
+	
+	
 }
 
 ?>

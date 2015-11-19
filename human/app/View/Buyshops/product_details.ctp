@@ -27,7 +27,7 @@
 			source_image_height: 1200,
 			show_hint: true,
 			click_callback: function(image_anchor, instance_id){
-				alert('Callback example:\nYou clicked on an image with the anchor: "'+image_anchor+'"\n(in Etalage instance: "'+instance_id+'")');
+				//alert('Callback example:\nYou clicked on an image with the anchor: "'+image_anchor+'"\n(in Etalage instance: "'+instance_id+'")');
 			}
 		});
 
@@ -69,80 +69,90 @@ html {
 <body>
 <div class="single_top">
 	 <div class="width1220 product_details"> 
-			  <?php 
-				
-			  if($this->Session->check('count_add_cart_session') == 1)
-			  $count_add_cart_session = $this->Session->read('count_add_cart_session');			
-				
-			  if($this->Session->check('count_add_to_cart') == 1)
-			  $count_add_to_cart = $this->Session->read('count_add_to_cart');			
-		  
-			  if($this->Session->check('present') == 1)
-			  $present = $this->Session->read('present');			
-				
-			  //echo "present_above".$present;
-				
-			  //die();
-				
-			  //echo "count_add_cart_session".$count_add_cart_session."<br>";
-				
-			  //echo "count_add_to_cart".$count_add_to_cart."<br>";
-				
-			  if(isset($count_add_to_cart) && isset($count_add_cart_session))
-				$count_last = ($count_add_to_cart+$count_add_cart_session); 			  
-			  elseif(isset($count_add_cart_session))
-				$count_last = $count_add_cart_session; 
-			  elseif(isset($count_add_to_cart))
-				$count_last = $count_add_to_cart; 
-			  else
-				$count_last = 0;
-			  
-			  ?>
-					
+
 			<div class="single_grid">
 				<div class="grid images_3_of_2">
-						<ul id="etalage">
+
+					<ul id="etalage">
 							
 							<?php 
 
 							foreach($product['images'] as $image)
-								{
-									$image = $image['Produc_image']['imagepath'];
-									
-									?>
-									<li>
-										<a href="optionallink.html">
-											<img class="etalage_thumb_image" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$image; ?>" class="img-responsive" />
-											<img class="etalage_source_image" src="<?php echo $this->webroot.'img/product/thumb/large_images/'.$image; ?>" class="img-responsive" title="" />
-										</a>
-									</li>
-									<?php
-								}							
+							{
+								$image = $image['Produc_image']['imagepath'];
+								
+								?>
+								<li>
+									<a href="optionallink.html">
+										<img class="etalage_thumb_image" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$image; ?>" class="img-responsive" />
+										<img class="etalage_source_image" src="<?php echo $this->webroot.'img/product/thumb/large_images/'.$image; ?>" class="img-responsive" title="" />
+									</a>
+								</li>
+								<?php
+							}							
+							
 							?>
-							
-							<!--<li>
-								<img class="etalage_thumb_image" src="<?php //echo $this->webroot.'img/buy_shop/s2.jpg'; ?>" class="img-responsive" />
-								<img class="etalage_source_image" src="<?php //echo $this->webroot.'img/buy_shop/s2.jpg'; ?>" class="img-responsive" title="" />
-							</li>
-							
-							<li>
-								<img class="etalage_thumb_image" src="<?php //echo $this->webroot.'img/buy_shop/s3.jpg'; ?>" class="img-responsive"  />
-								<img class="etalage_source_image" src="<?php //echo $this->webroot.'img/buy_shop/s3.jpg'; ?>"class="img-responsive"  />
-							</li>
-						    <li>
-								<img class="etalage_thumb_image" src="<?php //echo $this->webroot.'img/buy_shop/s4.jpg';?>" class="img-responsive"  />
-								<img class="etalage_source_image" src="<?php //echo $this->webroot.'img/buy_shop/s4.jpg';?>"class="img-responsive"  />
-							</li>-->
-
 						</ul>
-						 <div class="clearfix"></div>		
+						
+						<div class="clearfix"></div>		
+						
 				  </div>
-					
+				
 				  <div class="desc1 span_3_of_2">
+  
+					<?php
+						
+						if($product['wishlist_id'] == 1)
+						{
+							?>
+							<div id="results_wishlist_replacea">
+								<div class="size_2-right added_wishlist"><button  class="add_cart_btm">Added to wishlist</button></div>
+							</div>							
+							<?php
+						}
+						else
+						{
+							?>
+							<div id="results_wishlist_replace">
+								<div class="size_2-right added_wishlist"><button id="add_to_wishlist" class="add_cart_btm">Add to wishlist</button></div>
+							</div>							
+							<?php
+						}
+					?>
+  
+					<script>
+						
+						$(document).ready(function(){
+							
+							$('#add_to_wishlist').click(function(){
+								
+								var product_id = '<?php echo $product['id']; ?>';
+								
+								//$("#results").html('<img src="<?=$this->webroot?>img/29.gif">');
+								
+								$.post("<?=$this->webroot?>/buyshops/wishlist_mgt", {
+								
+																				product_id: product_id,
+								
+																			}, function(result){									
+									if(result == "yes")
+										$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Added to wishlist</button></div>');	
+									else
+										$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Please login first..!!!</button></div>');									
+								});																	
+							});
+						});
+
+					</script>		
+				  
 				  	<ul class="back">
-                	  <li><i class="back_arrow"> </i>Back to <a href="index.html">Men's Clothing</a></li>
-                    </ul>
+					
+                	  <li><i class="back_arrow"> </i>Back to <a href="index.html">Men's Clothing</a></li>					  
+					  
+					</ul>
+					
 					<h1><?php echo $product['prodname']; //nibh euismod?></h1>
+					
 					<p><?php echo $product['proddesc']; //Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum ?></p>
 				     <div class="dropdown_top" style="margin:10px 0px;">
 				       
@@ -164,9 +174,11 @@ html {
 										$att_element = $att_element['Produc_attribute'];
 										?>
 										<option value="<?php echo $att_element['att_value_id']; ?>"><?php echo $att_element['att_val_name']; ?></option>	
+										
 										<!--<option value="1">M</option>
 										<option value="2">L</option>
 										<option value="3">XL </option>-->
+										
 										<?php
 									}
 									?>
@@ -216,33 +228,27 @@ html {
 									$att_element = $att_element['Produc_attribute'];
 									
 									?>
-								
-									<!--<input value="<?php //echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />--><?php echo $att_element['att_val_name']; ?>
 									
+									<!--<input value="<?php //echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />--><?php //echo $att_element['att_val_name']; ?>
 									<!--<li><a href="#"> <span class="color2"> </span></a></li>
 									<li><a href="#"> <span class="color3"> </span></a></li>
 									<li><a href="#"> <span class="color4"> </span></a></li>-->
 									
 									<?php
-								}		
-								
+								}										
 								echo '</ul>';		
 							}
 							
 							if(($key !='Brand') && ($key !='Size') && ($key !='Color'))
-							{
-								
+							{								
 								echo '<div style="width:100px">'; 
 								
 								echo '<ul class="brand_box">';
 								
-								
-
-
-								
 								?>
 								
-							<li>
+								<li>
+								
 								<?php
 								
 								$att_count = count($att);
@@ -280,78 +286,127 @@ html {
 									
 									<?php
 								}		
+								
 								echo '<div>';
 								echo '</ul>';								
-							}
-							
+							}							
 						}
-					   ?>
-						 
-					   <!--<div class="dropdown_left">
-					     <select class="dropdown" tabindex="10" data-settings='{"wrapperClass":"metro1"}'>
-	            			<option value="0">Select size</option>	
-							<option value="1">M</option>
-							<option value="2">L</option>
-							<option value="3">XL </option>
-							<option value="4">Fs</option>
-							<option value="5">S </option>
-							<option value="5"></option>
-							<option value="5"></option>
-			             </select>
-			            </div>
-			            <ul class="color_list">
-							<li><a href="#"> <span class="color1"> </span></a></li>
-							<li><a href="#"> <span class="color2"> </span></a></li>
-							<li><a href="#"> <span class="color3"> </span></a></li>
-							<li><a href="#"> <span class="color4"> </span></a></li>
-							<li><a href="#"> <span class="color5"> </span></a></li>
-						</ul>-->
 						
-
-
-
-						<div class="clearfix"></div>
+					   ?>
+						
+					<div class="clearfix"></div>
 			         </div>
 			         <div class="simpleCart_shelfItem">
 			         	<div class="price_single">
 						  <div class="head"><h2><span class="amount item_price"><?php echo '$'.$product['prodprice'];//$45.00 ?></span></h2></div>
-						  <div class="head_desc"><a href="#">12 reviews</a><img src="<?php echo $this->webroot.'img/buy_shop/review.png'; ?>" alt=""/></li></div>
+						  
+						  <div class="head_desc">
+						  
+						  <div id="reviews_show" ><?php echo count($reviews).' ';?>reviews</div>
+						  <img src="<?php echo $this->webroot.'img/buy_shop/review.png'; ?>" alt=""/>
+						  </li>
+						  </div>
 					       <div class="clearfix"></div>
 					     </div>
 						 
-						  <?php
-							
-						  if(isset($count_last))
-						  {
-							  if(($count_last>0) && ($present==1))
-							  {
-								  ?>
-								  <div class="size_2-right"><button id="added_to_cart" class="add_cart_btm">Added to Cart</button></div>
-								  <?php
-							  }
-							  else
-							  {
-								  ?>
-								  <div class="size_2-right"><button id="add_to_cart" class="add_cart_btm">Add To Cart</button></div>
-								  <?php
-							  }
-						  }
-						  else
-						  {
-							  ?>
-							  <div class="size_2-right"><button id="add_to_cart" class="add_cart_btm">Add To Cart</button></div>
-							  <?php
-						  }
-						  ?>
-						  
-						  <div class="size_2-right added_cart"><button id="added_to_cart" class="add_cart_btm">Added to Cart</button></div>
-						  
-					  <script>
-				
+						 <div id="added_cart_1">
+						 <div class="size_2-right">									
+							<button id="added_to_cart" class="add_cart_btm">Added to Cart</button>
+						 </div>
+						 </div>
+									
+						 <?php
+
+							if(isset($product['add_to_cart']))
+							{
+								if($product['add_to_cart'] == 1)
+								{
+									?>									
+									<div id="added_cart">
+									<div class="size_2-right">									
+									<button id="added_to_cart" class="add_cart_btm">Added to Cart</button>
+									</div>
+									</div>
+									<?php
+								}
+								else
+								{
+									?>
+									<div id="add_cart_1">
+									<div class="size_2-right">									
+									<button id="add_to_cart" class="add_cart_btm">Add To Cart</button>
+									</div>
+									</div>
+									<?php
+								}
+							}
+							else
+							{
+								?>
+								<div id="add_cart_2">
+								<div class="size_2-right">								
+								<button id="add_to_cart"  class="add_cart_btm">Add To Cart</button>
+								</div>
+								</div>
+								<?php
+							}
+						 ?>`
+						
+						
+						
+						<div style="margin-left:100px" class="size_2-right"><a id="add_to_cart_buy" class="add_cart_btm" href="<?php echo $this->webroot.'buyshops/buy_product/'.$product['id']; ?>">Buy</a></div>
+						
+						<div class="apply_box">
+						<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;">Apply Coupon</a></div>
+						<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both">
+						<button id="coupon_apply_btn"  class="apply_btn">Apply</button>
+						
+						<button id="discounted_price"  class="apply_btn"></button>
+						
+						</div>
+						
+					    <script>
+						
 						$(document).ready(function(){
 							
-							$('.added_cart').hide();
+							$('#discounted_price').hide();
 							
+							$('#coupon_apply_btn').click(function(){
+								
+								$('#discounted_price').show();
+								
+								var product_id = '<?php echo $product['id']; ?>';
+								
+								var coupon_txt = $('#coupon_txt').val();
+								
+								$.post("<?=$this->webroot?>buyshops/coupon_mgt", {coupon_txt: coupon_txt, product_id: product_id}, function(result){
+								
+									$("#discounted_price").html(result);								    
+								});								
+							});
+							
+							$('#coupon_apply_btn').hide();
+							$('#coupon_txt').hide();
+							
+							$('#coupon_btn').click(function(){
+								
+								alert("Coupon_button_click");
+								
+								//$('#coupon_btn').show();								
+								
+								$('#coupon_apply_btn').show();
+								$('#coupon_txt').show();
+							});
+							
+							$('#added_cart_1').hide();
+							
+							$('#review_div').hide();
+							
+							$('#reviews_show').click(function(){
+									
+								$('#review_div').toggle();
+							});
+								
 							$('#add_to_cart').click(function(){
 								
 								var page_id = '<?php echo $page_id; ?>';
@@ -360,10 +415,10 @@ html {
 								
 								$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id, page_id: page_id}, function(result){
 								
-									$("#cart").html(result);
-								    $('.added_cart').show();
-									$('#add_to_cart').hide();
-									
+									$("#cart").html(result);								    
+									$('#add_cart_1').hide();
+									$('#add_cart_2').hide();
+									$('#added_cart_1').show();
 								});
 							});
 						});
@@ -374,7 +429,8 @@ html {
 				</div>
           	    <div class="clearfix"></div>
           	   </div>
-          	 <div class="single_social_top">   
+          	 
+			 <div class="single_social_top">   
           	  <ul class="single_social">
 				  <li><a href="#"> <i class="s_fb"> </i> <div class="social_desc">Share<br> on facebook</div><div class="clearfix"> </div></a></li>
 				  <li><a href="#"> <i class="s_twt"> </i> <div class="social_desc">Tweet<br> this product</div><div class="clearfix"> </div></a></li>
@@ -382,6 +438,7 @@ html {
 				  <li class="last"><a href="#"> <i class="s_email"> </i><div class="social_desc">Email<br> a Friend</div><div class="clearfix"> </div></a></li>
 			  </ul>
 			 </div>
+			 
 			 <ul class="menu_drop">
 				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png'; ?>">Description</a>
 					<ul>
@@ -424,12 +481,66 @@ html {
 						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
 					</ul>
 				</li>
-				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Reviews (10)</a>
+				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>"><?php echo 'Reviews ('.count($reviews).')'; ?></a>
+					
+					<div id="review_div">
 					<ul>
-						<li class="subitem1"><a href="#">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor </a></li>
+						<?php
+						if(count($reviews) == 0)
+							echo "No Reviews";
+						else
+						foreach($reviews as $review)
+						{
+							?>
+							<li class="subitem1"><a href="#"><?php echo $review['Review_master']['review_txt']; ?> </a></li>
+							<?php
+						}
+						
+						?>
+						
+						<!--<li class="subitem1"><a href="#">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor </a></li>
 						<li class="subitem2"><a href="#"> Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore</a></li>
-						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>
+						<li class="subitem3"><a href="#">Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes </a></li>-->
+						
+						<li class="subitem3"><textarea id="review_text" style="width:100%; height:70px">Write a Review</textarea></li>
+						<li class="subitem3"><input style="width:100px;height:30px" id="button_submit" type="button" value="Submit"></li>
+						
+						<div id="results_review"></div>
+
+						<li><br><br></li>
+						
+						<script>
+						
+							$(document).ready(function(){
+								
+								$('#button_submit').click(function(){
+									
+									var review_text = $('#review_text').val();
+									
+									var product_id = '<?php echo $product['id']; ?>';
+									
+									//$("#results").html('<img src="<?=$this->webroot?>img/29.gif">');
+									
+									$.post("<?=$this->webroot?>/buyshops/review_mgt", {
+									
+																				review_text: review_text,
+																				product_id: product_id,
+									
+																			 }, function(result){
+																				 
+										if(result == "yes")
+										$("#results_review").html('Thank You..your review is in the process of approval...!!!');
+										else
+										$("#results_review").html('Please logged in first...!!!');
+									});									
+								});
+							});
+
+						</script>		
+
 					</ul>
+					</div>
+					
 				</li>
 				<li class="item1"><a href="#"><img src="<?php echo $this->webroot.'img/buy_shop/product_arrow.png';?>">Helpful Links</a>
 					<ul>

@@ -39,8 +39,6 @@
 		
 		$('.change_pass').click(function(){
 			
-			alert("pass_click");
-			
 			$('#one_change').show();
 			
 			/*

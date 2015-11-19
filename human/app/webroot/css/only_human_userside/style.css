@@ -444,9 +444,10 @@ nav{
     width: 80%;
 	color:#444444;
 }
+/*border: 1px solid #cccccc;*/
 .refine_box{
     background-color: #ffffff;
-    border: 1px solid #cccccc;
+    
     box-shadow: 0 0 0 9px #fff;
     float: left;
     height: auto;
@@ -913,6 +914,42 @@ p{
 .product_box .add32{
 	background-color:#f08c00;
 }
+.apply_box
+{
+	    clear: both;
+    float: left;
+    height: auto;
+    padding: 30px 0;
+    width: 100%;
+	
+}
+.apply_input
+{
+    background-color: #f4f4f4;
+    border: 0 none;
+    color: #000;
+    font-size: 14px;
+    height: 37px;
+    padding: 10px;
+	float:left;
+    width: 200px;
+}
+.apply_btn
+{
+    background-color: #e5e5e5;
+    border: 0 none;
+    color: #000;
+    float: left;
+    font-size: 17px;
+    padding: 9px 20px 8px;
+    text-transform: uppercase;
+}
+
+
+
+
+
+
 
 }
 

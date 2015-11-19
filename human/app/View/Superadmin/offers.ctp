@@ -50,18 +50,42 @@
                         <td>
 						<?php 
 							
-						//echo $offer['offercat']; 
+						$i=0;
+						$count_offercat = count($offer['category_txt']);
 						foreach($offer['category_txt'] as $offer_arr)
-						echo $offer_arr;
-
+						{
+							if($i == ($count_offercat-1))
+							echo $offer_arr;
+							elseif($i==0)
+							echo $offer_arr.',';
+							else
+							echo $offer_arr;
+							
+							unset($offer_arr);
+							
+							$i++;
+						}
+						
 						?>
                         </td>
                         <td>
 						<?php 
-							
-						//echo $offer['offerprod']; 
+						
+						$i=0;
+						$count_offerprod = count($offer['product_txt']);
 						foreach($offer['product_txt'] as $product_arr)
-						echo $product_arr;							
+						{
+							if($i == ($count_offerprod-1))
+							echo $product_arr;							
+							elseif($i==0)
+							echo $product_arr.',';
+							else
+							echo $product_arr;
+							
+							unset($product_arr);
+							
+							$i++;
+						}
 						
 						?>
                         </td>
