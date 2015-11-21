@@ -38,7 +38,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image');
 
 /**
  * Displays a view
@@ -818,9 +818,87 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		if ($this->request->is('post')) {
 						
+			$this->request->data['Produc_master']['date_added']=date('Y-m-d H:i:s',time());			
+						
 			$this->Produc_master->save($this->request->data);
 			
-			$last_inserted_id = $this->Produc_master->getLastInsertId();
+			$last_inserted_id = $this->Produc_master->getLastInsertId();			
+						
+			foreach($this->request->data['Produc_master']['attribute'] as $data_second)
+			{
+				if(isset($data_second['id']))
+				{
+					if($data_second['id'] !='')
+					{
+						$attvid = $data_second['id'];
+						
+						if(isset($data_second['color_imgs'][0]['name']))
+						{
+							if($data_second['color_imgs'][0]['name'] !='')
+							{
+								foreach($data_second['color_imgs'] as $color_imgs)
+								{
+									if(isset($color_imgs['name']))
+										$color_imgs['name'] = uniqid().$color_imgs['name'];
+				
+									if(isset($color_imgs['name']))
+										$name = $color_imgs['name'];
+								
+									if(isset($color_imgs['tmp_name']))
+										$tmp_name = $color_imgs['tmp_name'];
+									
+									if(isset($color_imgs['type']))
+										$type = $color_imgs['type'];
+									
+									if(isset($type))
+										$type_data = explode('/', $type);
+									
+									$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+									
+									if(isset($type_data))
+									if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+									{
+										//Uploadation code for images
+										if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
+										{ 
+											$url="../webroot/img/product/".$name;
+											$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
+											$this->make_thumb($url,$thumbnail_url,200);
+											
+											$url="../webroot/img/product/".$name;
+											$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
+											$this->make_thumb($url,$thumbnail_url,1500);
+											
+											$product_image_data['Produc_color_image']['attvid'] = $attvid;
+											$product_image_data['Produc_color_image']['prodid'] = $last_inserted_id;
+											$product_image_data['Produc_color_image']['image_path'] = $color_imgs['name'];
+											$product_image_data['Produc_color_image']['del_status'] = 0;						
+											
+											$this->Produc_color_image->create();
+											$this->Produc_color_image->save($product_image_data);
+											
+											/*
+											$this->Produc_color_image->create();
+											$this->Produc_color_image->save($product_image_data);					
+											*/											
+										}
+										else
+										{
+											$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+											$this->redirect('add_category');	
+										}
+									}
+									else
+									{
+										$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+										//$this->redirect('add_category');	
+									}									
+								}																
+							}
+						}
+					}
+				}
+			}
 			
 			foreach($this->request->data['Produc_master']['attribute'] as $data_second)
 			{
@@ -1030,58 +1108,242 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function saved_imgalt() 
 	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['imgalt'] = $_REQUEST['saved_imgalt_text'];
+		$id_data = $_REQUEST['id_data'];
 		
-		if($this->Produc_image->save($data))
-		echo "Yes";
+		$order_id = explode('_', $id_data);
+		
+		$attvid = $order_id[0];
+		
+		$prodid = $order_id[1];
+		
+		if($attvid == 0)
+		{
+			$data['Produc_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_image']['imgalt'] = $_REQUEST['saved_imgalt_text'];
+			
+			if($this->Produc_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		else
-		echo "No";
+		{
+			$data['Produc_color_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_color_image']['imgalt'] = $_REQUEST['saved_imgalt_text'];
+			
+			if($this->Produc_color_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		
 		die();
 	}
 	
 	public function is_default_image() 
 	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['isdefault'] = $_REQUEST['is_default'];
+		$id_data = $_REQUEST['id_data'];
 		
-		if($this->Produc_image->save($data))
-		echo "Yes";
+		$order_id = explode('_', $id_data);
+		
+		$attvid = $order_id[0];
+		
+		$prodid = $order_id[1];
+		
+		if($attvid == 0)
+		{
+			$data['Produc_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_image']['isdefault'] = $_REQUEST['is_default'];
+			
+			if($this->Produc_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		else
-		echo "No";
+		{
+			$data['Produc_color_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_color_image']['isdefault'] = $_REQUEST['is_default'];
+			
+			if($this->Produc_color_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
+		
+		
 		
 		die();
 	}
 	
 	public function change_order_image() 
 	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['order'] = $_REQUEST['change_order_number'];
+		$id_data = $_REQUEST['id_data'];
 		
-		if($this->Produc_image->save($data))
-		echo "Yes";
+		$order_id = explode('_', $id_data);
+		
+		$attvid = $order_id[0];
+		
+		$prodid = $order_id[1];
+		
+		if($attvid == 0)
+		{
+			$data['Produc_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_image']['order'] = $_REQUEST['change_order_number'];
+			
+			if($this->Produc_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		else
-		echo "No";
+		{
+			$data['Produc_color_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_color_image']['order'] = $_REQUEST['change_order_number'];
+			
+			if($this->Produc_color_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		
 		die();
 	}
 	
 	public function change_status_image() 
 	{
-		$data['Produc_image']['id'] = $_REQUEST['image_id'];
-		$data['Produc_image']['del_status'] = $_REQUEST['type_data'];
+		$id_data = $_REQUEST['id_data'];
 		
-		if($this->Produc_image->save($data))
-		echo "Yes";
+		$order_id = explode('_', $id_data);
+		
+		$attvid = $order_id[0];
+		
+		$prodid = $order_id[1];
+		
+		if($attvid == 0)
+		{
+			$data['Produc_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_image']['del_status'] = $_REQUEST['type_data'];
+		
+			if($this->Produc_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		else
-		echo "No";
+		{
+			$data['Produc_color_image']['id'] = $_REQUEST['image_id'];
+			$data['Produc_color_image']['del_status'] = $_REQUEST['type_data'];
+		
+			if($this->Produc_color_image->save($data))
+			echo "Yes";
+			else
+			echo "No";
+		}
 		
 		die();
 	}
 	
+	public function color_images($id) 
+	{
+		$data = explode('_', $id);
+		
+		$attvid = $data[0];
+		
+		$prodid = $data[1];
+		
+		if($attvid==0)
+		{
+			$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid' =>$prodid)));			
+			
+			foreach($product_images as $key=>$product)
+			{
+				$product_data = $product['Produc_image'];
+				
+				$product_master_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_data['prodid'])));
+				$product_images[$key]['Produc_image']['prodname'] = $product_master_data['Produc_master']['prodname'];			
+				$product_images[$key]['Produc_image']['id_data'] = $id;							
+			}
+		}
+		else
+		{
+			$product_images = $this->Produc_color_image->find('all', array('conditions'=>array('Produc_color_image.prodid' =>$prodid, 'Produc_color_image.attvid' =>$attvid)));			
+			
+			foreach($product_images as $data)
+			{
+				$data['Produc_color_image']['imagepath'] = $data['Produc_color_image']['image_path'];
+				$data_one['Produc_image'] = $data['Produc_color_image'];
+				$data_second[] = $data_one; 
+			}
+			
+			foreach($data_second as $key=>$product)
+			{
+				//$product['Produc_image'] = $product['Produc_color_image'];
+				
+				$product_data = $product['Produc_image'];
+				
+				$product_master_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_data['prodid'])));
+				$data_second[$key]['Produc_image']['prodname'] = $product_master_data['Produc_master']['prodname'];							
+				$data_second[$key]['Produc_image']['id_data'] = $id;							
+			}
+			
+			unset($product_images);
+			$product_images = $data_second;
+		}
+		
+		$count_data = count($product_images);
+		
+		for($i=1;$i<=$count_data;$i++)
+		$total_order_number[$i] = $i;
+		
+		/*
+		echo "Total_order_number<pre>";
+		print_r($total_order_number);
+		echo "<pre>";
+		*/
+		
+		$this->set('total_order_number', $total_order_number);
+		
+		$this->set('product_images', $product_images);
+		
+		/*
+		echo "product_images<pre>";
+		print_r($product_images);
+		echo "<pre>";
+		
+		die();		
+		*/
+	}
+	
 	public function product_images($id) 
 	{
+		$product_attribute = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid'=>$id), 'order' => array('id' => 'DESC')));
+		
+		$att_val_name['0_'.$product_attribute[0]['Produc_attribute']['prodid']] = 'General';
+		
+		foreach($product_attribute as $data)
+		{
+			//echo $data['Produc_attribute']['attvid'];
+			
+			$attribute_value = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data['Produc_attribute']['attvid'])));
+			
+			$att_val_name[$data['Produc_attribute']['attvid'].'_'.$data['Produc_attribute']['prodid']] = $attribute_value['Attribute_value']['attvalue'];
+		}
+		
+		
+		
+		/*
+		echo "att_val_name<pre>";
+		print_r($att_val_name);
+		echo "<pre>";
+		
+		die();
+		*/
+		
+		$this->set('att_val_name', $att_val_name);
+		
+		
+		/*
 		$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$id), 'order' => array('id' => 'DESC')));
 		
 		foreach($product_images as $key=>$product)
@@ -1089,8 +1351,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			$product_data = $product['Produc_image'];
 			
 			$product_master_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_data['prodid'])));
-			$product_images[$key]['Produc_image']['prodname'] = $product_master_data['Produc_master']['prodname'];
-			
+			$product_images[$key]['Produc_image']['prodname'] = $product_master_data['Produc_master']['prodname'];			
 		}
 		
 		$count_data = count($product_images);
@@ -1109,6 +1370,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			$this->Product->save($this->request->data);
 			$this->redirect('products');
 		}
+		
+		*/
 	}
 	
 	public function offers() 

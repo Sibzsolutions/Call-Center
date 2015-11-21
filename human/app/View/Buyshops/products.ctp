@@ -370,7 +370,28 @@
 							?></div>
 							
 							 <div class="pro_price">
+							 
 								<strong><?php echo '$'.$product['prodprice']; // $187.95 ?></strong>
+								<br>
+								<?php 
+								
+								if(isset($product['discount']))
+								{
+									?>
+									<strong>
+									<?php
+									echo 'Discount '.$product['discount'].'%'; // $187.95 	
+									?>
+									</strong>
+									<br>
+									<br>
+									<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
+									<?php
+								}
+
+								?>
+								
+								
 								
 							    <!--<select class="item_Size">
 								<option value="Small">L</option>
@@ -394,7 +415,10 @@
 									   <!--<input type="text" class="item_quantity quantity_1" value="1" />-->
 									</div>
 									<div id="red_buy_<?php echo $product['id']; ?>">
-									<div class="size_2-right"><input type="button" class="item_add add3" id="item_add_add3_<?php echo $product['id']; ?>" value="" />
+									<div class="size_2-right">
+									
+									<input type="button" class="item_add add3" id="item_add_add3_<?php echo $product['id']; ?>" value="" />
+									
 									</div>								 
 									<input type="hidden" value="<?php echo $product['id']; ?>" id="product_id_<?php echo $product['id']; ?>" />
 									</div>

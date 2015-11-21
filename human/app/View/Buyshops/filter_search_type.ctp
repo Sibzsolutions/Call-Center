@@ -51,7 +51,15 @@
 					?></h6>
 					
 					 <div class="size_1">
-								<span class="item_price"><?php echo 'MSRP: $'.$product['prodprice']; // $187.95 ?></span>
+								<!--<span class="item_price"><?php //echo 'MSRP: $'.$product['prodprice']; // $187.95 ?></span>-->
+								
+								<strong><?php echo '$'.$product['prodprice']; // $187.95 ?></strong>
+								<br>
+								<strong><?php echo 'Discount '.$product['discount'].'%'; // $187.95 ?></strong>
+								<br>
+								<br>
+								<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
+								
 							   <!--<select class="item_Size">
 								<option value="Small">L</option>
 								<option value="Medium">S</option>

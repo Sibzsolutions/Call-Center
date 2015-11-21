@@ -71,7 +71,8 @@ html {
 	 <div class="width1220 product_details"> 
 
 			<div class="single_grid">
-				<div class="grid images_3_of_2">
+				
+				<div class="grid images_3_of_2"  id="product_image_data">
 
 					<ul id="etalage">
 							
@@ -201,12 +202,51 @@ html {
 									
 									<li>
                                     <label>
-                                    <input value="<?php echo $att_element['att_value_id']; ?>" id="check_box" type="checkbox" />
-                                    <img src="<?php echo $this->webroot.'img/attribute_value/thumb/small_images/'.$att_element['att_value_img']; //image.gif ?>" >
+									
+                                    <input class="check_class" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" />
+                                    
+									<!--<input type="checkbox" name="<?php //echo $att_element['att_value_id']; ?>">-->
+									
+									<img src="<?php echo $this->webroot.'img/attribute_value/thumb/small_images/'.$att_element['att_value_img']; //image.gif ?>" >
                                     <img src="<?php echo $this->webroot.'img/only_human_userside/tick.png'; ?>" style="border: 0px none; width: auto; height: auto; padding: 9px; position: relative; margin: 0px 0px 0px -28px; z-index:499" />
                                     </label>
                                     
                                     </li>
+									
+									<script>
+						
+										$(document).ready(function(){
+											
+											//$('#discounted_price').hide();
+											
+											$('#<?php echo $att_element['att_value_id']; ?>_<?php echo $att_element['prodid']; ?>').click(function(){
+												
+												var attvid = '<?php echo $att_element['att_value_id']; ?>';
+												
+												var prodid = '<?php echo $att_element['prodid']; ?>';
+												
+												if($(this).is(":checked"))
+												{
+													$.post("<?=$this->webroot?>buyshops/color_change_imgs", {attvid: attvid, prodid: prodid, checkid: 1}, function(result){
+													
+														$("#product_image_data").html(result);								    
+													});								
+													
+													$( ".check_class" ).prop( "checked", false );
+													
+													$(this).prop( "checked", true );
+												}
+												else
+												{
+													$.post("<?=$this->webroot?>buyshops/color_change_imgs", {attvid: attvid, prodid: prodid, checkid: 0}, function(result){
+													
+														$("#product_image_data").html(result);								    
+													});								
+												}
+											});
+										});
+										
+									</script>
 									
 									<!--<li><a href="#"> <span class="color2"> </span></a></li>
 									<li><a href="#"> <span class="color3"> </span></a></li>
@@ -226,6 +266,8 @@ html {
 								foreach($att as $key_element=>$att_element)
 								{
 									$att_element = $att_element['Produc_attribute'];
+									
+									echo $att_element['att_val_name'];
 									
 									?>
 									
@@ -298,7 +340,14 @@ html {
 			         </div>
 			         <div class="simpleCart_shelfItem">
 			         	<div class="price_single">
-						  <div class="head"><h2><span class="amount item_price"><?php echo '$'.$product['prodprice'];//$45.00 ?></span></h2></div>
+						  <div class="head">
+						  <h2><span class="amount item_price"><?php echo '$'.$product['prodprice'];//$45.00 ?>
+							<br>
+							<?php echo 'Discount '.$product['discount'].'%'; // $187.95 ?>
+							<br>
+							<?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?>
+							</span></h2>
+						  </div>
 						  
 						  <div class="head_desc">
 						  

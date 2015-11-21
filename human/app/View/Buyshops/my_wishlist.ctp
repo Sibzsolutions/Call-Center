@@ -83,6 +83,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								</ul>
 								<div class="delivery">
 									 <p>Service Charges : Rs.<?php echo $product['Wishlist_detail']['prod_details']['prodprice'];//['prodprice'];?></p>
+									 
+									<br>
+									<br>
+									<p><?php echo 'Discount '.$product['Wishlist_detail']['prod_details']['discount'].'%'; // $187.95 ?></p>
+									<br>
+									<br>
+									<p><?php echo 'Discounted Price $'.$product['Wishlist_detail']['prod_details']['discounted_price']; // $187.95 ?></p>
+									 
 									 <span>Delivered in 2-3 bussiness days</span>
 									 <div class="clearfix"></div>
 								</div>	

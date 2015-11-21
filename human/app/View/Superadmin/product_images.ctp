@@ -27,226 +27,31 @@
                     <thead>
                       <tr>
                         <th bgcolor="#00bcd4" class="text14_white">Image Id</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Product Name</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Image Path</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Image Alter</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Is Default</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Order</th>                        
-                        <th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+                        <th bgcolor="#00bcd4" class="text14_white">Color</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Action</th>                        
                       </tr>
                     </thead>
                     <tbody>
-                      <?php
-                      foreach($product_images as $produc)
-                      {
-						  $product_image = $produc['Produc_image'];
-                      ?>
-                        <tr>
-                        <td><?php echo $product_image['id']; ?></td>
-                        <td><?php echo $product_image['prodname']; ?></td>
-                        <td>
-                        <img src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product_image['imagepath']; ?>" />
-						</td>
-                        <td><input type="text" id="saved_imgalt_text_<?php echo $product_image['id']; ?>" value="<?php echo $product_image['imgalt']; ?>" class="form-control" /><input type="button" id="saved_imgalt_button_<?php echo $product_image['id']; ?>" value="save" style="float:right" class="login_button"  />
-                        
-                        <div style="width:20px; height:20px; float:left">
-                        <div id="saved_imgalt_button_data_<?php echo $product_image['id'];?>"></div>
-                        </div>
-                        
-                        </td>
-                        <td>
-                        <?php //echo $this->Form->input('is_default',array('type'=>'select', 'options'=>array(1=>'Yes', 0=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'id'=>'is_default_'.$product_image['id'].'' ,'default'=>$product_image['isdefault'] ));
 						
-						$data_arr = array(1=>'Yes', 0=>'No');
-
-						?>
-                        <select class="form-control select2" style="width: 100%;" id="is_default_<?php echo $product_image['id']; ?>">
-                        <?php 
+						<?php
 						
-						foreach($data_arr as $key=>$first)
+						$i=1;
+						
+						foreach($att_val_name as $key=>$att)
 						{
-							if($key == $product_image['isdefault'])
-							{
 							?>
-							<option selected="selected" value="<?php echo $key; ?>"><?php echo $first; ?></option>
-							<?php
-							}
-							else
-							{
-							?>
-							<option value="<?php echo $key; ?>"><?php echo $first; ?></option>
-							<?php	
-							}
-						}
-
-						?>
-                        </select>
-                        
-                        <div style="width:20px; height:20px; float:left">
-                        <div id="is_default_data_<?php echo $product_image['id'];?>"></div>
-                        </div>
-                        
-						<?php //echo $product_image['isdefault']; ?>
-                        </td>
-                        <td>
-                        <?php //echo $this->Form->input('change_order',array('type'=>'select', 'class'=>'form-control select2', 'style'=>'width: 100%;', 'options'=>array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5), 'id'=>'change_order_'.$product_image['id'].'', 'class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'default'=>$product_image['order']));
-						
-						//$data_arr = array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
-
-						?>
-                        
-                        <select class="form-control select2" style="width: 100%;" id="change_order_<?php echo $product_image['id']; ?>">
-                        <?php 
-							foreach($total_order_number as $first)
-							{
-								if($first == $product_image['order'])
-								{
-								?>
-                                <option selected="selected" value="<?php echo $first; ?>"><?php echo $first; ?></option>
-                                <?php
-								}
-								else
-								{
-								?>
-                                <option value="<?php echo $first; ?>"><?php echo $first; ?></option>
-                                <?php	
-								}
-							}
-						?>
-                        </select>
-                        
-                        <div style="width:20px; height:20px; float:left">
-                        <div id="change_order_data_<?php echo $product_image['id'];?>"></div>
-                        </div>
-                        
-                        </td>
-                        <td align="center">
-						<?php //echo $this->Form->input('del_status',array('type'=>'select', 'options'=>array(1=>'Active', 0=>'Inactive'), 'class'=>'form-control', 'id'=>'del_status_'.$product_image['id'].'', 'required'=>'required','label'=>'','div'=>false));
-						
-						$data_arr = array(0=>'Active', 1=>'Inactive');
-
-						?>
-                        <select class="form-control select2" style="width: 100%;" id="del_status_<?php echo $product_image['id']; ?>">
-                        <?php 
+							<tr>
+							<td><?php echo $i; ?></td>
+							<td><?php echo $att; ?></td>
+							<td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/color_images/'.$key; ?>"><i class="fa fa-file-picture-o"></i></a>
+							<tr>
+							<?php 
 							
-						foreach($data_arr as $key=>$first)
-						{
-							if($key == $product_image['del_status'])
-							{
-							?>
-							<option selected="selected" value="<?php echo $key; ?>"><?php echo $first; ?></option>
-							<?php
-							}
-							else
-							{
-							?>
-							<option value="<?php echo $key; ?>"><?php echo $first; ?></option>
-							<?php	
-							}
+							$i++;
 						}
-
+						
 						?>
-                        </select>
-                        
-                        <div style="width:20px; height:20px; float:left">
-                        <div id="del_status_data_<?php echo $product_image['id'];?>"></div>
-                        </div>
-                        </td>
-                        </tr>
-                      
-						<script>
-                        
-                            $(document).ready(function(){
-                                
-								$('#del_status_<?php echo $product_image['id']; ?>').change(function(){
-								
-								var type_data = $('#del_status_<?php echo $product_image['id']; ?>').val();
-								
-								$('#del_status_data_<?php echo $product_image['id']; ?>').html('<img src="http://propelle.co/images/loading_small.gif">');
-								$.post("<?=$this->webroot?>Admin/change_status_image", {
-																		 type_data : type_data,
-																		 image_id : '<?php echo $product_image['id']; ?>' },
-								
-																		 function(result){
-									 if(result=='Yes')
-									 {
-									  $('#del_status_data_<?php echo $product_image['id']; ?>').html('<img src="http://www.customotion.com/green_check_small.png">');
-									  $('#del_status_data_<?php echo $product_image['id']; ?>').hide(2500);
-									 }
-									
-									});
-								});
-								
-								
-								$('#change_order_<?php echo $product_image['id']; ?>').change(function(){
-								
-								var change_order_number = $('#change_order_<?php echo $product_image['id']; ?>').val();
-								
-								$('#change_order_data_<?php echo $product_image['id']; ?>').html('<img src="http://propelle.co/images/loading_small.gif">');
-								$.post("<?=$this->webroot?>Admin/change_order_image", {
-																		 change_order_number : change_order_number,
-																		 image_id : '<?php echo $product_image['id']; ?>' },
-								
-																		 function(result){
-									 if(result=='Yes')
-									 {
-									  $('#change_order_data_<?php echo $product_image['id']; ?>').html('<img src="http://www.customotion.com/green_check_small.png">');
-									  $('#change_order_data_<?php echo $product_image['id']; ?>').hide(2500);
-									 }
-									
-									});
-								});
-								
-                                
-								$('#is_default_<?php echo $product_image['id']; ?>').change(function(){
-								
-								var is_default = $('#is_default_<?php echo $product_image['id']; ?>').val();
-								
-								$('#is_default_data_<?php echo $product_image['id']; ?>').html('<img src="http://propelle.co/images/loading_small.gif">');
-								$.post("<?=$this->webroot?>Admin/is_default_image", {
-																		 is_default : is_default,
-																		 image_id : '<?php echo $product_image['id']; ?>' },
-								
-																		 function(result){
-									 if(result=='Yes')
-									 {
-									  $('#is_default_data_<?php echo $product_image['id']; ?>').html('<img src="http://www.customotion.com/green_check_small.png">');
-									  $('#is_default_data_<?php echo $product_image['id']; ?>').hide(2500);
-									 }
-									
-									});
-								});
-								
-								
-								$('#saved_imgalt_button_<?php echo $product_image['id']; ?>').click(function(){
-								
-								var saved_imgalt_text = $('#saved_imgalt_text_<?php echo $product_image['id']; ?>').val();
-								
-                                $('#saved_imgalt_button_data_<?php echo $product_image['id']; ?>').html('<img src="http://propelle.co/images/loading_small.gif">');
-								$.post("<?=$this->webroot?>Admin/saved_imgalt", {
-																		 saved_imgalt_text : saved_imgalt_text,
-																		 image_id : '<?php echo $product_image['id']; ?>' },
-								
-																		 function(result){
-									 if(result=='Yes')
-									 {
-									  $('#saved_imgalt_button_data_<?php echo $product_image['id']; ?>').html('<img src="http://www.customotion.com/green_check_small.png">');
-									  $('#saved_imgalt_button_data_<?php echo $product_image['id']; ?>').hide(2500);
-									 }
-									
-									});
-								});
-								
-								
-								
-                            });
-                        
-                        </script>
-                        
-    				  <?php
-                      }
-                      ?>
-                      
+                        </tr>						
                     </tbody>
                   </table>
                 </div><!-- /.box-body -->

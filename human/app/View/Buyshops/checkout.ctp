@@ -80,7 +80,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<li><p>Qty : 1</p></li>
 							</ul>
 							<div class="delivery">
-								 <p>Service Charges : Rs.<?php echo $product['prodprice'];?></p>
+								<p>Service Charges : Rs.<?php echo $product['prodprice'];?></p>
+								 
+								<br>
+								<br>
+								<p><?php echo 'Discount '.$product['discount'].'%'; // $187.95 ?></p>
+								<br>
+								<br>
+								<p><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></p>
+								
+								 </p>
 								 <span>Delivered in 2-3 bussiness days</span>
 								 <div class="clearfix"></div>
 							</div>	
@@ -136,30 +145,62 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			   <li class="last_price">
 			   <span>
 			   <?php echo $total_price; //6350.00  ?>
+			   
+			   <input id="total_price_id" type="text" value="<?php echo $total_price; //6350.00  ?>" name="price_data">
+			   
 			   </span></li>
 			   <div class="clearfix"> </div>
 			 </ul>
 			
 			 <div class="clearfix"></div>
-			 <a class="order" href="#<?php echo $this->webroot.'place_order'; ?>">Place Order</a>
+
 			 
 			 <div class="total-item">
 				 <h3>OPTIONS</h3>
 				 <h4>COUPONS</h4>
 				 <a class="cpns" href="#">Apply Coupons</a>
 				 
-				 <div class="apply_box">
-						<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;">Apply Coupon</a></div>
-						<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both">
-						<button id="coupon_apply_btn"  class="apply_btn">Apply</button>
+				  <div class="apply_box">
 						
-						<button id="discounted_price"  class="apply_btn"></button>
-						
-				 </div>
-				 
+					<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;">Apply Coupon</a></div>
+					
+					<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both">
+					
+					<button id="coupon_apply_btn"  class="apply_btn">Apply</button>
+					
+					<!--<input type="text" value="<?php //echo $total_price; //6350.00  ?>" name="final_price">-->
+					
+					<button id="discounted_price"  class="apply_btn"></button>
+					
+					<input type="text" value="" id="coupon_price_id">
+					
+				  </div>
+				  
+				  <div class="clearfix"></div>
+				  
+				  <button class="order" id="place_order">Place Order</button>
+				  
+				  <!--<a class="order" href="">Place Order</a>-->
+				  
 				 <script>
 						
 					$(document).ready(function(){
+						
+						$('#place_order').click(function(){
+							
+							alert("shashikant");
+							
+							var total_price_id = $('#total_price_id').val();
+							
+							alert(total_price_id);
+							
+							var coupon_price_id = $('#coupon_price_id').val();
+							
+							alert(coupon_price_id);
+							
+							$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>/'+total_price_id+'/'+coupon_price_id);
+						
+						});
 						
 						$('#discounted_price').hide();
 						
@@ -173,9 +214,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							
 							$.post("<?=$this->webroot?>buyshops/coupon_mgt", {coupon_txt: coupon_txt, total_price: total_price}, function(result){
 								
-								alert(result);
-							
-								$("#discounted_price").html(result);								    
+								
+								$("#coupon_price_id").val(result);
+								
+								if(result == 0)
+								$("#discounted_price").html("Sorry, you entered wrong coupon number");								    
+								else
+								$("#discounted_price").html("Discounted prices is "+result);								    
 							});								
 						});
 						
