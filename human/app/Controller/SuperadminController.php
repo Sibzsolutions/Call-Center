@@ -38,7 +38,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status');
 
 /**
  * Displays a view
@@ -2402,7 +2402,18 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		$this->set('coupons', $coupons);		
 	}
 	
-	
+	public function orders() 
+	{
+		$orders = $this->Order_master->find('all', array('conditions'=>array('Order_master.del_status'=>0)));
+		
+		echo "Orders<pre>";
+		print_r($orders);
+		echo "<pre>";
+		
+		die();
+		
+		$this->set('orders', $orders);		
+	}
 	
 	
 }

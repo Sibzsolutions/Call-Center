@@ -6,9 +6,8 @@
           <a href="<?php echo $this->webroot.'Superadmin/users'?>">User Management</a>
           <a href="<?php echo $this->webroot.'Superadmin/site_setting'?>">Site Setting</a>
           <a href="<?php echo $this->webroot.'Superadmin/reviews'?>">Manage Reviews</a>
-          <a href="#">Order Management</a>
-          <?php
-					
+          <a href="<?php echo $this->webroot.'Superadmin/orders'?>">Order Management</a>
+          <?php					
 				if(AuthComponent::user()):
 				?>
 				<a href="<?php echo $this->webroot.'Superadmin/myaccount'; ?>">My Account</a>
