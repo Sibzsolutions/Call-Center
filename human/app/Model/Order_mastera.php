@@ -8,7 +8,9 @@ class Order_master extends AppModel {
 	public $hasMany =array('Order_detail','Order_status');
 	
 	public $validate = array(
-
+	
+	
+	
     );
 }
 ?>

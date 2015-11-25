@@ -2406,15 +2406,50 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	{
 		$orders = $this->Order_master->find('all', array('conditions'=>array('Order_master.del_status'=>0)));
 		
-		echo "Orders<pre>";
-		print_r($orders);
-		echo "<pre>";
-		
-		die();
+		foreach($orders as $key=>$order)
+		{
+			$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>$order['Order_master']['id'])));
+			
+			$orders[$key]['Order_detail'] = $order_details;			
+			
+			$user_details = $this->User->find('first', array('conditions'=>array('User.id'=>$order['Order_master']['usrid'])));
+			
+			$orders[$key]['User_detail'] = $user_details;			
+		}
 		
 		$this->set('orders', $orders);		
 	}
 	
+	public function order_status_change($id) 
+	{
+		$order = $this->Order_master->find('first', array('conditions'=>array('Order_master.id'=>$id, 'Order_master.del_status'=>0)));
+		
+		$order_data['Order_master']['id'] = $order['Order_master']['id'];
+		
+		if($order['Order_master']['del_status'] == 1)
+			$order_data['Order_master']['del_status'] = 0;
+		else
+			$order_data['Order_master']['del_status'] = 1;
+		
+		if($this->Order_master->save($order_data))			
+			$this->redirect('orders');
+	}
+	
+	public function order_details($id) 
+	{
+		$this->Session->Write('id', $id);
+		
+		$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>33)));
+		
+		foreach($order_details as $key=>$detail)
+		{
+			$product_details = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$detail['Order_detail']['prodid'])));
+			
+			$order_details[$key]['Product_details'] = $product_details;
+		}
+		
+		$this->set('order_details', $order_details);
+	}
 	
 }
 
