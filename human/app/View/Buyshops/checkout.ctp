@@ -76,7 +76,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							<div class="cart-item-info">
 							<div class="brand_box"><?php echo $product['prodname']; //Mountain Hopper(XS R034) ?><span>Model No: 3578</span></div>
 							<ul class="qty">
-								<li><p>Size : 5</p></li>
+								
+								<?php 
+									
+									if(isset($product['att']))
+									foreach($product['att'] as $key=>$pro_att)
+									{
+										?>
+										<li><p><?php echo $key.' : '.$pro_att['attvalue']; ?></p></li>
+										<?php
+									}
+									
+								?>
+								
 								<li><p>Qty : 1</p></li>
 							</ul>
 							<div class="delivery">
@@ -122,16 +134,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				foreach($products_checkout as $product)
 				{
 					if($i==0)
-					$total_price = $product['prodprice'];
+					$total_price = $product['discounted_price'];
 					else
-					$total_price = ($total_price+$product['prodprice']);
+					$total_price = ($total_price+$product['discounted_price']);
 
 					$i++;
 				}
 				
 				echo $total_price;//6200.00
 				 
-				 ?>
+				?>
 				
 				 </span>
 				 <span>Discount</span>
@@ -188,15 +200,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						
 						$('#place_order').click(function(){
 							
-							alert("shashikant");
+							//alert("shashikant");
 							
 							var total_price_id = $('#total_price_id').val();
 							
-							alert(total_price_id);
+							//alert(total_price_id);
 							
 							var coupon_price_id = $('#coupon_price_id').val();
 							
-							alert(coupon_price_id);
+							//alert(coupon_price_id);
 							
 							$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>/'+total_price_id+'/'+coupon_price_id);
 						

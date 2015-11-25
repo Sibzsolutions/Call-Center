@@ -388,10 +388,8 @@
 									<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
 									<?php
 								}
-
+								
 								?>
-								
-								
 								
 							    <!--<select class="item_Size">
 								<option value="Small">L</option>
@@ -417,10 +415,14 @@
 									<div id="red_buy_<?php echo $product['id']; ?>">
 									<div class="size_2-right">
 									
-									<input type="button" class="item_add add3" id="item_add_add3_<?php echo $product['id']; ?>" value="" />
+									<a href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; ?>"><input type="button" class="cancel_item_add add3" id="cancel_item_add_add3_<?php echo $product['id']; ?>" value="" /></a>
+									
+									<!-- <input type="button" class="cancel_item_add add3" id="cancel_item_add_add3_<?php echo $product['id']; ?>" value="" /> -->
 									
 									</div>								 
+
 									<input type="hidden" value="<?php echo $product['id']; ?>" id="product_id_<?php echo $product['id']; ?>" />
+
 									</div>
 									<div class="clearfix"> </div>
                                     </div>
@@ -437,8 +439,12 @@
                                            <!--<input type="text" class="item_quantity quantity_1" value="1" />-->
                                         </div>
                                         <div id="green_buy_<?php echo $product['id']; ?>">			 
-                                        <div class="size_2-right"><input type="button" class="item_add add32" value="" /></div>
-                                        </div>
+										
+										<a href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; ?>"><div class="size_2-right"><input type="button" class="item_add add32" value="" /></div></a>
+										
+                                        <!--<div class="size_2-right"><input type="button" class="item_add add32" value="" /></div>-->
+                                        
+										</div>
                                       </div>
                                    </div>
 								 </div>

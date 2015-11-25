@@ -42,7 +42,7 @@ App::uses('AppController', 'Controller');
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master', 'Produc_color_image', 'Attribute_value', 'User_address', 'Order_master', 'Order_detail', 'Order_status');
+	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master', 'Produc_color_image', 'Attribute_value');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -61,12 +61,12 @@ App::uses('AppController', 'Controller');
 		 AuthComponent::$sessionKey='onlyhuman';
 		 $this->Auth->fields = array('username' => 'username','password' => 'password');
 		 $this->Auth->authenticate = array('Form' => array('scope'=>array('User.usrtype'=>array('0'))));
-		 $this->Auth->loginAction=array('controller' => 'Buyshops','action' => 'login');
+		 $this->Auth->loginAction=array('controller' => 'Buyshops','action' => 'myaccount');
 		 $this->Auth->logoutRedirect=array('controller' => 'Buyshops','action' => 'login');
 		 $this->Auth->loginRedirect = array('controller'=>'Buyshops','action'=>'myaccount');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt', 'color_change_imgs', 'att_cart', 'address');  
+		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt', 'color_change_imgs', 'att_cart');  
 		 
 		 $this->layout="buyshops_layout";   
 		 
@@ -1382,154 +1382,11 @@ App::uses('AppController', 'Controller');
 	}
 	public function place_order($original_price=null, $discounted_price=null) 
 	{
-		if(isset($_REQUEST))
-		$place_order_address['Place_Order'] = $_REQUEST;
-			
-		if(!empty($place_order_address['Place_Order']))
-		{
-			$userdata = $this->Auth->user();
-			
-			$order_data['Order_master']['usrid'] = $userdata['id'];
-			
-			$order_data['Order_master']['orderstartdate'] = date('Y-m-d H:i:s',time());			
-			
-			$order_data['Order_master']['orderenddate'] = date('Y-m-d H:i:s',time());			
-			
-			$order_data['Order_master']['paymentid'] = 0;			
-			
-			$order_data['Order_master']['shippingid'] = 0;			
-			
-			if($this->Session->check('original_price') == 1)
-			{
-				$original_price = $this->Session->read('original_price');						
-				//$this->Session->delete('original_price');						
-			}
-			
-			if($this->Session->check('discounted_price') == 1)
-			{
-				$discounted_price = $this->Session->read('discounted_price');						
-				//$this->Session->delete('discounted_price');						
-			}
-
-			if(isset($discounted_price))
-				$order_data['Order_master']['ordervalue'] = $discounted_price;
-			else
-				$order_data['Order_master']['ordervalue'] = $original_price;
-			
-			$order_data['Order_master']['order_status'] = 1;
-			
-			$order_data['Order_master']['del_status'] = 1;
-			
-			$this->Order_master->save($order_data);
-			
-			$last_inserted_orderid = $this->Order_master->getLastInsertId();
-			
-			if($this->Session->check('product_data_final') == 1)
-			{
-				$product_data_final = $this->Session->read('product_data_final');						
-				
-				$i=1;
-				foreach($product_data_final as $key=>$product)
-				{
-					$product_one = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product['prodid'])));
-					
-					$product_data_final[$key]['Produc_master']['original_price'] = $product_one['Produc_master']['prodprice']; 		
-					
-					$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['prodid'] .'\',Offer_master.offerprod)')));
-					
-					if($offer_master_data !='')
-					{
-						foreach($offer_master_data as $lowest_price)
-						{
-							$low[] = $lowest_price['Offer_master']['discount'];
-						}
-						
-						if(isset($low))
-						$max_discount = max($low);
-						
-						unset($low);
-					}
-					
-					if(isset($max_discount))
-					{
-						$final_max_discount = $max_discount;
-										
-						unset($max_discount);
-						
-						$discounted_price = ($product_one['Produc_master']['prodprice']-(($final_max_discount/100)*$product_one['Produc_master']['prodprice']));
-						
-						$product_data_final[$key]['Produc_master']['discounted_price'] = $discounted_price; 		
-						
-						$product_data_final[$key]['Produc_master']['discount'] = $final_max_discount; 		
-							
-						unset($final_max_discount);
-
-						$i++;
-					}
-					
-					$product_details['Order_detail']['orderid'] = $last_inserted_orderid;					
-				}
-			}
-			
-			foreach($product_data_final as $data)
-			{
-				$product_details['Order_detail']['attvid'] = $data['attvid'];
-				
-				$product_details['Order_detail']['prodid'] = $data['prodid'];
-				
-				$product_details['Order_detail']['orderid'] = $last_inserted_orderid;
-				
-				if(isset($data['discounted_price']))
-					$product_details['Order_detail']['subtotal'] = $data['Produc_master']['discounted_price'];
-				else
-					$product_details['Order_detail']['subtotal'] = $data['Produc_master']['original_price'];
-				
-				if(isset($data['original_price']))
-					$product_details['Order_detail']['prodprice'] = $data['Produc_master']['original_price'];
-				else
-					$product_details['Order_detail']['prodprice'] = 0;
-				
-				$product_details['Order_detail']['prodqty'] = 1;
-				
-				$product_details['Order_detail']['orderdate'] = date('Y-m-d H:i:s',time());			;
-				
-				if(isset($data['Produc_master']['discount']))
-					$product_details['Order_detail']['offer'] = $data['Produc_master']['discount'];					
-				else
-					$product_details['Order_detail']['offer'] = 0;
-				
-				$product_details['Order_detail']['comments'] = 'N/A';			;
-				
-				$this->Order_detail->create();
-				$this->Order_detail->save($product_details);
-				
-				$order_status['Order_status']['ostatusname'] = 'This is the order status name';
-				
-				$order_status['Order_status']['ostatusdesc'] = 'This is the order description';
-				
-				$order_status['Order_status']['del_status'] = 0;
-				
-				$this->Order_status->create();
-				$this->Order_status->save($order_status);
-			}
-			
-			echo "Shashikant_you have saved the all all into the database";
-			die();
-		}
-		
-		$redirect_page = $this->request->params['action'];
-		
-		$this->Session->write('redirect_page', $redirect_page);
-		
 		$user_data = $this->Auth->user();
 		
-		$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'])));
-		
-		$user_data['Addresses'] = $user_address_data;
-		
-		$this->set('userdata', $user_data);
-		
-		/*
+		echo "user_data<pre>";
+		print_r($user_data);
+		echo "<pre>";
 		
 		echo "<br>Original Price".$original_price;
 		
@@ -1539,96 +1396,40 @@ App::uses('AppController', 'Controller');
 		print_r($_REQUEST);
 		echo "<pre>";
 		
-		*/
-		
-		if(isset($original_price))
-			$this->Session->write('original_price', $original_price);						
-		
-		if(isset($discounted_price))
-			$this->Session->write('discounted_price', $discounted_price);						
+		echo "This is the place order functionality";						
 		
 		if($this->Session->check('add_cart_session') == 1)
-			$add_cart_session = $this->Session->read('add_cart_session');						
+		$add_cart_session = $this->Session->read('add_cart_session');						
 		
 		if($this->Auth->user())
 		{
+			$user_data = $this->Auth->user();
+			
 			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
 		
 			foreach($all_products as $product)
 			{
 				$product = $product['Cart_master'];
 				
-				$data['prodid'] = $product['product_id'];
-				
-				$data['attvid'] = $product['attvid'];
-				
-				$product_data[] = $data;
-			}
-			
-			if($this->Session->check('add_cart_session') == 1)
-			{
-				$add_cart_session = $this->Session->read('add_cart_session');						
-				
-				$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
-		
-				foreach($all_products as $product)
-				{
-					$product = $product['Cart_master'];
-					
-					$data['prodid'] = $product['product_id'];
-					
-					$data['attvid'] = $product['attvid'];
-					
-					$product_dataa[$product['product_id']] = $data;
-				}
+				$product_id[] = $product['product_id'];
 			}
 		}
-
-		if($this->Session->check('cart_data') == 1)
-			$att_add_cart_session = $this->Session->read('cart_data');						
 		
-		$si=0;
-		foreach($att_add_cart_session as $data_ses)
-		{
-			$i=1;
-			$data_count_ses = count($data_ses);
-			foreach($data_ses as $ses)
-			{
-				if($i==1)
-				{
-					if($i == $data_count_ses)
-						$data_one = $ses['attvid'];
-					else
-						$data_one = $ses['attvid'].',';						
-				}					
-				else
-				{
-					if($i == $data_count_ses)
-						$data_one = $data_one.$ses['attvid'];
-					else
-						$data_one = $data_one.$ses['attvid'].',';
-				}
-				
-				$i++;
-			}
-			
-			$data_second[$ses['prodid']]['prodid'] = $ses['prodid'];
-			$data_second[$ses['prodid']]['attvid'] = $data_one;
-			
-			if($si==0)
-				$data_third = $data_second;
-			else
-				$data_third = $data_third+$data_second;
-			
-			$si++;
-		}
+		if(isset($add_cart_session) && isset($product_id))
+		$product_id = array_merge($product_id, $add_cart_session);
+		elseif(isset($add_cart_session))
+		$product_id = array_merge($add_cart_session);
+		elseif(isset($product_id))
+		$product_id = array_merge($product_id);
 		
-		$data_final = $product_dataa + $data_third;
+		if(isset($product_id))
+		$product_id = array_unique($product_id);
 		
-		if(isset($data_final))
-			$this->Session->write('product_data_final', $data_final);
+		echo "Product_id<pre>";
+		print_r($product_id);
+		echo "<pre>";
 		
-		$this->set('data_final', $data_final);
+		die();		
 	}
 	
 	public function sub_cat($id) {
@@ -1731,36 +1532,29 @@ App::uses('AppController', 'Controller');
 		
 		if($this->Session->check('cart_data') == 1)
 		$att_add_cart_session = $this->Session->read('cart_data');						
-		
+				
 		foreach($att_array as $key_first=>$arr)
 		{
 			foreach($arr as $key_second=>$data_att)
 			{
-				if(isset($att_add_cart_session))
-				foreach($att_add_cart_session as $key_one_att=>$att_data)
+				foreach($att_add_cart_session as $att_data)
 				{
-					if($key_one_att == $data_att['Produc_attribute']['prodid'])
+					if($att_data['attvid'] == $data_att['Produc_attribute']['attvid'])
 					{
-						foreach($att_data as $att_one_data)
-						{
-							if($att_one_data['attvid'] == $data_att['Produc_attribute']['attvid'])
-							{
-								$att_array[$key_first][$key_second]['Produc_attribute']['selected'] = 1;
-							}
-						}
-					}					
+						$att_array[$key_first][$key_second]['Produc_attribute']['selected'] = 1;
+					}
 				}
-			}			
+			}
+			
 		}
-		
-		/*
-		echo "Att_array<pre>";
-		print_r($att_array);
-		echo "<pre>";
-		
-		die();
-		*/
-		
+		   /*
+		   echo "att_array<pre>";
+		   print_r($att_array);
+		   echo "<pre>";
+		   
+		   die();
+		   */
+		   
 		$this->set('att_array', $att_array);
 		
 		$product = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
@@ -2086,43 +1880,6 @@ App::uses('AppController', 'Controller');
 		
 		$product_data = $_REQUEST;
 		
-		if($this->Session->check('cart_data'))
-		{
-			$cart_data = $this->Session->read('cart_data');
-				
-			foreach($cart_data as $key_cart_first=>$cart)
-			{
-				$i=1;
-				$count_cart = count($cart);
-				foreach($cart as $key_cart=>$cart_first)
-				{
-					if($i==1)
-					{
-						if($i == $count_cart)
-							$mayur_cart = $cart_first['attvid'];
-						else
-							$mayur_cart = $cart_first['attvid'].',';
-					}
-					else
-					{
-						if($i == $count_cart)
-							$mayur_cart = $cart_first['attvid'];
-						else
-							$mayur_cart = $cart_first['attvid'].',';
-					}
-					
-					if($i==1)
-						$shashi_cart = $mayur_cart;
-					else
-						$shashi_cart = $shashi_cart.$mayur_cart;
-				
-					$i++;
-				}
-				
-				$cart_data[$key_cart_first]['attvid_set'] = $shashi_cart;
-			}		
-		}
-		
 		$product_checkout[$product_data['product_id']] = $product_data['product_id'];
 		
 		if($this->Session->check('add_cart_session') == 1)
@@ -2153,43 +1910,11 @@ App::uses('AppController', 'Controller');
 		{
 			$user_data = $this->Auth->user();
 			
-			$cart_master_data = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'] , 'Cart_master.product_id'=>$product_data['product_id'])));
+			$add_to_cart['Cart_master']['user_id'] = $user_data['id'];
 			
-			if(!empty($cart_master_data))
-			{
-				$add_to_cart['Cart_master']['id'] = $cart_master_data['Cart_master']['id'];
-			}
+			$add_to_cart['Cart_master']['product_id'] = $product_data['product_id'];
 			
-			foreach($cart_data as $key_one=>$cart_one)
-			{
-				foreach($cart_one as $key_one_key=>$cart_one_data)
-				{
-					if($key_one == $product_data['product_id'])
-					{
-						$shashi_data = $cart_one['attvid_set'];
-						break;
-					}						
-				}
-				
-				if(isset($shashi_data))
-				{
-					$add_to_cart['Cart_master']['attvid'] = $shashi_data;
-					
-					$add_to_cart['Cart_master']['user_id'] = $user_data['id'];
-			
-					$add_to_cart['Cart_master']['product_id'] = $product_data['product_id'];
-				}
-				else
-				{
-					$add_to_cart['Cart_master']['user_id'] = $user_data['id'];
-			
-					$add_to_cart['Cart_master']['product_id'] = $product_data['product_id'];
-				}
-			}
-		
 			$this->Cart_master->save($add_to_cart);		
-			
-			//$this->Cart_master->save($add_to_cart);		
 			
 			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
 		
@@ -2212,6 +1937,8 @@ App::uses('AppController', 'Controller');
 		{
 			$add_cart = array_unique($product_id);			
 			echo count($add_cart);
+			
+			
 		}
 		else
 			echo "0";
@@ -2223,79 +1950,19 @@ App::uses('AppController', 'Controller');
 	{
 		if ($this->request->is('post'))
 		{
-			echo "Shashikant is in the register functionality";
-			
-			$this->Session->write('registration_data', $this->request->data);
-			
-			//$this->redirect('address');
-			
 			$this->request->data['User']['usrtype']=0;
-			$this->request->data['User']['del_status']=1;
+			$this->request->data['User']['del_status']=0;
 			
 			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
 			
 			if($this->User->save($this->request->data))
 			{
-				$usrid = $this->User->getLastInsertId();
-				
-				$this->Session->write('usrid', $usrid);
-				
 				$this->Session->setFlash('Successfully registered');
-				$this->redirect('address');
+				$this->redirect('login');
 			}
 		}
 	}
-	
-	public function address() {	
 		
-		if($this->request->is('post'))
-		{
-			if($this->Session->check('usrid') == 1)
-			{
-				$usrid = $this->Session->read('usrid');
-				
-				$this->Session->delete('usrid');
-				
-				$usrdata['id'] = $usrid;
-				$usrdata['del_staus'] = 0;
-				
-				$this->request->data['User_address']['usrid'] = $usrid;
-				
-				if($this->User_address->save($this->request->data))
-				{
-					$usrdata['id'] = $usrid;
-					$usrdata['del_staus'] = 0;
-					
-					$this->User->save($usrdata);
-					
-					$this->Session->setFlash('Successfully registered');
-					$this->redirect('login');
-				}
-				else
-				{
-					$user['User']['id'] = $usrid;
-					
-					$this->User->delete($user['User']['id']);
-					
-					$this->Session->setFlash('Sorry registration is not completed');
-					$this->redirect('register');					
-				}
-			}
-			else
-			{
-				$userdata = $this->Auth->user();
-					
-				$this->request->data['User_address']['usrid'] = $userdata['id'];
-				
-				if($this->User_address->save($this->request->data))
-				{
-					$this->Session->setFlash('Successfully registered');
-					$this->redirect('myaccount');
-				}
-			}
-		}		
-	}
-	
 	public function login() {
 		
 		if ($this->request->is('post')) {
@@ -2310,18 +1977,7 @@ App::uses('AppController', 'Controller');
 				 );
 			 }
 			 else
-			 {
-				 if($this->Session->check('redirect_page')==1)
-				 {
-					$redirect_page = $this->Session->read('redirect_page');
-					
-					$this->Session->delete('redirect_page');
-					
-					$this->redirect($redirect_page);			  
-				 }
-				 else
-				 	$this->redirect('myaccount');			  
-			 }			 
+			 $this->redirect('myaccount');			 
 		}
 	}
 	
@@ -2396,7 +2052,8 @@ App::uses('AppController', 'Controller');
 						$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
 					}
 					
-					$max_discount_cat = max($low_cat);					
+					$max_discount_cat = max($low_cat);
+					
 					unset($low_cat);				
 				}
 				
@@ -2436,73 +2093,18 @@ App::uses('AppController', 'Controller');
 		
 		if($this->Session->check('cart_data') == 1)
 		$att_add_cart_session = $this->Session->read('cart_data');						
-		
-		if(isset($att_add_cart_session))
+	
 		foreach($products_checkout as $key=>$products)
 		{
-			foreach($att_add_cart_session as $key_prod=>$session_cart_att)
+			foreach($att_add_cart_session as $session_cart_att)
 			{
-				if($key_prod == $products['id'])
+				if($session_cart_att['prodid'] == $products['id'])
 				{
-					foreach($session_cart_att as $key_att=>$session_one)
-					{
-						$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id' => $session_one['attvid'])));
-						
-						$products_checkout[$key]['att'][$key_att] = $attvid_data['Attribute_value'];
-					}
+					$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id' => $session_cart_att['attvid'])));
+					
+					$products_checkout[$key]['att'][$session_cart_att['key']] = $attvid_data['Attribute_value']['attvalue'];
 				}
 			}
-		}
-		
-		foreach($products_checkout as $key=>$products)
-		{
-			if($this->Auth->user())
-			{
-				if(!isset($products['att']))
-				{					
-					$attvid_data = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.product_id' => $products['id'], 'Cart_master.user_id' => $user_data['id'])));
-					
-					$attvid_data = explode(',', $attvid_data['Cart_master']['attvid']);
-					
-					$i=0;
-					foreach($attvid_data as $data_second)
-					{
-						$val_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data_second)));
-						
-						$att_val_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$val_data['Attribute_value']['attid'])));
-						
-						$shashi_data[$att_val_data['Attribute_master']['attname']] = $val_data['Attribute_value'];
-						
-						if($i==0)
-						$data_second_shashi = $shashi_data;
-						else
-						$data_second_shashi = $data_second_shashi + $shashi_data;
-						
-						unset($shashi_data);
-						
-						$i++;
-					}
-					
-					$products_checkout[$key]['att'] = $data_second_shashi;				
-					
-					unset($data_second_shashi);					
-				}				
-			}
-			
-			/*
-			foreach($att_add_cart_session as $key_prod=>$session_cart_att)
-			{
-				if($key_prod == $products['id'])
-				{
-					foreach($session_cart_att as $key_att=>$session_one)
-					{
-						$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id' => $session_one['attvid'])));
-						
-						$products_checkout[$key]['att'][$key_att] = $attvid_data['Attribute_value'];
-					}
-				}
-			}
-			*/
 		}
 		
 		if(isset($products_checkout))
@@ -2612,21 +2214,12 @@ App::uses('AppController', 'Controller');
 		}
 	}	
 	
-	public function myaccount() 
-	{ 
-		$redirect_page = $this->request->params['action'];
-		
-		$this->Session->write('redirect_page', $redirect_page);
-		
+	public function myaccount() { 
+	
 		$userdata = $this->Auth->user();	
-		
-		$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$userdata['id'])));
-		
-		$userdata['Addresses'] = $user_address_data;
-		
 		$this->set('userdata', $userdata);
 		
-		if($this->request->is('post')) {
+		if ($this->request->is('post')) {
 			
 			$data = $this->User->find('first', array('conditions'=>array('User.id'=> $userdata['id'])));
 			
@@ -2654,7 +2247,6 @@ App::uses('AppController', 'Controller');
 					
 					$this->User->save();
 				}
-				
 				/*
 				else 
 				{
@@ -2929,127 +2521,68 @@ App::uses('AppController', 'Controller');
 			{
 				$cart_data_new = $this->Session->read('cart_data');
 				
-				$keys = array_keys($cart_data_new);
+				$cart_one[$key] = $cart_data;
 				
-				if(in_array($prodid, $keys))
-				{
-					$prodid_keys = array_keys($cart_data_new[$prodid]);
-					
-					if(in_array($key, $prodid_keys))
-					{
-						$cart_data_new[$prodid][$key] = $cart_data;						
-						
-						$this->Session->write('cart_data', $cart_data_new);
-					}
-					else
-					{
-						$cart_data_first = $cart_data_new[$prodid];
-						
-						$cart_data_first_key[$key] = $cart_data;
-						
-						$prodone_key = $cart_data_first_key + $cart_data_first;
-						
-						$cart_data_new[$prodid] = $prodone_key;
-						
-						$this->Session->write('cart_data', $cart_data_new);
-					}
-				}
-				else
-				{
-					$cart_data_first_product = $this->Session->read('cart_data');
-					
-					$new_product[$key] = $cart_data;
-					
-					$new_one[$prodid] = $new_product;
-					
-					$another_key = $cart_data_first_product + $new_one;
-					
-					$this->Session->write('cart_data', $another_key);
-				}									
+				$cart_data_first = $cart_one + $cart_data_new;
+				
+				$this->Session->write('cart_data', $cart_data_first);			
 			}
 			else
 			{
 				$cart_data_new = $this->Session->read('cart_data');
 				
-				$keys = array_keys($cart_data_new);
+				unset($cart_data_new[$key]);
 				
-				if(in_array($prodid, $keys))
-					unset($cart_data_new[$prodid][$key]);
-				
-				if(empty($cart_data_new[$prodid]))
-					unset($cart_data_new[$prodid]);
-				
-				$this->Session->write('cart_data', $cart_data_new);
-			}						
+				$this->Session->write('cart_data', $cart_data_new);			
+			}			
 		}
 		else
 		{
 			if($_REQUEST['checked'] == 1)
 			{
-				$cart_one[$prodid][$key] = $cart_data;
+				$cart_one[$key] = $cart_data;
 				$this->Session->write('cart_data', $cart_one);
 			}			
 		}
 		
-		//$cart_data = $this->Session->read('cart_data');
+		$cart_data = $this->Session->read('cart_data');
+		
+		echo "cart_data<pre>";
+		print_r($cart_data);
+		echo "<pre>";
+		
+		die();						
 		
 		if($this->Auth->user())
 		{
+			echo "User is logged in";
+			
 			$userdata = $this->Auth->user();
 			
-			/*
 			echo "userdata<pre>";
 			print_r($userdata);
 			echo "<pre>";
 			
 			die();
-			*/
 		}
 		else
 		{
-			/*
+			echo "User is logged out";
+			
 			echo "cart_data<pre>";
 			print_r($cart_data);
 			echo "<pre>";
 			
 			die();			
-			*/
 		}
+		
+		
+		
+		
+		
+		
+		
 	}
-	
-	public function address_edit($id) 
-	{
-		//$address_data = $this->User_address->find('first', array('conditions'=>array('User_address.id'=>$id)));
-		//$this->set('address_data', $address_data);
-		
-		if($this->request->data)
-		{
-			$userdata = $this->Auth->user();
-			
-			$this->request->data['User_address']['usrid'] = $userdata['id'];
-		
-			$this->User_address->save($this->request->data);
-			
-			$this->redirect('myaccount');
-		}
-		else
-		$this->request->data = $this->User_address->findById($id);
-	}
-	
-	public function address_status_change($id) 
-	{
-		$address_data = $this->User_address->find('first', array('conditions'=>array('User_address.id'=>$id)));
-		
-		if($address_data['User_address']['del_status'] == 0)
-			$address_data['User_address']['del_status'] = 1;
-		else
-			$address_data['User_address']['del_status'] = 0;
-		
-		$this->User_address->save($address_data);
-			
-		$this->redirect('myaccount');
-	}
-	
 	
 }
 ?>

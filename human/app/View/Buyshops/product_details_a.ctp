@@ -156,7 +156,7 @@ html {
 					
 					<p><?php echo $product['proddesc']; //Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum ?></p>
 				     <div class="dropdown_top" style="margin:10px 0px;">
-				       
+				       <form id="register_form"
 					   <?php
 					   
 					   foreach($att_array as $key=>$att)
@@ -177,20 +177,42 @@ html {
 											if(isset($att_element['selected']))
 											{
 												?>												
-												<input class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>" checked="checked" />
+												<input class="check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>" checked="checked" />
 												<?php
 											}
 											else
 											{
 												?>
-												<input class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>"/>
+												<input class="check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>"/>
 												<?php
 											}											
 										?>
 										
 										<script>
-										
+						
 											$(document).ready(function(){
+											
+												$('#add_to_cart').click(function(){
+												
+												if($('.check_class_<?php echo $att_element['Attribute_master']; ?>').is(":checked"))
+												{
+													var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id');
+													//alert(val);
+													
+													//alert('<?php echo $att_element['Attribute_master']; ?>');
+												}
+												else												
+												{
+													alert("Please insert attributes <?php echo $att_element['Attribute_master']; ?>");
+													$("#one_msg").html("Please insert attributes <?php echo $att_element['Attribute_master']; ?>");								    
+													//$("#one_msg").html("Please shashi");								    
+													
+													//$('#add_to_cart').stop();
+													
+													return false;
+												}
+											});
+
 											
 											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
 												
@@ -231,6 +253,7 @@ html {
 												}
 													
 												});
+												
 											});
 										
 										</script>
@@ -286,13 +309,13 @@ html {
 									if(isset($att_element['selected']))
 									{
 										?>
-										<input value="<?php echo $att_element['att_val_name']; ?>" class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" checked="checked"/>
+										<input value="<?php echo $att_element['att_val_name']; ?>" class="check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" checked="checked"/>
 										<?php										
 									}
 									else
 									{
 										?>
-										<input value="<?php echo $att_element['att_val_name']; ?>" class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" />
+										<input value="<?php echo $att_element['att_val_name']; ?>" class="check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" />
 										<?php
 									}
 									
@@ -307,62 +330,93 @@ html {
                                     </li>
 									
 									<script>
-									$(document).ready(function(){
+					
+										$(document).ready(function(){
 										
-										$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
-										
-											var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
-											
-											//alert("val"+val);								
-									
-										});
-										
-										$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
-											
-											if($(this).is(":checked"))
+											$('#add_to_cart').click(function(){
+												
+											if($('.check_class_<?php echo $att_element['Attribute_master']; ?>').is(":checked"))
 											{
-												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
+												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id');
+												//alert(val);
 												
-												var key = '<?php echo $key; ?>';
-												
-												var checked = 1;
-												
-												$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
-									
-													//alert(result);
-													
-													$("#shashi").html(result);								    
-													
-												});
-												
-												$( ".check_class_<?php echo $att_element['Attribute_master']; ?>" ).prop( "checked", false );
-												
-												$(this).prop( "checked", true );
-												
+												//alert('<?php echo $att_element['Attribute_master']; ?>');
 											}
-											else
+											else												
 											{
+												alert("Please insert attributes <?php echo $att_element['Attribute_master']; ?>");
+												$("#one_msg").html("Please insert attributes <?php echo $att_element['Attribute_master']; ?>");								    
+												//$("#one_msg").html("Please shashi");								    
+												
+												//$('#add_to_cart').stop(stopAll);
+												
+												return false;
+											}
+										});
+
+											/*
+											
+											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
+											
 												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
 												
-												var key = '<?php echo $key; ?>';
+												alert("val"+val);								
+										
+											});
+											
+											*/
+											
+											
+											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
 												
-												var checked = 0;
-												
-												$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
-												
-													//alert(result);
+												if($(this).is(":checked"))
+												{
+													var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
 													
-													$("#shashi").html(result);								    
+													var key = '<?php echo $key; ?>';
 													
-												});
-											}													
-										});				
-									});
-								
+													var checked = 1;
+													
+													$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
+										
+														alert(result);
+														
+														$("#shashi").html(result);								    
+														
+													});
+													
+													$( ".check_class_<?php echo $att_element['Attribute_master']; ?>" ).prop( "checked", false );
+													
+													$(this).prop( "checked", true );
+													
+												}
+												else
+												{
+													var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
+													
+													var key = '<?php echo $key; ?>';
+													
+													var checked = 0;
+													
+													$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
+													
+														alert(result);
+														
+														$("#shashi").html(result);								    
+														
+													});
+												}
+													
+											});
+											
+											
+										});
+									
 									</script>
 
+									
 									<script>
-										
+						
 										$(document).ready(function(){
 											
 											//$('#discounted_price').hide();
@@ -394,7 +448,6 @@ html {
 											});
 										});
 										
-										
 									</script>
 									
 									<!--<li><a href="#"> <span class="color2"> </span></a></li>
@@ -420,19 +473,20 @@ html {
 									
 									?>
 									
-									<input id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>"  type="hidden" class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" value="<?php echo $att_element['att_val_name']; ?>">
+									<input id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" type="hidden" class="check_class_<?php echo $att_element['Attribute_master']; ?>" value="<?php echo $att_element['att_val_name']; ?>">
 									
 									<script>
 					
 										$(document).ready(function(){
 										
+											/*
 											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
 											
 												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
 												
-												//alert("val"+val);								
+												alert("val"+val);								
 											});
-											
+											*/
 											
 											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
 												
@@ -446,7 +500,7 @@ html {
 													
 													$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
 										
-														//alert(result);
+														alert(result);
 													});
 													
 													$( ".check_class_<?php echo $att_element['Attribute_master']; ?>" ).prop( "checked", false );
@@ -464,7 +518,7 @@ html {
 													
 													$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
 													
-														//alert(result);
+														alert(result);
 													});
 												}													
 											});											
@@ -506,6 +560,7 @@ html {
 									$att_element = $att_element['Produc_attribute'];
 									
 									?>
+									
 									<li>
                                     <label>
 									<?php 
@@ -515,13 +570,13 @@ html {
 									if($att_count>1)
 									{
 										?>
-										<input id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" value="<?php echo $att_element['att_value_id']; ?>" id="cancel_check_box" type="checkbox" class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>"/>                                    
+										<input id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" value="<?php echo $att_element['att_value_id']; ?>" id="cancel_check_box" type="checkbox" class="check_class_<?php echo $att_element['Attribute_master']; ?>"/>                                    
 										<?php
 									}
 									else
 									{
 										?>
-										<input id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" value="<?php echo $att_element['att_value_id']; ?>" id="cancel_check_box" type="hidden" class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>"/>                                    
+										<input id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" value="<?php echo $att_element['att_value_id']; ?>" id="cancel_check_box" type="hidden" class="check_class_<?php echo $att_element['Attribute_master']; ?>"/>                                    
 										<?php
 										echo $att_element['att_value_id'];                                     
 									}
@@ -532,14 +587,39 @@ html {
 									<script>
 					
 										$(document).ready(function(){
-																						
+										
+												$('#add_to_cart').click(function(){
+												
+												if($('.check_class_<?php echo $att_element['Attribute_master']; ?>').is(":checked"))
+												{
+													var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id');
+													
+													//alert(val);
+													
+													//alert('<?php echo $att_element['Attribute_master']; ?>');
+												}
+												else												
+												{
+													//alert("Please insert attributes <?php echo $att_element['Attribute_master']; ?>");
+													$("#one_msg").html("Please insert attributes <?php echo $att_element['Attribute_master']; ?>");								    
+													
+													//$("#one_msg").html("Please shashi");								    
+													
+													//$('#add_to_cart').stop(stopAll);
+													
+													return false;
+
+												}
+											});
+
+											/*
 											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
 											
 												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
 												
-												//alert("val"+val);																		
+												alert("val"+val);																		
 											});											
-											
+											*/											
 											
 											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
 												
@@ -553,7 +633,7 @@ html {
 													
 													$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
 										
-														//alert(result);
+														alert(result);
 													});
 													
 													$( ".check_class_<?php echo $att_element['Attribute_master']; ?>" ).prop( "checked", false );
@@ -571,7 +651,7 @@ html {
 													
 													$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
 													
-														//alert(result);
+														alert(result);
 													});
 												}													
 											});											
@@ -602,11 +682,13 @@ html {
 									
 									//var val = $('.<?php echo $key ?>').val();
 									
-									//alert("val"+val);								
+									alert("val"+val);								
+								
 								});
 																
 								});							
-														
+								
+							});							
 						</script>
 					<?php
 							
@@ -670,7 +752,7 @@ html {
 							else
 							{
 								?>
-								<div id="add_cart_1">
+								<div id="add_cart_2">
 								<div class="size_2-right">								
 								<button id="add_to_cart"  class="add_cart_btm">Add To Cart</button>
 								<div id="one_msg"  style="font-size:15px">Please insert the all attributes</div>
@@ -718,6 +800,8 @@ html {
 							
 							$('#coupon_btn').click(function(){
 								
+								alert("Coupon_button_click");
+								
 								//$('#coupon_btn').show();								
 								
 								$('#coupon_apply_btn').show();
@@ -733,6 +817,24 @@ html {
 								$('#review_div').toggle();
 							});
 							
+
+							$('#add_to_cart').click(function(){
+								
+								var page_id = '<?php echo $page_id; ?>';
+								
+								var product_id = '<?php echo $product['id']?>';
+								
+								$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id, page_id: page_id}, function(result){
+									
+									$("#shashi").html(result);								    
+									
+									$("#cart").html(result);								    
+									$('#add_cart_1').hide();
+									$('#add_cart_2').hide();
+									$('#added_cart_1').show();
+								});
+							});	
+								
 							$('#cancel_add_to_cart').click(function(){
 								
 								var page_id = '<?php echo $page_id; ?>';
@@ -751,58 +853,7 @@ html {
 						
 					</script>
 					  
-					<script>
-					$(document).ready(function(){
-						
-					$('#add_to_cart').click(function(){
-						
-						var mm=0;
-						<?php
-						foreach($att_array as $key=>$att_arr)
-						{
-							?>
-							var key = '<?php echo $key; ?>';
-							
-							if(key != 'Brand')
-							{
-								if($('.<?php echo $key; ?>').is(":checked"))
-								{
-									
-								}
-								else
-								{
-									var mm=1;
-									$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
-									return false;
-								}
-							}
-							<?php
-						}
-						?>
-						
-						if(mm==0)
-						{
-							//var page_id = '<?php echo $page_id; ?>';
-								
-							var product_id = '<?php echo $product['id']?>';
-							
-							//, page_id: page_id
-							
-							$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id}, function(result){
-								
-								//$("#shashi").html(result);								    
-								
-								$("#cart").html(result);								    
-								$('#add_cart_1').hide();
-								$('#add_cart_2').hide();
-								$('#added_cart_1').show();
-							});
-						}						
-					});
-					});
-					</script>
-			        
-					</div>
+			         </div>
 				</div>
           	    <div class="clearfix"></div>
           	   </div>
