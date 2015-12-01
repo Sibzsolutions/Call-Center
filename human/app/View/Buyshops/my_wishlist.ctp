@@ -1,3 +1,5 @@
+<div id="shashi"></div>
+
 <!--A Design by W3layouts
 Author: W3layout
 Author URL: http://w3layouts.com
@@ -29,8 +31,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			{
 				foreach($wishlist as $product)
 				{
-					?>
-					
+					?>					
 					<script>
 					
 						$(document).ready(function(c) {
@@ -39,12 +40,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								
 								var wishlist_master_id = '<?php echo $product['Wishlist_master']['id']; ?>';
 								
+								$(location).attr('href', '<?php echo $this->webroot.'buyshops/remove_from_wishlist/'.$product['Wishlist_master']['id']; ?>')
+								
+								/*
 								$.post("<?=$this->webroot?>buyshops/remove_from_wishlist", {wishlist_master_id: wishlist_master_id}, function(result){
 									
 									//alert(result);
 									
 									//$("#cart").html(result);
 								});
+								*/
 								
 								$('.cart-header_rmv<?php echo $product['Wishlist_master']['id']; ?>').fadeOut('slow', function(c){
 									//$('.cart-header_rmv<?php echo $product['Wishlist_master']['id']; ?>').remove();
@@ -76,13 +81,39 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							?>
 								</div>
 								<div class="cart-item-info">
-								<div class="brand_box"><?php echo $product['Wishlist_detail']['prod_details']['prodname'];//['prodname'] //Mountain Hopper(XS R034) ?><span>Model No: 3578</span></div>
+								<div class="brand_box">
+								<?php
+								
+								if(isset($product['Wishlist_detail']['prod_details']['prodname']))
+								echo $product['Wishlist_detail']['prod_details']['prodname'];//['prodname'] //Mountain Hopper(XS R034) 
+								
+								?>
+								<span>Model No: 3578</span></div>
 								<ul class="qty">
-									<li><p>Size : 5</p></li>
-									<li><p>Qty : 1</p></li>
+									
+									<?php 
+									
+									if(isset($product['Wishlist_master']['att']))
+									foreach($product['Wishlist_master']['att'] as $keya=>$data)
+									{
+										?>
+										<li><p><?php echo $keya; ?> : <?php echo $data; ?></p></li>
+										<?php
+									}
+									
+									?>
+								
+									<!--<li><p>Size : 5</p></li>-->
+									<li><p>Qty : <?php echo $product['Wishlist_detail']['prodqty']; ?></p></li>
+									
 								</ul>
 								<div class="delivery">
-									 <p>Service Charges : Rs.<?php echo $product['Wishlist_detail']['prod_details']['prodprice'];//['prodprice'];?></p>
+									 <p>Service Charges : Rs.
+									 <?php 
+									 if(isset($product['Wishlist_detail']['prod_details']['prodprice']))
+									 echo $product['Wishlist_detail']['prod_details']['prodprice'];//['prodprice'];
+									 ?>
+									 </p>
 									 
 									<br>
 									<br>
@@ -95,7 +126,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 									 <div class="clearfix"></div>
 								</div>	
 								<?php
-								
+									
+									if(isset($product['Wishlist_detail']['prod_details']['add_to_cart']))
 									if($product['Wishlist_detail']['prod_details']['add_to_cart'] == 1 )
 									{
 										?>
@@ -123,10 +155,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 											$.post("<?=$this->webroot?>/buyshops/add_to_cart", {
 											
 																							product_id: product_id,
+																							
+																							quantity_data: '<?php echo $product['Wishlist_detail']['prodqty']; ?>',
 											
 																						}, function(result){									
 												$("#results_wishlist_replace_<?php echo $product['Wishlist_master']['id']; ?>").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Added to cart</button></div>');
-												$("#cart").html(result);												
+												
+												//$("#shashi").html(result);												
+												
+												$("#cart").html(result);																								
 											});																				
 										});
 									});
@@ -180,71 +217,80 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		?>
 		</div>
 		<?php 
+		
 		if(isset($wishlist))
-		{
-		?>
-		<div id="total_update">
-		 <div class="col-md-3 cart-total">
-			 <a class="continue" href="<?php echo $this->webroot.'buyshops/index'; ?>">Continue to basket</a>
-			 
-			 <div class="price-details">
-				 <h3>Price Details</h3>
-				 <span>Total</span>
-				 
-				 <span class="total1">
-				 
-				<?php
+		{			
+			if(!empty($wishlist))
+			{
 				
-				$i=0;
-				foreach($wishlist as $product)
-				{
-					if($i==0)
-					$total_price = $product['Wishlist_detail']['prod_details']['prodprice'];
-					else
-					$total_price = ($total_price+$product['Wishlist_detail']['prod_details']['prodprice']);
-
-					$i++;
-				}
-				
-				echo $total_price;//6200.00
-				 
-				?>
-				
-
-				 </span>
-				 <span>Discount</span>
-				 <span class="total1">---</span>
-				 <span>Delivery Charges</span>
-				 <span class="total1"> --- </span>
-				 <div class="clearfix"></div>				 
-			 </div>	
-			 <ul class="total_price">
-			   <li class="last_price"> <h4>TOTAL</h4></li>	
-			   <li class="last_price">
-			   <span>
-			   <?php echo $total_price; //6350.00  ?>
-			   </span></li>
-			   <div class="clearfix"> </div>
-			 </ul>
+			?>
 			
-			 <div class="clearfix"></div>
-			 <a class="order" href="#<?php echo $this->webroot.'place_order'; ?>">Place Order</a>
-			 
-			 <div class="total-item">
-				 <h3>OPTIONS</h3>
-				 <h4>COUPONS</h4>
-				 <a class="cpns" href="#">Apply Coupons</a>
-				 <p><a href="#">Log In</a> to use accounts - linked coupons</p>
-			 </div>
+			<div id="total_update">
+			 <div class="col-md-3 cart-total">
+				 <a class="continue" href="<?php echo $this->webroot.'buyshops/index'; ?>">Continue to basket</a>
+				 
+				 <div class="price-details">
+					 <h3>Price Details</h3>
+					 <span>Total</span>
+					 
+					 <span class="total1">
+					 
+					<?php
+					
+					$i=0;
+					foreach($wishlist as $product)
+					{
+						if(isset($product['Wishlist_detail']['prod_details']['prodprice']))
+						{
+							if($i==0)
+							$total_price = $product['Wishlist_detail']['prod_details']['prodprice'];
+							else
+							$total_price = ($total_price+$product['Wishlist_detail']['prod_details']['prodprice']);
+						}
+						$i++;
+					}
+					
+					echo $total_price;//6200.00
+					 
+					?>
+					
 
-			 </div>
-		</div>
-		<?php
+					 </span>
+					 <span>Discount</span>
+					 <span class="total1">---</span>
+					 <span>Delivery Charges</span>
+					 <span class="total1"> --- </span>
+					 <div class="clearfix"></div>				 
+				 </div>	
+				 <ul class="total_price">
+				   <li class="last_price"> <h4>TOTAL</h4></li>	
+				   <li class="last_price">
+				   <span>
+				   <?php echo $total_price; //6350.00  ?>
+				   </span></li>
+				   <div class="clearfix"> </div>
+				 </ul>
+				
+				 <div class="clearfix"></div>
+				 <a class="order" href="#<?php echo $this->webroot.'place_order'; ?>">Place Order</a>
+				 
+				 <div class="total-item">
+					 <h3>OPTIONS</h3>
+					 <h4>COUPONS</h4>
+					 <a class="cpns" href="#">Apply Coupons</a>
+					 <p><a href="#">Log In</a> to use accounts - linked coupons</p>
+				 </div>
+
+				 </div>
+			</div>
+			<?php
 			}
-			
 			else
+			{
 				echo "<br><br><div class='width100' style='border: 2px solid #f0f0f0; color: #ff0000; font-size: 21px; margin: 10px 0; padding: 10px 0; text-align: center;'>Sorry no item found in your cart</div>";
-			
+			}	
+		}
+		
 		?>
 	 </div>
 </div>

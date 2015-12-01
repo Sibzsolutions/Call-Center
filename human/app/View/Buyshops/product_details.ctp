@@ -129,21 +129,69 @@ html {
 								
 								var product_id = '<?php echo $product['id']; ?>';
 								
-								//$("#results").html('<img src="<?=$this->webroot?>img/29.gif">');
+								var quantity_data = $('#quantity_data').val();
 								
-								$.post("<?=$this->webroot?>/buyshops/wishlist_mgt", {
+								var checked = 1;
 								
-																				product_id: product_id,
+								var key = 'Quantity';
 								
-																			}, function(result){									
-									if(result == "yes")
-										$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Added to wishlist</button></div>');	
-									else
-										$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Please login first..!!!</button></div>');									
-								});																	
+								var val = quantity_data+'_<?php echo $product['id']?>';
+								
+								$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
+									
+									//alert(result);
+									
+									//$("#shashi").html(result);								    		
+								});
+								
+								var mm=0;
+								<?php
+								foreach($att_array as $key=>$att_arr)
+								{
+									?>
+									var key = '<?php echo $key; ?>';
+									
+									if(key != 'Brand')
+									{
+										if($('.<?php echo $key; ?>').is(":checked"))
+										{
+											
+										}
+										else
+										{
+											var mm=1;
+											$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+											return false;
+										}
+									}
+									<?php
+								}
+								?>
+								
+								if(mm==0)
+								{
+									var product_id = '<?php echo $product['id']?>';
+									
+									var quantity_data = $('#quantity_data').val();
+									
+									$.post("<?=$this->webroot?>/buyshops/wishlist_mgt", {
+									
+																					product_id: product_id,
+																					quantity_data: quantity_data,
+									
+																				}, function(result){									
+										//$("#shashi").html(result);
+										
+										if(result == "yes")
+											$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Added to wishlist</button></div>');	
+										else
+											$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Please login first..!!!</button></div>');																		
+										
+									});
+								}						
 							});
 						});
-
+							
 					</script>		
 				  
 				  	<ul class="back">
@@ -608,11 +656,21 @@ html {
 								});							
 														
 						</script>
+						
 					<?php
 							
 						}						
 					?>
-		
+					
+					Quantity:
+					<select name="quantity_data" id="quantity_data" class="quantity_data">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<select>
+						
 					<div class="clearfix"></div>
 			         </div>
 			         <div class="simpleCart_shelfItem">
@@ -678,16 +736,65 @@ html {
 								</div>
 								<?php
 							}
-						 ?>`
+						?>
+						
+						<div style="margin-left:100px" class="size_2-right">
+						
+						<!--<a id="add_to_cart_buy" class="add_cart_btm" href="<?php //echo $this->webroot.'buyshops/buy_product/'.$product['id']; ?>">Buy</a>-->
 						
 						
 						
-						<div style="margin-left:100px" class="size_2-right"><a id="add_to_cart_buy" class="add_cart_btm" href="<?php echo $this->webroot.'buyshops/buy_product/'.$product['id']; ?>">Buy</a></div>
+						</div>
+						
+						<?php
+						
+						$paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr'; 
+						
+						$paypal_id = 'shashikant.chobhe-seller@sibzsolutions.com';  // sriniv_1293527277_biz@inbox.com
+
+						?>
 						
 						<div class="apply_box">
+						
+						<?php
+						/*
+
+						?>
+							<form action='<?php echo $paypal_url; ?>' method='post' name='frmPayPal1'>-->
+							
+							<input type='hidden' name='business' value='<?php echo $paypal_id;?>'>
+							<input type='hidden' name='cmd' value='_xclick'>
+
+							<input type='hidden' name='item_name' value='<?php echo $product['prodname']; ?>'>
+							<input type='hidden' name='item_number' value='<?php echo $product['id']; ?>'>
+							<input type='hidden' name='amount' value='<?php echo $product['prodprice']; ?>'>
+
+							<input type='hidden' name='no_shipping' value='1'>
+							<input type='hidden' name='currency_code' value='USD'>
+							<input type='hidden' name='handling' value='0'>
+							<input type='hidden' name='cancel_return' value='http://localhost/pay/paypal/cancel.php'>
+							<input type='hidden' name='return' value='http://localhost/pay/paypal/success.php'>
+							
+							<input style="font-size:15px"  type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+							<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+							
+							</form> 
+						<?php
+
+						*/
+						?>
+						
+						
+						<button class="order" id="place_order">Place Order</button>
+						
 						<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;">Apply Coupon</a></div>
+						
 						<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both">
 						<button id="coupon_apply_btn"  class="apply_btn">Apply</button>
+						
+						<input type="text" id="original_price" value="<?php echo $product['prodprice']; ?>">
+						
+						<input type="text" id="discounted_price">
 						
 						<button id="discounted_price"  class="apply_btn"></button>
 						
@@ -696,6 +803,41 @@ html {
 					    <script>
 						
 						$(document).ready(function(){
+							
+							alert("shashikant");
+							
+							$('#place_order').click(function(){
+								
+								alert("shashikant");
+								
+								var product_id = '<?php echo $product['id']; ?>';
+								
+								alert(product_id);
+								
+								var product_price = '<?php echo $product['prodprice']; ?>';
+								
+								alert(product_price);
+								
+								var total_price_id = $('#original_price').val();
+								
+								alert(total_price_id);
+								
+								var coupon_price_id = $('#discounted_price').val();
+								
+								alert(coupon_price_id);
+								
+								$(location).attr('href','<?php echo $this->webroot.'buyshops/buy_product/'; ?>'+product_id+'/'+total_price_id+'/'+coupon_price_id);						
+								
+								//$(location).attr('href','<?php echo $this->webroot.'buyshops/buy_product/'; ?>/'+product_id+'/'+total_price_id+'/'+coupon_price_id);						
+								
+								/*
+								var product_price = '<?php echo $product['prodprice']; ?>';
+								
+								var product_name = '<?php echo $product['prodname']; ?>';
+								$(location).attr('href','<?php echo $this->webroot.'buyshops/buy_product/'; ?>/'+product_id+'/'+total_price_id+'/'+coupon_price_id+'/'+product_name+'/'+'/'+product_id+'/'+'/'+product_price+'/');						
+								*/
+							});
+							
 							
 							$('#discounted_price').hide();
 							
@@ -708,6 +850,8 @@ html {
 								var coupon_txt = $('#coupon_txt').val();
 								
 								$.post("<?=$this->webroot?>buyshops/coupon_mgt", {coupon_txt: coupon_txt, product_id: product_id}, function(result){
+									
+									$("#discounted_price").val(result);								    
 								
 									$("#discounted_price").html(result);								    
 								});								
@@ -754,52 +898,70 @@ html {
 					<script>
 					$(document).ready(function(){
 						
-					$('#add_to_cart').click(function(){
-						
-						var mm=0;
-						<?php
-						foreach($att_array as $key=>$att_arr)
-						{
-							?>
-							var key = '<?php echo $key; ?>';
+						$('#add_to_cart').click(function(){
 							
-							if(key != 'Brand')
-							{
-								if($('.<?php echo $key; ?>').is(":checked"))
-								{
-									
-								}
-								else
-								{
-									var mm=1;
-									$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
-									return false;
-								}
-							}
-							<?php
-						}
-						?>
-						
-						if(mm==0)
-						{
-							//var page_id = '<?php echo $page_id; ?>';
-								
-							var product_id = '<?php echo $product['id']?>';
+							var quantity_data = $('#quantity_data').val();
 							
-							//, page_id: page_id
+							var checked = 1;
 							
-							$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id}, function(result){
+							var key = 'Quantity';
+							
+							var val = quantity_data+'_<?php echo $product['id']?>';
+							
+							$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
 								
-								//$("#shashi").html(result);								    
-								
-								$("#cart").html(result);								    
-								$('#add_cart_1').hide();
-								$('#add_cart_2').hide();
-								$('#added_cart_1').show();
+								$("#shashi").html(result);								    		
 							});
-						}						
+							
+							var mm=0;
+							<?php
+							foreach($att_array as $key=>$att_arr)
+							{
+								?>
+								var key = '<?php echo $key; ?>';
+								
+								if(key != 'Brand')
+								{
+									if($('.<?php echo $key; ?>').is(":checked"))
+									{
+										
+									}
+									else
+									{
+										var mm=1;
+										$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+										return false;
+									}
+								}
+								<?php
+							}
+							?>
+							
+							if(mm==0)
+							{
+								//var page_id = '<?php echo $page_id; ?>';
+									
+								var product_id = '<?php echo $product['id']?>';
+								
+								var quantity_data = $('#quantity_data').val();
+								
+								//, page_id: page_id
+								
+								$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id, quantity_data: quantity_data}, function(result){
+									
+									//$("#shashi").html(result);								    
+									
+									//alert(result);
+									
+									$("#cart").html(result);								    
+									$('#add_cart_1').hide();
+									$('#add_cart_2').hide();
+									$('#added_cart_1').show();
+								});
+							}						
+						});
 					});
-					});
+					
 					</script>
 			        
 					</div>

@@ -38,12 +38,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							
 							var product_id = '<?php echo $product['id']; ?>';
 							
+							$(location).attr('href', '<?php echo $this->webroot.'buyshops/remove_from_cart/'.$product['id']; ?>')
+							
+							/*
 							$.post("<?=$this->webroot?>buyshops/remove_from_cart", {product_id: product_id}, function(result){
 								
 								//alert(result);
 								
 								$("#cart").html(result);
 							});
+							*/
 							
 							$('.cart-header_rmv<?php echo $product['id']; ?>').fadeOut('slow', function(c){
 								$('.cart-header_rmv<?php echo $product['id']; ?>').remove();
@@ -82,14 +86,22 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 									if(isset($product['att']))
 									foreach($product['att'] as $key=>$pro_att)
 									{
-										?>
-										<li><p><?php echo $key.' : '.$pro_att['attvalue']; ?></p></li>
-										<?php
+										if($key == 'Quantity')
+										{
+											?>
+											<li><p><?php echo $key.' : '.$pro_att; ?></p></li>
+											<?php
+										}
+										else
+										{
+											?>
+											<li><p><?php echo $key.' : '.$pro_att['attvalue']; ?></p></li>
+											<?php
+										}
 									}
-									
 								?>
 								
-								<li><p>Qty : 1</p></li>
+								<!--<li><p>Qty : 1</p></li>-->
 							</ul>
 							<div class="delivery">
 								<p>Service Charges : Rs.<?php echo $product['prodprice'];?></p>

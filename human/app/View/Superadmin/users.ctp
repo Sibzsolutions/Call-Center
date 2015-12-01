@@ -53,7 +53,7 @@
                         <td><?php echo $user_data['usrtype']; ?></td>
                         <td><?php echo $user_data['last_login']; ?></td>
                         <td><?php if($user_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
-                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/user_edit/'.$user_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/user_status_change/'.$user_data['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td>&nbsp;&nbsp;&nbsp;<a title="view Orders" href="<?php echo $this->webroot.'superadmin/view_orders/'.$user_data['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/user_edit/'.$user_data['id']; ?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/user_status_change/'.$user_data['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
                         <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php echo $this->webroot.'superadmin/user_delete/'.$user_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
                         </td>

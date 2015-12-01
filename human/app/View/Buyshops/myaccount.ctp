@@ -1,16 +1,17 @@
 <?php 
 	
-	echo "<br>".$userdata['usrfname'];
+	echo "<br>First Name:- ".$userdata['usrfname'];
 	
-	echo "<br>".$userdata['usrlname'];	
+	echo "<br>Last Name:- ".$userdata['usrlname'];	
 	
-	echo "<br>".$userdata['username'];	
+	echo "<br>User Name:- ".$userdata['username'];	
 	
 ?>
 
 <br>
+<br>
 
-<button style="width:50px;height:50px" class="change_pass" value="Change Password"></button>
+<button  class="change_pass" value="Change Password">Change Password</button>
 
 <br>
 
@@ -19,13 +20,13 @@
 <div>
 	
 	<?=$this->Form->create('User');?>
-
-	<?=$this->Form->input('password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false));?>
-
-	<?=$this->Form->input('new_password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false));?>
-	
-	<?=$this->Form->input('confirm_password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false));?>
-	
+	<br>
+	<?=$this->Form->input('password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false, 'Placeholder'=>'Please enter the old password'));?>
+	<br>
+	<?=$this->Form->input('new_password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false, 'Placeholder'=>'Please enter the new password'));?>
+	<br>
+	<?=$this->Form->input('confirm_password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false, 'Placeholder'=>'Please enter the new password again'));?>
+	<br>
 	<input type="submit" value="Save">
 	
 	<?=$this->Form->end()?>
@@ -71,6 +72,7 @@
 <link rel="stylesheet" href="<?php echo $this->webroot.'plugins/datatables/dataTables.bootstrap.css';?>">
 <!-- Theme style -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
 
 <div class="row">
 	<div class="col-xs-12">
@@ -140,8 +142,78 @@
 	  </div><!-- /.box -->
 	</div><!-- /.col -->
   </div>
-		  
-		  
+
+
+
+<div class="row">
+	<div class="col-xs-12">
+	  
+	  <div class="box">
+		<div class="box-header">
+		  <!--<h3 class="box-title">Data Table With Full Features</h3>-->
+		</div><!-- /.box-header -->
+		<div class="box-header" style="width:100%; float:left">
+		<h1>Orders:</h1>
+		
+		<!--<a class="login_button" href="<?php //echo $this->webroot.'buyshops/address' ?>">Add Address</a>-->
+		
+		</div><!-- /.box-header -->
+		<div class="box-body">
+		  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1_order">
+			<thead>
+			  <tr>
+				<th bgcolor="#00bcd4" class="text14_white">Id</th>
+				<th bgcolor="#00bcd4" class="text14_white">Session Id</th>
+				<th bgcolor="#00bcd4" class="text14_white">Username</th>
+				<th bgcolor="#00bcd4" class="text14_white">Order Start Date</th>
+				<th bgcolor="#00bcd4" class="text14_white">Order End Date</th>
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:70px">Order Value</div></th>
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Payment Id</div></th>
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Shipping Id</div></th>
+				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Order Status</div></th>
+				<th bgcolor="#00bcd4" class="text14_white">Status</th>                        
+				<th bgcolor="#00bcd4" class="text14_white">Action</th>                        
+			  </tr>
+			</thead>
+			<tbody>
+			  <?php
+			  
+			  foreach($userdata['orders'] as $order)
+			  {
+				 $order = $order['Order_master'];
+			  
+			  ?>
+				<tr>
+				<td><?php echo $order['id']; ?></td>
+				<td><?php echo $order['session_id']; ?></td>
+				<td><?php echo $userdata['usrfname'].' '.$userdata['usrlname']; ?></td>
+				<td><?php echo $order['orderstartdate']; ?></td>
+				<td><?php echo $order['orderenddate']; ?></td>
+				<td><?php echo $order['ordervalue']; ?></td>
+				<td><?php echo $order['paymentid']; ?></td>
+				<td><?php echo $order['shippingid']; ?></td>
+				<td><?php echo $order['orderstatus']; ?></td>
+				
+				<td><?php if($order['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
+				
+				<td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'buyshops/order_details/'.$order['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'buyshops/order_status_change/'.$order['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        
+                <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php echo $this->webroot.'superadmin/user_delete/'.$order_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
+				
+				</td>
+				</tr>
+			  
+			  <?php
+			  }
+			  ?>
+			  
+			</tbody>
+		  </table>
+		</div><!-- /.box-body -->
+	  </div><!-- /.box -->
+	</div><!-- /.col -->
+  </div>
+		  		  
 <script src="<?php echo $this->webroot.'plugins/jQuery/jQuery-2.1.4.min.js';?>"></script>
 <!-- Bootstrap 3.3.5 -->
 <!--<script src="<?php //echo $this->webroot.'bootstrap/js/bootstrap.min.js';?>"></script>-->
@@ -159,9 +231,10 @@
 <!-- page script -->
 
 <script>
+  
   $(function () {
-	$("#example2").DataTable();
-	$('#example1').DataTable({
+	$("#example2_order").DataTable();
+	$('#example1_order').DataTable({
 	  "aaSorting": [],
 	  "paging": true,
 	  "lengthChange": true,
@@ -171,4 +244,22 @@
 	  "autoWidth": true
 	});
   });
+  
 </script>
+
+<script>
+
+  $(function () {
+	$("#example2").DataTable();
+	$('#example1').DataTable({
+	  "aaSorting": [],
+	  "paging": true,
+	  "lengthChange": true,
+	  "searching": false,
+	  "ordering": true,
+	  "info": true,
+	  "autoWidth": true
+	});
+  });
+
+  </script>

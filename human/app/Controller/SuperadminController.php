@@ -38,7 +38,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address');
 
 /**
  * Displays a view
@@ -71,7 +71,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		 $this->Auth->loginRedirect = array('controller'=>'Superadmin','action'=>'index');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login', 'product_attribute_change', 'change_slider_img_order', 'category_tree_one', 'product_attribute_change_edit');  
+		 $this->Auth->allow('register','login', 'product_attribute_change', 'change_slider_img_order', 'category_tree_one', 'product_attribute_change_edit', 'change_order_status');  
 		 
 		 //$this->layout="Superadministrator_layout";    
 		 
@@ -2450,6 +2450,59 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		$this->set('order_details', $order_details);
 	}
+	
+	public function change_order_status($order_id, $value) 
+	{
+		if($value == 1)
+			$statusname = 'Received';
+		else
+			$statusname = 'Pending';
+	
+		$order = $this->Order_status->find('first', array('conditions'=>array('Order_status.orderid'=>$order_id)));
+		
+		$order['Order_status']['ostatusname'] = $statusname;
+		
+		$order['Order_status']['orderid'] = $order_id;
+		
+		$order_data = $this->Order_master->find('first', array('conditions'=>array('Order_master.id'=>$order_id)));
+		
+		$order_data['Order_master']['orderstatus'] = $statusname;
+		
+		if(($this->Order_status->save($order)) && ($this->Order_master->save($order_data)))
+			echo "yes";
+		else
+			echo "no";	
+		die();
+	}
+	
+	public function view_orders($id) 
+	{
+		$user_data = $this->User->find('first', array('conditions'=>array('User.id'=>13)));
+		
+		//$id = 13;
+		$orders = $this->Order_master->find('all', array('conditions'=>array('Order_master.del_status'=>0, 'Order_master.usrid'=>$id)));
+	
+		foreach($orders as $key=>$order)
+		{
+			$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>$order['Order_master']['id'])));
+			
+			$orders[$key]['Order_detail'] = $order_details;			
+		}
+		
+		//$userdata['id'] = 13;
+		if(isset($userdata))
+		$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$userdata['id'])));
+		
+		$userdata['user'] = $user_data['User'];
+		
+		if(isset($user_address_data))
+		$userdata['Addresses'] = $user_address_data;
+		
+		$userdata['orders'] = $orders;
+		
+		$this->set('userdata', $userdata);
+	}
+	
 	
 }
 
