@@ -355,6 +355,7 @@ html {
                                     </li>
 									
 									<script>
+									
 									$(document).ready(function(){
 										
 										$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
@@ -785,7 +786,7 @@ html {
 						?>
 						
 						
-						<button class="order" id="place_order">Place Order</button>
+						<button style="font-size:20px" class="order" id="place_order">Buy</button>
 						
 						<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;">Apply Coupon</a></div>
 						
@@ -804,27 +805,52 @@ html {
 						
 						$(document).ready(function(){
 							
-							alert("shashikant");
-							
 							$('#place_order').click(function(){
 								
-								alert("shashikant");
+								var quantity_data = $('#quantity_data').val();
+							
+								var checked = 1;
+								
+								var key = 'Quantity';
+								
+								var val = quantity_data+'_<?php echo $product['id']?>';
+								
+								$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
+									
+									$("#shashi").html(result);								    		
+								});
+								
+								var mm=0;
+								<?php
+								foreach($att_array as $key=>$att_arr)
+								{
+									?>
+									var key = '<?php echo $key; ?>';
+									
+									if(key != 'Brand')
+									{
+										if($('.<?php echo $key; ?>').is(":checked"))
+										{
+											
+										}
+										else
+										{
+											var mm=1;
+											$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+											return false;
+										}
+									}
+									<?php
+								}
+								?>
 								
 								var product_id = '<?php echo $product['id']; ?>';
 								
-								alert(product_id);
-								
 								var product_price = '<?php echo $product['prodprice']; ?>';
-								
-								alert(product_price);
 								
 								var total_price_id = $('#original_price').val();
 								
-								alert(total_price_id);
-								
 								var coupon_price_id = $('#discounted_price').val();
-								
-								alert(coupon_price_id);
 								
 								$(location).attr('href','<?php echo $this->webroot.'buyshops/buy_product/'; ?>'+product_id+'/'+total_price_id+'/'+coupon_price_id);						
 								

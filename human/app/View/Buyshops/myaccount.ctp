@@ -1,14 +1,20 @@
+<script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery-1.11.1.min.js';?>"></script>
+
+<!-- start menu -->
+<script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/megamenu.js';?>"></script>
+<script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
+<!-- end menu -->
+
 <?php 
 	
 	echo "<br>First Name:- ".$userdata['usrfname'];
 	
 	echo "<br>Last Name:- ".$userdata['usrlname'];	
 	
-	echo "<br>User Name:- ".$userdata['username'];	
-	
+	echo "<br>User Name:- ".$userdata['username'];		
+
 ?>
 
-<br>
 <br>
 
 <button  class="change_pass" value="Change Password">Change Password</button>
@@ -214,21 +220,11 @@
 	</div><!-- /.col -->
   </div>
 		  		  
-<script src="<?php echo $this->webroot.'plugins/jQuery/jQuery-2.1.4.min.js';?>"></script>
 <!-- Bootstrap 3.3.5 -->
 <!--<script src="<?php //echo $this->webroot.'bootstrap/js/bootstrap.min.js';?>"></script>-->
 <!-- DataTables -->
 <script src="<?php echo $this->webroot.'plugins/datatables/jquery.dataTables.min.js';?>"></script>
 <script src="<?php echo $this->webroot.'plugins/datatables/dataTables.bootstrap.min.js';?>"></script>
-<!-- SlimScroll -->
-<script src="<?php echo $this->webroot.'plugins/slimScroll/jquery.slimscroll.min.js';?>"></script>
-<!-- FastClick -->
-<script src="<?php echo $this->webroot.'plugins/fastclick/fastclick.min.js';?>"></script>
-<!-- AdminLTE App -->
-<script src="<?php echo $this->webroot.'dist/js/app.min.js';?>"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="<?php echo $this->webroot.'dist/js/demo.js';?>"></script>
-<!-- page script -->
 
 <script>
   

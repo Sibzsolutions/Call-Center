@@ -1,5 +1,12 @@
 <?php ?>
+
 <script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery-1.11.1.min.js';?>"></script>
+
+<!-- start menu -->
+<script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/megamenu.js';?>"></script>
+<script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
+<!-- end menu -->
+
 <form id="submit_target" action="" method="post">
 <h3>Choose Address Option</h3>
 <?php
@@ -13,7 +20,7 @@
 		<input type="checkbox" class="user_address_id" id="user_address_id_<?php echo $user_address['id'] ?>" name="user_address_id_<?php echo $user_address['id'] ?>" value="<?php echo $user_address['id'] ?>"/>
 		
 		<script>
-	
+		
 		$(document).ready(function(){
 			
 			$('#submit_data').click(function(){
@@ -125,7 +132,8 @@
 	<input type="checkbox" id="user_shipping_id" name="user_shipping_id" value="<?php echo $shipping_master['Shipping_master']['id'] ?>"/>
 	
 	<br>
-	<input type="textarea" id="user_comment" name="user_comment"/>
+	<textarea style="width:200px;height:" id="user_comment" name="user_comment"></textarea>
+	<!--<input type="textarea" id="user_comment" name="user_comment"/>-->
 	
 	<br>
 	<br>

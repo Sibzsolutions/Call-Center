@@ -293,6 +293,12 @@
 		     </ul>
 		     <div class="clearfix"></div>	
 		</div>
+		
+		
+		
+		
+		
+		
 		<div id="result_sort">
 		<?php 	
 			
@@ -494,9 +500,8 @@
 				</script>
 				</a>
 			<?php
-
 			}		
-
+			
 			if(!empty($products))
 			{   
 				echo "<div class='pagination'>";
