@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 <div class="row">
+
             <div class="col-xs-12">
               
               <div class="box">
@@ -46,6 +47,7 @@
 					  die();
 					  */
 					  
+					  if(isset($product_images))
                       foreach($product_images as $produc)
                       {
 						  $product_image = $produc['Produc_image'];

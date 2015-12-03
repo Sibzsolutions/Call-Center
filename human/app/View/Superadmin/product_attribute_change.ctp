@@ -1,3 +1,5 @@
+<script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery-1.11.1.min.js';?>"></script>
+
 <div id="att_one">
 <?php
 	if(isset($attribute_data))
@@ -27,11 +29,20 @@
 				  
 				  </div>
 				  <div class="width100">
-					  <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]"  placeholder="Additional Cost" style="margin-right:5px;"/>
-					  
-					  <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"  placeholder="Less Cost"/>				  
-					  
+						
 					  <input class="form-control" type="file" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][color_imgs][]"  placeholder="Enter Product Images"/>				  					  
+					  
+					  <input class="form-control" type="number" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][product_quantity]"  placeholder="Enter Product Quantity"/>				  					  
+					  
+					  
+					  <select class="form-control"   name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
+					  <option value="0">Additional Cost</option>
+					  <option value="1">Less Cost</option>
+					  </select>
+					  
+					  <label for="exampleInputEmail1">Enter Cost</label>	  
+					  <input class="form-control" type="text" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]"  placeholder="Cost"/>				  
+					  
 				  </div>
 				  </div>
 				  <br />
@@ -63,11 +74,22 @@
 				  <option value="0">No</option>
 				  </select>
 				  
-				  </div>
-				  <div class="width100">
+				  
+				  
+				  <!--<div class="width100">
 					  <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][add_cost]"  placeholder="Additional Cost" style="margin-right:5px;"/>
 					  
 					  <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][less_cost]"  placeholder="Less Cost"/>				  
+				  </div>-->
+				  
+				  <select class="form-control"   name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
+					  <option value="0">Additional Cost</option>
+					  <option value="1">Less Cost</option>
+					  </select>
+					  
+					  <label for="exampleInputEmail1">Enter Cost</label>	  
+					  <input class="form-control" type="text" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]"  placeholder="Cost"/>				  
+				  
 				  </div>
 				  </div>
 				  <br />

@@ -38,7 +38,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address', 'Produc_quantity');
 
 /**
  * Displays a view
@@ -817,7 +817,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		$this->set('attribute_data', $attribute_data);
 		
 		if ($this->request->is('post')) {
-						
+			
 			$this->request->data['Produc_master']['date_added']=date('Y-m-d H:i:s',time());			
 						
 			$this->Produc_master->save($this->request->data);
@@ -831,6 +831,19 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 					if($data_second['id'] !='')
 					{
 						$attvid = $data_second['id'];
+						
+						if(isset($data_second['product_quantity']))
+						{
+							if($data_second['product_quantity'] != '')
+							{
+								$product_quantity_data['Produc_quantity']['attvid'] = $attvid;
+								$product_quantity_data['Produc_quantity']['prodid'] = $last_inserted_id;
+								$product_quantity_data['Produc_quantity']['qty'] = $data_second['product_quantity'];
+								
+								$this->Produc_quantity->create();
+								$this->Produc_quantity->save($product_quantity_data);
+							}
+						}
 						
 						if(isset($data_second['color_imgs'][0]['name']))
 						{
@@ -908,12 +921,19 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 					{
 						$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
 						$product_att['Produc_attribute']['attvid'] = $data_second['id'];
-						$product_att['Produc_attribute']['add_cost'] = $data_second['add_cost'];
-						$product_att['Produc_attribute']['less_cost'] = $data_second['less_cost'];
+						
+						if($data_second['cost_type'] == 1)							
+							$product_att['Produc_attribute']['add_cost'] = $data_second['cost'];
+						else
+							$product_att['Produc_attribute']['less_cost'] = $data_second['cost'];
+						
 						$product_att['Produc_attribute']['del_status'] = $data_second['del_status'];
 						
 						$this->Produc_attribute->create();
 						$this->Produc_attribute->save($product_att);
+						
+						unset($data_second['cost']);
+						unset($product_att);
 					}
 				}
 			}
@@ -974,13 +994,30 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		$product_attribute = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid'=>$id)));
 		
+		foreach($product_attribute as $key_att=>$attribute)
+		{
+			$attval = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attribute['Produc_attribute']['attvid'])));
+			
+			$attmaster = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$attval['Attribute_value']['attid'])));
+			
+			$product_quantity = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.attvid'=>$attribute['Produc_attribute']['attvid'], 'Produc_quantity.prodid'=>$attribute['Produc_attribute']['prodid']), 'order' => array('id' => 'DESC')));
+			
+			$product_attribute[$key_att]['Produc_attribute']['att_master'] = $attmaster['Attribute_master']['attname'];
+			
+			if(isset($product_quantity['Produc_quantity']['qty']))
+				$product_attribute[$key_att]['Produc_attribute']['qty'] = $product_quantity['Produc_quantity']['qty'];
+			else
+				$product_attribute[$key_att]['Produc_attribute']['qty'] = 0;			
+		}
+		
 		foreach($product_attribute as $attribute)
 		{
 			$product['id'] = $attribute['Produc_attribute']['attvid'];
 			$product['add_cost'] = $attribute['Produc_attribute']['add_cost'];
 			$product['less_cost'] = $attribute['Produc_attribute']['less_cost'];			
-			$product['del_status'] = $attribute['Produc_attribute']['del_status'];			
-			
+			$product['att_master'] = $attribute['Produc_attribute']['att_master'];			
+			$product['qty'] = $attribute['Produc_attribute']['qty'];			
+			$product['del_status'] = $attribute['Produc_attribute']['del_status'];						
 			$prd_att[] = $product;
 		}
 		
@@ -1016,7 +1053,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		$this->set('product_data', $product_data['Produc_master']);
 				
 		if ($this->request->is('post')) {
-			
+				
 			$this->Produc_master->save($this->request->data);
 			
 			$last_inserted_id = $this->request->data['Produc_master']['id'];
@@ -1029,10 +1066,43 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 				{
 					if($data_second['id'] !='')
 					{
+						$attvid = $data_second['id'];
+						
+						if(isset($data_second['product_quantity']))
+						{
+							if($data_second['product_quantity'] != '')
+							{
+								$product_quantity_data['Produc_quantity']['attvid'] = $attvid;
+								$product_quantity_data['Produc_quantity']['prodid'] = $last_inserted_id;
+								$product_quantity_data['Produc_quantity']['qty'] = $data_second['product_quantity'];
+								
+								$data_quantity = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.attvid'=>$attvid, 'Produc_quantity.prodid'=>$last_inserted_id)));
+								
+								$data_count = count($data_quantity);
+								
+								if($data_count>0)
+								{
+									$product_quantity_data['Produc_quantity']['id'] = $data_quantity['Produc_quantity']['id'];
+									
+									$this->Produc_quantity->create();
+									$this->Produc_quantity->save($product_quantity_data);
+								}
+								else								
+								{
+									$this->Produc_quantity->create();
+									$this->Produc_quantity->save($product_quantity_data);
+								}
+							}
+						}
+						
 						$product_att['Produc_attribute']['prodid'] = $last_inserted_id;
 						$product_att['Produc_attribute']['attvid'] = $data_second['id'];
-						$product_att['Produc_attribute']['add_cost'] = $data_second['add_cost'];
-						$product_att['Produc_attribute']['less_cost'] = $data_second['less_cost'];
+						
+						if($data_second['cost_type'] == 1)
+							$product_att['Produc_attribute']['add_cost'] = $data_second['cost'];
+						else
+							$product_att['Produc_attribute']['less_cost'] = $data_second['cost'];
+						
 						$product_att['Produc_attribute']['del_status'] = $data_second['del_status'];
 						
 						$this->Produc_attribute->create();
@@ -1043,7 +1113,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			if($this->request->data['Produc_master']['produc_images'][0]['name'] != '')			
 			{
-				$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
+				//$this->Produc_image->deleteAll(array('Produc_image.prodid' => $last_inserted_id));
 			
 				foreach($this->request->data['Produc_master']['produc_images'] as $data)
 				{
@@ -1276,6 +1346,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 				$data_second[] = $data_one; 
 			}
 			
+			if(isset($data_second))
 			foreach($data_second as $key=>$product)
 			{
 				//$product['Produc_image'] = $product['Produc_color_image'];
@@ -1288,13 +1359,18 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			}
 			
 			unset($product_images);
+			
+			if(isset($data_second))
 			$product_images = $data_second;
 		}
 		
-		$count_data = count($product_images);
+		if(isset($product_images))
+		{
+			$count_data = count($product_images);
 		
-		for($i=1;$i<=$count_data;$i++)
-		$total_order_number[$i] = $i;
+			for($i=1;$i<=$count_data;$i++)
+			$total_order_number[$i] = $i;
+		}
 		
 		/*
 		echo "Total_order_number<pre>";
@@ -1302,8 +1378,10 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		echo "<pre>";
 		*/
 		
+		if(isset($total_order_number))
 		$this->set('total_order_number', $total_order_number);
 		
+		if(isset($product_images))
 		$this->set('product_images', $product_images);
 		
 		/*

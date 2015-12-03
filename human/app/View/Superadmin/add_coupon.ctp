@@ -12,8 +12,6 @@
 <script type="text/javascript" src="js/jquery-1.11.1.min.js';?>"></script>
 <!-- start menu -->
 
-
-
 <link rel="stylesheet" href="<?php echo $this->webroot.'css/buy_shop/etalage.css';?>">
 
   <?=$this->Form->create('Coupon_master', array("role"=>"form"));?>

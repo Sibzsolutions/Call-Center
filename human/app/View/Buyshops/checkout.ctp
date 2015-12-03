@@ -238,11 +238,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							
 							$.post("<?=$this->webroot?>buyshops/coupon_mgt", {coupon_txt: coupon_txt, total_price: total_price}, function(result){
 								
-								
 								$("#coupon_price_id").val(result);
 								
 								if(result == 0)
-								$("#discounted_price").html("Sorry, you entered wrong coupon number");								    
+								$("#discounted_price").html("Sorry, you entered wrong coupon number/ Already used this coupon.");								    
 								else
 								$("#discounted_price").html("Discounted prices is "+result);								    
 							});								

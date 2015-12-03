@@ -1,26 +1,10 @@
 <?php ?>
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-<link href="<?php echo $this->webroot.'css/buy_shop/bootstrap.css';?>" rel='stylesheet' type='text/css' />
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<!-- Custom Theme files -->
-<link href="<?php echo $this->webroot.'css/buy_shop/style.css';?>" rel='stylesheet' type='text/css' />
-<script src="<?php echo $this->webroot.'js/buy_shop/simpleCart.min.js';?>"> </script>
-<!-- Custom Theme files -->
-<!--webfont-->
-<link href='http://fonts.googleapis.com/css?family=Lato:100,200,300,400,500,600,700,800,900' rel='stylesheet' type='text/css'>
 <script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery-1.11.1.min.js';?>"></script>
+
 <!-- start menu -->
-<link href="<?php echo $this->webroot.'css/buy_shop/megamenu.css';?>" rel="stylesheet" type="text/css" media="all" />
 <script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/megamenu.js';?>"></script>
 <script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
-<!-- the jScrollPane script -->
-<script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery.jscrollpane.min.js';?>"></script>
-<script type="text/javascript" id="sourcecode">
-	$(function()
-	{
-		$('.scroll-pane').jScrollPane();
-	});
-</script>
+<!-- end menu -->
 
 <div>
   
@@ -383,16 +367,32 @@
 								
 								if(isset($product['discount']))
 								{
-									?>
-									<strong>
-									<?php
-									echo 'Discount '.$product['discount'].'%'; // $187.95 	
-									?>
-									</strong>
-									<br>
-									<br>
-									<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
-									<?php
+									if($product['discount'] == 0)
+									{
+										?>
+										<strong>
+										<?php
+										echo 'Discount N/A'
+										?>
+										</strong>
+										<br>
+										<br>
+										<?php
+									}
+									else
+									{
+										?>
+										<strong>
+										<?php
+										echo 'Discount '.$product['discount'].'%'; // $187.95 	
+										?>
+										</strong>
+										<br>
+										<br>
+										<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
+										<?php
+									}
+									
 								}
 								
 								?>
