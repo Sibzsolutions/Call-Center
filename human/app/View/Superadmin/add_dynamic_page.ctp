@@ -26,7 +26,7 @@
                                             
     <div class="form-group" style="clear: both; width: 100%;">
       <label for="exampleInputEmail1">Script</label>
-      <?=$this->Form->input('script',array('type'=>'textarea','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Script'));?>
+      <?=$this->Form->input('script',array('type'=>'textarea','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Script'));?>
     </div>
     
     

@@ -39,9 +39,11 @@ html {
 			  	<div class="contact_heading"><strong>REGISTERED</strong> CUSTOMERS</div>
 				<div class="width100 text14_black" style="padding:0 0 20px 0">If you have an account with us, please log in.</div>
 				
+				
+				<?=$this->Session->flash('auth');?>
 				<?=$this->Form->create('User');?>
 				  <div>
-					<span>Email Address<label>*</label></span>
+					<span>Username<label>*</label></span>
 					
 					<?=$this->Form->input('username',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
 					
@@ -52,7 +54,7 @@ html {
 					<?=$this->Form->input('password',array('type'=>'password','class'=>'form-control','required'=>'required','label'=>'','div'=>false))?>
 					
 				  </div>
-				  <a class="forgot" href="#">Forgot Your Password?</a>
+				  <!--<a class="forgot" href="#">Forgot Your Password?</a>-->
 				  <input type="submit" value="Login" class="button" style="margin:0px;">
 			    <?=$this->Form->end()?>
 			   </div>

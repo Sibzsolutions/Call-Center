@@ -24,11 +24,16 @@
       <?=$this->Form->input('name',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter First Name'));?>
     </div>
     
-	<div class="form-group">
+	<!--<div class="form-group">
       <label for="exampleInputEmail1">Coupon Number</label>
-      <?=$this->Form->input('coupon_number',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Name'));?>
-    </div>
+      <?php // echo $this->Form->input('coupon_number',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Last Name'));?>
+    </div>-->
     
+	<div class="form-group">
+      <label for="exampleInputEmail1">Status</label>
+      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Deactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    </div>
+	
 	<div class="form-group">
       <label for="exampleInputEmail1">Discount Type</label>	  
 	  <?=$this->Form->input('percnt',array('type'=>'checkbox', 'label'=>'Percent','div'=>false, 'placeholder'=>'Discount in Percent', 'id'=>'discount_prcnt', 'checked'=>'checked'));?>      
@@ -49,10 +54,7 @@
     </div>
 	</div>
 	
-    <div class="form-group">
-      <label for="exampleInputEmail1">Status</label>
-      <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Deactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
-    </div>
+    
     
   </div><!-- /.box-body -->
 

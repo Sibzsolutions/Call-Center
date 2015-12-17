@@ -2,46 +2,49 @@
       <div class="footer_list">
         <div class="footer_heading"><strong>About Us</strong></div>
         <ul>
-          <li><a href="#">Our Story</a></li>
-          <li><a href="#">Friendly Policies</a></li>
-          <li><a href="#">Legal</a></li>
-          <li><a href="#">Color Disclaimer</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/our_story'; ?>">Our Story</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/friendly_policies'; ?>">Friendly Policies</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/legal'; ?>">Legal</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/color_disclaimer'; ?>">Color Disclaimer</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/faq'; ?>">FAQs</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/privacy_policy'; ?>">Privacy Policy</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/terms_and_conditions'; ?>">Terms and Conditions</a></li>
+		  <li><a href="<?php echo $this->webroot.'buyshops/about_us'; ?>">About Us</a></li>
         </ul>
       </div>
       <div class="footer_list">
         <div class="footer_heading"><strong>Marketing Tools</strong></div>
         <ul>
-          <li><a href="#">Catalog Download</a></li>
-          <li><a href="#">    Catalog Request</a></li>
-          <li><a href="#">    #HollowaySportswear</a></li>
-          <li><a href="#">Product Videos</a></li>
-          <li><a href="#">Instructional Videos</a></li>
-          <li><a href="#">    Prebuilt Personalized Flyers</a></li>
-          <li><a href="#">    Web Links</a></li>
-          <li><a href="#">    Sizing & Fit Guide</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/catalog_download'; ?>">Catalog Download</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/catalog_request'; ?>">    Catalog Request</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/hollowaysportswear'; ?>">    HollowaySportswear</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/productvideos'; ?>">Product Videos</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/instructional_videos'; ?>">Instructional Videos</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/prebuilt_personalized_flyers'; ?>">    Prebuilt Personalized Flyers</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/web_links'; ?>">    Web Links</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/sizing_fit_guide'; ?>">    Sizing & Fit Guide</a></li>
         </ul>
       </div>
       <div class="footer_list">
         <div class="footer_heading"><strong>Decoration</strong></div>
         <ul>
-          <li><a href="#">    Decoration Techniques</a></li>
-          <li><a href="#">    Stock Decoration Library</a></li>
-          <li><a href="#">    Uniform Decoration Guides</a></li>
-          <li><a href="#">    Knowledge Center</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/decoration_techniques'; ?>">    Decoration Techniques</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/stock_decoration_library'; ?>">    Stock Decoration Library</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/uniform_decoration_guides'; ?>">    Uniform Decoration Guides</a></li>
+          <li><a href="<?php echo $this->webroot.'buyshops/knowledge_center'; ?>">    Knowledge Center</a></li>
+		  <li><a href="<?php echo $this->webroot.'buyshops/tell_a_friend'; ?>">    Tell a Friends</a></li>
+		  
         </ul>
       </div>
       <div class="footer_list">
         <div class="footer_heading"><strong>Connect With Us</strong></div>
         <ul>
 		  <li><a href="<?php echo $this->webroot.'buyshops/contact_us' ?>">Contact Us</a></li>
-          <li><a href="#">Facebook</a></li>
-          <li><a href="#">Twitter</a></li>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">YouTube</a></li>
-          <li><a href="<">Contact Info</a></li>
+          <li><a href="https://www.facebook.com">Facebook</a></li>
+          <li><a href="https://twitter.com">Twitter</a></li>
+          <li><a href="https://www.instagram.com">Instagram</a></li>
+          <li><a href="https://www.youtube.com/">YouTube</a></li>
+          <!--<li><a href="<?php echo $this->webroot.'buyshops/our_story'; ?>">Contact Info</a></li>-->
         </ul>
       </div>
       <div class="copyright">&copy; 2015  onlyhumansportswear. All Rights Reserved.</div>

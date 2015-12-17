@@ -8,6 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <html>
 <head>
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+
 <link href="<?php echo $this->webroot.'css/buy_shop/bootstrap.css';?>" rel='stylesheet' type='text/css' />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!-- Custom Theme files -->
@@ -43,8 +44,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					 </div>
 					 
 					 <div>
-						<span>City<label>*</label></span>
-						<?=$this->Form->input('usrcity',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the City'));?>
+						<span>Country<label>*</label></span>
+						<?=$this->Form->input('usrcountry',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Country'));?>
+						
 						<!--<input type="text"> -->
 					 </div>
 					 
@@ -53,22 +55,22 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						<?=$this->Form->input('usrstate',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the State'));?>
 						<!--<input type="text"> -->
 					 </div>
-					 
-					<div>
-						<span>Country<label>*</label></span>
-						<?=$this->Form->input('usrcountry',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Country'));?>
-						
+                     
+					 <div>
+						<span>City<label>*</label></span>
+						<?=$this->Form->input('usrcity',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the City'));?>
 						<!--<input type="text"> -->
-					 </div>			
+					 </div>
+								
 					 <div>
 						<span>Zip Code<label>*</label></span>
-						<?=$this->Form->input('usrzip',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Zip Code'));?>
+						<?=$this->Form->input('usrzip',array('type'=>'text','class'=>'form-control','maxlength'=>'14','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Zip Code'));?>
 						
 						<!--<input type="text"> -->
 					 </div>			
 					<div>
 						 <span>Phone Number<label>*</label></span>
-						 <?=$this->Form->input('usrphones',array('type'=>'number', 'style'=>'width:560px','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Phone Number'));?>
+						 <?=$this->Form->input('usrphones',array('type'=>'number', 'style'=>'width:560px','maxlength'=>'10','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Phone Number'));?>
 						 <!--<input type="text"> -->
 					 </div>
 					 

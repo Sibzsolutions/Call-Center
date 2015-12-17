@@ -18,6 +18,9 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
  * @since         CakePHP(tm) v 0.2.9
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+App::uses('CakeEmail', 'Network/Email');	
+App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
+App::uses('AppController', 'Controller');
 
 //App::uses('AppController', 'Controller');
 
@@ -32,13 +35,12 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
  class SuperadminController extends AppController {
 
-
 /**
  * This controller does not use a model
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address', 'Produc_quantity');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address', 'Produc_quantity', 'Notify_prod_email');
 
 /**
  * Displays a view
@@ -73,8 +75,12 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
 		 $this->Auth->allow('register','login', 'product_attribute_change', 'change_slider_img_order', 'category_tree_one', 'product_attribute_change_edit', 'change_order_status');  
 		 
-		 //$this->layout="Superadministrator_layout";    
+		 $this->layout="super";   
 		 
+		 //$this->layout="Superadministrator_layout";    
+		
+		$this->Session->write('pre_controller', $this->params['controller']);
+		
 		 $userdata = $this->Auth->user();
 		
 		 $this->set('user_data',$userdata);
@@ -269,7 +275,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function categories() 
 	{
-		$categories_data = $this->Category->find('all', array('conditions'=>array('Category.del_status'=>0), 'order' => array('id' => 'DESC')));
+		$categories_data = $this->Category->find('all', array('order' => array('id' => 'DESC')));
 		
 		//$categories_data = $this->Category->find('all', array('conditions'=>array('Category.del_status'=>0), 'order' => array('id' => 'DESC')));
 		
@@ -314,7 +320,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			echo '<option value="'.$attribute['Attribute_master']['id'].'">'.$attribute['Attribute_master']['attname'].'</option>';
 		}
 	}
-
+	
 	function category_tree($catid, $selected_id){
 		
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid, 'Category.del_status'=>0)));
@@ -336,27 +342,27 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		}
 	}
 	
-	function category_tree_one($catid, $selected_id, $sele){
-		
+	function category_tree_one($catid, $selected_id, $sele)
+	{
 		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid, 'Category.del_status'=>0)));
 		
 		foreach($category_data as $data)
 		{
 			 $data = $data['Category'];
-			 if(isset($sele))
+			 if(isset($selected_id))
 			 {
-				 if($sele == $data['id'])
-				 echo '<option selected="selected" value="'.$data['id'].'">'.$data['catname'].'</option>';
-				 else
-				 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
+				if($selected_id == $data['id'])
+					echo '<option selected="selected" value="'.$data['id'].'">'.$data['catname'].'</option>';					
+				else
+					echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>'; 
 			 }
 			 else
-			 echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
+				echo '<option value="'.$data['id'].'">'.$data['catname'].'</option>';
 			 
 			 $this->category_tree_one($data['id'], $selected_id);
 		}
 	}
-
+	
 	public function add_category() 
 	{
 		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
@@ -405,8 +411,6 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			$this->request->data['Category']['catimg'] = $this->request->data['Category']['catimg']['name'];
 			
-			$this->request->data['Category']['parent_id'] = 0;
-			
 			if($this->Category->save($this->request->data))
 			
 			if($this->request->data['Category']['att'] !='')
@@ -429,9 +433,9 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	}
 	
 	//Make Thumb function of the uploaded images
-	function make_thumb($src, $dest, $desired_width) {
-                        
-		if(substr(strtolower(strrchr($src, '.')), 1) == 'png')
+	function make_thumb($src, $dest, $desired_width) 
+	{
+    	if(substr(strtolower(strrchr($src, '.')), 1) == 'png')
 		$source_image = imagecreatefrompng($src);
 		
 		else
@@ -456,26 +460,26 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		foreach($attribute_data as $data)
 		{
-			 $att_data[$data['Attribute_master']['id']] = $data['Attribute_master']['attname'];
+			$att_data[$data['Attribute_master']['id']] = $data['Attribute_master']['attname']; 
 		}
-		
+	
 		if(isset($att_data))
 		$this->set('att_data', $att_data);
 		
 		$category_data = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
+	
+		$attribute_data_cat = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $category_data['Category']['id'])));
 		
-			$attribute_data_cat = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $category_data['Category']['id'])));
-			
-			foreach($attribute_data_cat as $cat)
-			$cat_id['attid'][] = $cat['Attribute_category']['attid'];
-			
-			if(isset($cat_id))
-			$this->set('cat_id', $cat_id);
-			
-			$this->set('category_data', $category_data['Category']);		
-			
-			if ($this->request->is('post')) {
-			
+		foreach($attribute_data_cat as $cat)
+		$cat_id['attid'][] = $cat['Attribute_category']['attid'];
+		
+		if(isset($cat_id))
+		$this->set('cat_id', $cat_id);
+		
+		$this->set('category_data', $category_data['Category']);		
+		
+		if ($this->request->is('post')) 
+		{
 			if($this->request->data['Category']['catimg']['name'] != '')
 			{
 				$this->request->data['Category']['catimg']['name'] = uniqid().$this->request->data['Category']['catimg']['name'];
@@ -626,7 +630,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 	public function products() 
 	{
-		$products_data = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.del_status'=>0), 'order' => array('id' => 'DESC')));
+		$products_data = $this->Produc_master->find('all', array('order' => array('id' => 'DESC')));
 		
 		$this->set('products_data', $products_data);
 		
@@ -638,92 +642,6 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			$this->redirect('products');
 		}
 	}
-	
-	/*
-	public function product_attribute_change()//$id 
-	{
-		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $_REQUEST['cat_id'])));
-		
-		if($cat_attribute_data != '')
-		{
-			foreach($cat_attribute_data as $cat)
-			$attid[] = $cat['Attribute_category']['attid'];
-			
-			if(isset($attid))
-			{
-				$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
-				
-				foreach($attributes_data as $master_data)
-				$master_attid[] = $master_data['Attribute_master']['id'];
-				
-				$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
-				
-				foreach($attribute_data as $key=>$data)
-				{
-					$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
-					
-					$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
-				}
-				
-				echo "Attribute_data<pre>";
-				print_r($attribute_data);
-				echo "<pre>";
-
-				die();
-				
-				$this->set('attribute_data', $attribute_data);		
-			}
-		}
-	}
-	
-	public function product_attribute_change_edit()
-	{
-		$product_id = $_REQUEST['product_id'];
-		
-		$cat_id = $_REQUEST['cat_id'];
-		
-		$product_attribute = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid'=>$product_id)));
-		
-		foreach($product_attribute as $attribute)
-		{
-			$product['id'] = $attribute['Produc_attribute']['attvid'];
-			$product['add_cost'] = $attribute['Produc_attribute']['add_cost'];
-			$product['less_cost'] = $attribute['Produc_attribute']['less_cost'];			
-			$product['del_status'] = $attribute['Produc_attribute']['del_status'];			
-			
-			$prd_att[] = $product;
-		}
-		
-		$this->set('product_att_data', $prd_att);
-		
-		$cat_attribute_data = $this->Attribute_category->find('all', array('conditions' => array('Attribute_category.catid' => $cat_id)));
-		
-		if($cat_attribute_data != '')
-		{
-			foreach($cat_attribute_data as $cat)
-			$attid[] = $cat['Attribute_category']['attid'];
-			
-			if(isset($attid))
-			{
-				$attributes_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $attid)));
-				
-				foreach($attributes_data as $master_data)
-				$master_attid[] = $master_data['Attribute_master']['id'];
-				
-				$attribute_data = $this->Attribute_master->find('all', array('conditions' => array('Attribute_master.id' => $master_attid)));
-				
-				foreach($attribute_data as $key=>$data)
-				{
-					$attribute_value_data = $this->Attribute_value->find('all', array('conditions' => array('Attribute_value.attid' => $data['Attribute_master']['id']), 'order' => array('id' => 'DESC')));
-					
-					$attribute_data[$key]['Attribute_value'] = $attribute_value_data;
-				}
-				
-				$this->set('attribute_data', $attribute_data);		
-			}
-		}
-	}
-	*/
 	
 	public function product_attribute_change()	//$id 
 	{
@@ -781,6 +699,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		{
 			foreach($cat_attribute_data as $cat)
 			$attid[] = $cat['Attribute_category']['attid'];
+			
 			
 			if(isset($attid))
 			{
@@ -1053,12 +972,14 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		$this->set('product_data', $product_data['Produc_master']);
 				
 		if ($this->request->is('post')) {
-				
+			
+			$prodid_one = $this->request->data['Produc_master']['id'];
+			
 			$this->Produc_master->save($this->request->data);
 			
 			$last_inserted_id = $this->request->data['Produc_master']['id'];
 			
-			$this->Produc_attribute->deleteAll(array('Produc_attribute.prodid' => $last_inserted_id));
+			$this->Produc_attribute->deleteAll(array('Produc_attribute.prodid' => $prodid_one));
 			
 			foreach($this->request->data['Produc_master']['attribute'] as $data_second)
 			{
@@ -1068,15 +989,64 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 					{
 						$attvid = $data_second['id'];
 						
+						if(isset($data_second['color_imgs']))
+						{
+							if($data_second['color_imgs'][0]['name'] != '')
+							{
+								foreach($data_second['color_imgs'] as $color_images)
+								{
+									$data['name'] = uniqid().$color_images['name'];
+									
+									$name = $data['name'];
+									$tmp_name = $color_images['tmp_name'];
+									$type = $color_images['type'];
+									$type_data = explode('/', $type);
+									$arr_ext = array('pjpeg','jpeg','jpg','png'); //set allowed extensions
+									
+									if(in_array($type_data[1], $arr_ext)) //Restriction to the uploaded images
+									{
+										//Uploadation code for images
+										if(move_uploaded_file($tmp_name, WWW_ROOT. 'img/product/'.$name))
+										{ 
+											$url="../webroot/img/product/".$name;
+											$thumbnail_url="../webroot/img/product/thumb/small_images/".$name;							
+											$this->make_thumb($url,$thumbnail_url,200);
+											
+											$url="../webroot/img/product/".$name;
+											$thumbnail_url="../webroot/img/product/thumb/large_images/".$name;							
+											$this->make_thumb($url,$thumbnail_url,1500);
+											
+											$product_color_images['Produc_color_image']['attvid'] = $attvid;
+											$product_color_images['Produc_color_image']['prodid'] = $prodid_one;
+											$product_color_images['Produc_color_image']['image_path'] = $data['name'];
+												
+											$this->Produc_color_image->create();
+											$this->Produc_color_image->save($product_color_images);					
+										}
+										else
+										{
+											$this->Session->setFlash(__('Sorry, File was not uploaded. Please try after sometime... '));
+											$this->redirect('add_product');	
+										}
+									}
+									else
+									{
+										$this->Session->setFlash(__('Sorry, Please insert the image in JPEG, JPG, PNG, PJPEG format only... '));
+										$this->redirect('add_product');	
+									}
+								}
+							}
+						}
+						
 						if(isset($data_second['product_quantity']))
 						{
 							if($data_second['product_quantity'] != '')
 							{
 								$product_quantity_data['Produc_quantity']['attvid'] = $attvid;
-								$product_quantity_data['Produc_quantity']['prodid'] = $last_inserted_id;
+								$product_quantity_data['Produc_quantity']['prodid'] = $prodid_one;
 								$product_quantity_data['Produc_quantity']['qty'] = $data_second['product_quantity'];
 								
-								$data_quantity = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.attvid'=>$attvid, 'Produc_quantity.prodid'=>$last_inserted_id)));
+								$data_quantity = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.attvid'=>$attvid, 'Produc_quantity.prodid'=>$prodid_one)));
 								
 								$data_count = count($data_quantity);
 								
@@ -1084,13 +1054,89 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 								{
 									$product_quantity_data['Produc_quantity']['id'] = $data_quantity['Produc_quantity']['id'];
 									
+									if($data_second['product_quantity']>0)
+									{
+										$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$prodid_one)));
+										
+										$data['product'] = $product_data;
+											
+										$att_vdata = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid)));
+											
+										$att_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$att_vdata['Attribute_value']['attid'])));
+											
+										$data['product'] = $product_data['Produc_master'];
+											
+										$data['attribute_value'] = $att_vdata['Attribute_value'];
+											
+										$data['attribute_master'] = $att_data['Attribute_master'];
+										
+										$notify_data = $this->Notify_prod_email->find('first', array('conditions'=>array('Notify_prod_email.prodid'=>$prodid_one, 'Notify_prod_email.attvid'=>$attvid)));
+										
+										if(!empty($notify_data))
+										{
+											$userdata = $this->User->find('first', array('conditions'=>array('User.id'=>$notify_data['Notify_prod_email']['usrid'])));
+										
+											$site_setting_data = $this->Site_setting->find('first');
+											
+											//Send email at the time of registration
+											$Email = new CakeEmail();
+											$Email->template('notify_prod_email');
+											$Email->emailFormat('html');
+											$Email->to($userdata['User']['email']);
+											$Email->from($site_setting_data['Site_setting']['orderemail']);
+											$Email->viewVars(array('email_unavailable_product' => $data));
+											$Email->subject('Login details');
+											$Email->send();																			
+										}										
+									}
+									
 									$this->Produc_quantity->create();
 									$this->Produc_quantity->save($product_quantity_data);
+									
+									unset($product_quantity_data);
 								}
 								else								
 								{
+									if($data_second['product_quantity']>0)
+									{
+										$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$prodid_one)));
+										
+										$data['product'] = $product_data;
+											
+										$att_vdata = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid)));
+											
+										$att_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$att_vdata['Attribute_value']['attid'])));
+											
+										$data['product'] = $product_data['Produc_master'];
+											
+										$data['attribute_value'] = $att_vdata['Attribute_value'];
+											
+										$data['attribute_master'] = $att_data['Attribute_master'];
+										
+										$notify_data = $this->Notify_prod_email->find('first', array('conditions'=>array('Notify_prod_email.prodid'=>$prodid_one, 'Notify_prod_email.attvid'=>$attvid)));
+										
+										if(!empty($notify_data))
+										{
+											$userdata = $this->User->find('first', array('conditions'=>array('User.id'=>$notify_data['Notify_prod_email']['usrid'])));
+											
+											$site_setting_data = $this->Site_setting->find('first');
+											
+											//Send email at the time of registration
+											$Email = new CakeEmail();
+											$Email->template('notify_prod_email');
+											$Email->emailFormat('html');
+											$Email->to($userdata['User']['email']);
+											$Email->from($site_setting_data['Site_setting']['orderemail']);
+											$Email->viewVars(array('email_unavailable_product' => $data));
+											$Email->subject('Login details');
+											$Email->send();																			
+										}
+									}
+									
 									$this->Produc_quantity->create();
 									$this->Produc_quantity->save($product_quantity_data);
+									
+									unset($product_quantity_data);
 								}
 							}
 						}
@@ -1241,8 +1287,6 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			echo "No";
 		}
 		
-		
-		
 		die();
 	}
 	
@@ -1372,25 +1416,12 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			$total_order_number[$i] = $i;
 		}
 		
-		/*
-		echo "Total_order_number<pre>";
-		print_r($total_order_number);
-		echo "<pre>";
-		*/
-		
 		if(isset($total_order_number))
 		$this->set('total_order_number', $total_order_number);
 		
 		if(isset($product_images))
 		$this->set('product_images', $product_images);
 		
-		/*
-		echo "product_images<pre>";
-		print_r($product_images);
-		echo "<pre>";
-		
-		die();		
-		*/
 	}
 	
 	public function product_images($id) 
@@ -1401,55 +1432,17 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		
 		foreach($product_attribute as $data)
 		{
-			//echo $data['Produc_attribute']['attvid'];
-			
 			$attribute_value = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data['Produc_attribute']['attvid'])));
+						
+			$att_master = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$attribute_value['Attribute_value']['attid'])));
 			
-			$att_val_name[$data['Produc_attribute']['attvid'].'_'.$data['Produc_attribute']['prodid']] = $attribute_value['Attribute_value']['attvalue'];
+			if(($att_master['Attribute_master']['attname'] == 'Color') || ($att_master['Attribute_master']['attname'] == 'color'))
+			{
+				$att_val_name[$data['Produc_attribute']['attvid'].'_'.$data['Produc_attribute']['prodid']] = $attribute_value['Attribute_value']['attvalue'];
+			}
 		}
-		
-		
-		
-		/*
-		echo "att_val_name<pre>";
-		print_r($att_val_name);
-		echo "<pre>";
-		
-		die();
-		*/
 		
 		$this->set('att_val_name', $att_val_name);
-		
-		
-		/*
-		$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$id), 'order' => array('id' => 'DESC')));
-		
-		foreach($product_images as $key=>$product)
-		{
-			$product_data = $product['Produc_image'];
-			
-			$product_master_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$product_data['prodid'])));
-			$product_images[$key]['Produc_image']['prodname'] = $product_master_data['Produc_master']['prodname'];			
-		}
-		
-		$count_data = count($product_images);
-		
-		for($i=1;$i<=$count_data;$i++)
-		$total_order_number[$i] = $i;
-		
-		$this->set('total_order_number', $total_order_number);
-		
-		$this->set('product_images', $product_images);
-		
-		if ($this->request->is('post')) {
-			
-			$this->request->data['Product']['last_login']=date('Y-m-d H:i:s',time());
-			
-			$this->Product->save($this->request->data);
-			$this->redirect('products');
-		}
-		
-		*/
 	}
 	
 	public function offers() 
@@ -1538,14 +1531,6 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			unset($product_txt);
 		}
-		
-		/*
-		echo "offers_data<pre>";
-		print_r($offers_data);
-		echo "<pre>";
-		
-		die();
-		*/
 		
 		$this->set('offers_data', $offers_data);
 	}
@@ -1717,7 +1702,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function attributes() 
 	{
-		$attribute_data = $this->Attribute_master->find('all', array('conditions'=>array('Attribute_master.del_status'=>0), 'order' => array('id' => 'DESC')));
+		$attribute_data = $this->Attribute_master->find('all', array('order' => array('id' => 'DESC')));
 		
 		foreach($attribute_data as $key=>$data)
 		{
@@ -2026,7 +2011,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 	public function main_slider_images() 
 	{
-		$slider_images = $this->Slider_image->find('all',  array('conditions'=>array('Slider_image.del_status'=>0), 'order' => array('id' => 'DESC')));
+		$slider_images = $this->Slider_image->find('all',  array('order' => array('id' => 'DESC')));
 		
 		$slider_count = count($slider_images);
 		
@@ -2394,9 +2379,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function reviews() 
 	{
-		$reviews = $this->Review_master->find('all', array('conditions'=>array('Review_master.del_status'=>0), 'order' => array(
-                'id' => 'DESC'
-            )));
+		$reviews = $this->Review_master->find('all', array('order'=>array('id' => 'DESC')));
 		
 		foreach($reviews as $key=>$review)
 		{
@@ -2404,7 +2387,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			
 			$product_master = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$review['Review_master']['prodid'])));
 			
-			$reviews[$key]['User'] = $user_data['User'];
+			if(isset($user_data['User']))
+				$reviews[$key]['User'] = $user_data['User'];
 			
 			$reviews[$key]['Produc_master'] = $product_master['Produc_master'];		
 		}
@@ -2453,12 +2437,15 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function coupon_edit($id) 
 	{
-		echo "Id".$id;
-		echo "Shashikant is in the edit coupon functionality";
-		
-		$coupons_data = $this->Coupon_master->find('first', array('conditions'=>array('coupon_master.id'=>$id)));
+		$coupons_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.id'=>$id)));
 		
 		$this->set('coupon_data', $coupons_data['Coupon_master']);		
+		
+		if ($this->request->is('post')) {
+			
+			if($this->Coupon_master->save($this->request->data))
+				$this->redirect('coupons');
+		}
 	}
 	
 	public function add_coupon() 
@@ -2476,13 +2463,13 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	
 	public function coupons() 
 	{
-		$coupons = $this->Coupon_master->find('all', array('conditions'=>array('Coupon_master.del_status'=>0)));
+		$coupons = $this->Coupon_master->find('all');
 		$this->set('coupons', $coupons);		
 	}
 	
 	public function orders() 
 	{
-		$orders = $this->Order_master->find('all', array('conditions'=>array('Order_master.del_status'=>0)));
+		$orders = $this->Order_master->find('all');
 		
 		foreach($orders as $key=>$order)
 		{
@@ -2517,14 +2504,16 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 	{
 		$this->Session->Write('id', $id);
 		
-		$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>33)));
+		//$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>33)));
+		
+		$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>$id)));
 		
 		foreach($order_details as $key=>$detail)
 		{
 			$product_details = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$detail['Order_detail']['prodid'])));
 			
 			$order_details[$key]['Product_details'] = $product_details;
-		}
+		}		
 		
 		$this->set('order_details', $order_details);
 	}
@@ -2535,18 +2524,23 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 			$statusname = 'Received';
 		else
 			$statusname = 'Pending';
-	
+		
 		$order = $this->Order_status->find('first', array('conditions'=>array('Order_status.orderid'=>$order_id)));
 		
-		$order['Order_status']['ostatusname'] = $statusname;
+		if(!empty($order))
+		{
+			$order['Order_status']['ostatusname'] = $statusname;
 		
-		$order['Order_status']['orderid'] = $order_id;
+			$order['Order_status']['orderid'] = $order_id;
+			
+			$this->Order_status->save($order);
+		}
 		
 		$order_data = $this->Order_master->find('first', array('conditions'=>array('Order_master.id'=>$order_id)));
 		
 		$order_data['Order_master']['orderstatus'] = $statusname;
 		
-		if(($this->Order_status->save($order)) && ($this->Order_master->save($order_data)))
+		if(($this->Order_master->save($order_data)))
 			echo "yes";
 		else
 			echo "no";	
@@ -2581,7 +2575,43 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 		$this->set('userdata', $userdata);
 	}
 	
-	
+	public function review_edit($id) 
+	{
+		$reviews = $this->Review_master->find('first', array('conditions'=>array('Review_master.id' => $id)));
+		
+		$user_data = $this->User->find('first', array('conditions'=>array('User.id'=>$reviews['Review_master']['user_id'])));
+		
+		$product_master = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$reviews['Review_master']['prodid'])));
+		
+		if(isset($user_data['User']))
+			$reviews['User'] = $user_data['User'];
+		
+		$reviews['Produc_master'] = $product_master['Produc_master'];		
+
+		$this->set('reviews', $reviews);				
+		
+		if ($this->request->is('post')) 
+		{
+			if($this->Review_master->save($this->request->data))
+			{
+				$reviews['requested_data'] = $this->request->data;
+						
+				$site_setting  = $this->Site_setting->find('first');
+				
+				//Send email at the time of registration
+				$Email = new CakeEmail();
+				$Email->template('review_notify');
+				$Email->emailFormat('html');
+				$Email->to($this->request->data['Review_master']['to']);
+				$Email->from($site_setting['Site_setting']['contactemail']);
+				$Email->viewVars(array('reviews' => $reviews));
+				$Email->subject('Review Disapproved');
+				$Email->send();																			
+				
+				$this->redirect('reviews');
+			}
+		}
+	}
 }
 
 ?>

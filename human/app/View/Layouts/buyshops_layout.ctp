@@ -22,11 +22,69 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 <html>
 <head>
-<title>Buy_shop an E-Commerce online Shopping Category Flat Bootstarp responsive Website Template| Home :: w3layouts</title>
+<?php
+
+	if(!empty($category_seo))
+	{
+		?>
+		<title><?php echo $category_seo['Category']['catmtitle']; ?></title>
+		<meta name="keywords" content="<?php echo $category_seo['Category']['catmkeywords']; ?>" />
+		<meta name="description" content="<?php echo $category_seo['Category']['catmdesc']; ?>" />	
+		<?php
+	}
+	
+	if(!empty($product_seo))
+	{
+		?>
+		<title><?php echo $product_seo['Produc_master']['prodmtitle']; ?></title>
+		<meta name="keywords" content="<?php echo $product_seo['Produc_master']['prodmkeywords']; ?>" />
+		<meta name="description" content="<?php echo $product_seo['Produc_master']['prodmdesc']; ?>" />	
+		<?php
+	}
+	
+	if(isset($dynamic_page_data['Dynamic_page']) !='')
+	{
+		if(($dynamic_page_data['Dynamic_page']['name'] == 'index') || (!(isset($dynamic_page_data['Dynamic_page']['name']))))
+		{
+			?>
+			<title><?php echo $site_setting['Site_setting']['defaulttitle']; ?></title>
+			<meta name="keywords" content="<?php echo $site_setting['Site_setting']['defaultkeywords']; ?>" />
+			<meta name="description" content="<?php echo $site_setting['Site_setting']['defaultdesc']; ?>" />	
+            <?php //echo $site_setting['Site_setting']['script']; ?>
+			<?php			
+		}
+		else
+		{
+			?>
+			<title><?php echo $dynamic_page_data['Dynamic_page']['meta_title']; ?></title>
+			<meta name="keywords" content="<?php echo $dynamic_page_data['Dynamic_page']['meta_keywords']; ?>" />
+			<meta name="description" content="<?php echo $dynamic_page_data['Dynamic_page']['meta_description']; ?>" />	
+			<?php
+			if($dynamic_page_data['Dynamic_page']['script'] != 'No script is here')
+			echo $dynamic_page_data['Dynamic_page']['script'];
+		}
+	}
+	else
+	{
+		?>
+			<title><?php echo $site_setting['Site_setting']['defaulttitle']; ?></title>
+			<meta name="keywords" content="<?php 
+			if(isset($site_setting['Site_setting']))
+			echo $site_setting['Site_setting']['defaultkeywords']; ?>" />
+			<meta name="description" content="<?php 
+			if(isset($site_setting['Site_setting']))
+			echo $site_setting['Site_setting']['defaultdesc']; ?>" />	
+            <?php //echo $site_setting['Site_setting']['script']; 
+	}
+	
+	
+?>
+
+<!--<title>Buy_shop an E-Commerce online Shopping Category Flat Bootstarp responsive Website Template| Home :: w3layouts</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Buy_shop Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />-->
 
 
 
@@ -54,7 +112,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	
 	
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Index</title>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="<?php echo $this->webroot.'css/only_human_userside/style.css'; ?>" rel="stylesheet" type="text/css" />

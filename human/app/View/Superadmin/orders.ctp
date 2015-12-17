@@ -42,6 +42,7 @@
                     </thead>
                     <tbody>
                       <?php
+					  
                       foreach($orders as $order)
                       {
 						  $order_data = $order['Order_master'];
@@ -97,21 +98,16 @@
 
 						   function change_status(order_id,value)
 						   {
-							  alert(order_id);
+							  //alert(order_id);
 							   
-							  alert("value"+value);
-							   //alert("value"+value);
-							  
 							  $('#status_'+order_id).show();
 							  
 							  $('#status_'+order_id).html('<img src="http://propelle.co/images/loading_small.gif">');
 							  $.post("<?=$this->webroot?>Superadmin/change_order_status/"+order_id+"/"+value,
 							
 								function(data,status){
-									
-  								 alert(data);
 								
-								 if(data=='yes')
+  								 if(data=='yes')
 								 {
 									  $('#status_'+order_id).html('<img src="http://www.customotion.com/green_check_small.png">');
 									  $('#status_'+order_id).hide(2500);

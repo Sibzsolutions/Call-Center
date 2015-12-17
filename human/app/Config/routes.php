@@ -30,6 +30,8 @@
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 	
+	Router::connect('buyshops/place_order/*', array('controller' => 'buyshops', 'action' => 'place_order'));
+	
 	Router::connect('/', array('controller' => 'Buyshops', 'action' => 'index'));
 	
 /**

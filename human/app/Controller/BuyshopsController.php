@@ -44,7 +44,7 @@ App::uses('AppController', 'Controller');
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master', 'Produc_color_image', 'Attribute_value', 'User_address', 'Order_master', 'Order_detail', 'Order_status', 'Payment_master', 'Shipping_master', 'Coupon_detail', 'Produc_quantity');
+	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master', 'Produc_color_image', 'Attribute_value', 'User_address', 'Order_master', 'Order_detail', 'Order_status', 'Payment_master', 'Shipping_master', 'Coupon_detail', 'Produc_quantity', 'Notify_prod_email');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -57,6 +57,7 @@ App::uses('AppController', 'Controller');
 	public $helpers = array( 
 	'Js' => array('Jquery'), 'Session');
 	 
+	 //This is the before filter method
 	function beforeFilter()
 	{
 		 parent::beforeFilter();
@@ -68,9 +69,11 @@ App::uses('AppController', 'Controller');
 		 $this->Auth->loginRedirect = array('controller'=>'Buyshops','action'=>'myaccount');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt', 'color_change_imgs', 'att_cart', 'address', 'price_changed');  
+		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt', 'color_change_imgs', 'att_cart', 'address', 'price_changed', 'add_new_addr', 'place_order_info', 'tell_a_friend', 'our_story', 'friendly_policies', 'legal', 'color_disclaimer', 'faq', 'privacy_policy', 'terms_and_conditions', 'about_us', 'catalog_download', 'catalog_request', 'hollowaysportswear', 'productvideos', 'instructional_videos', 'prebuilt_personalized_flyers', 'web_links', 'sizing_fit_guide', 'decoration_techniques', 'stock_decoration_library', 'uniform_decoration_guides', 'knowledge_center', 'tell_a_friends', 'disp_filter', 'category_tree_filter');  
 		 
 		 $this->layout="buyshops_layout";   
+		 
+		 $this->Session->write('pre_controller', $this->params['controller']);
 		 
 		 $userdata = $this->Auth->user();
 		
@@ -108,6 +111,8 @@ App::uses('AppController', 'Controller');
 		if(isset($data_first))
 		$this->set('dynamic_menu', $data_first);		 
 		 
+		 
+		//Add to cart functionality
 		if($this->Auth->user())
 		{
 			$user_data = $this->Auth->user();
@@ -220,9 +225,9 @@ App::uses('AppController', 'Controller');
 			
 			$this->Session->write('count_add_cart_session', $count_add_cart_session);
 		}				
-		 
 	 }
 	 
+	 //Filter search result page
 	 Public function filter_search_type()
 	 {
 		$this->layout='';
@@ -289,6 +294,12 @@ App::uses('AppController', 'Controller');
 		
 		if($this->Session->check('id_first') == 1)
 		$id_first = $this->Session->read('id_first');
+		
+		/*
+		echo "One<pre>";
+		print_r($one);
+		echo "<pre>";
+		*/
 		
 		if(!empty($one))
 		{
@@ -378,7 +389,7 @@ App::uses('AppController', 'Controller');
 					}
 				}
 			}
-			
+						
 			if(isset($one_last))
 			{
 				$search_new = $one_last;
@@ -394,18 +405,151 @@ App::uses('AppController', 'Controller');
 					$data_fin_new[] = $search_first;
 				}
 				
+				if($this->Session->check('id_first') == 1)
+					$id_first = $this->Session->read('id_first');
 				
+				//$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.catid'=>$id_first, 'Produc_master.del_status'=>0)));
+			
+				/*
+				$filter_one = $this->category_tree_filter($id_first);
 				
+				foreach($filter_one as $data)
+				{
+					if(count($data)>1)
+					{
+						foreach($data as $data_one)
+						{
+							if(!empty($data_one[0]))
+								$shashi[$data_one[0]] = $data_one[0];
+						}					
+					}
+					else
+					{
+						if(!empty($data[0]))
+							$shashi[$data[0]] = $data[0];
+					}
+				}
 				
+				$shashia = array_unique($shashi);
 				
+				if($this->Session->check('cat_one') == 1)
+				{
+					$cat_one = $this->Session->read('cat_one');
+					
+					$shashia[$cat_one] = $cat_one;
+				}
 				
-				$this->paginate = array(
+				echo "shashia<pre>";
+				print_r($shashia);
+				echo "<pre>";
+				*/
+				
+				$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+		
+				if(isset($id_first))
+				$category_all[$id_first] = $id_first;
+				
+				//foreach($category_all)
 
-				 'limit' => 8,
-				 'conditions'=>array('Produc_master.id'=>$data_fin_new, 'Produc_master.del_status'=>0)
-				);		
+				foreach($category_all as $key=>$cate_id)
+				{
+					$data = $this->sub_cat($cate_id);
+					
+					if(isset($data))
+					{
+						$mayur_data[$key] = $data;
+					
+						$key_two = key($mayur_data);
+						
+						$end_key = end($mayur_data[$key_two]);
+						
+						$key_one = key($mayur_data[$key_two]);
+						
+						$key_one = $key_one+1;
+						
+						$mayur_data[$key_two][$key_one] = $cate_id;			
+						
+						$shashi[] = $mayur_data;
+					}			
+				}
 				
-				$products_first_one = $this->paginate('Produc_master');
+				if(isset($mayur_data))
+				{
+					$mayur_data = reset($mayur_data);
+					$category_all = $mayur_data;
+				}
+				
+				foreach($category_all as $one)
+					$shashia[$one] = $one;
+				
+				$cat_prod_final = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id_first)));
+				
+				if(!empty($cat_prod_final['Category']['parentid']))
+				{
+					if($cat_prod_final['Category']['parentid'] !=0)
+					{
+						$shashia[$id_first] = $id_first;
+						
+						$sub_cat_prod = $this->Category->find('list', array('conditions'=>array('Category.id'=>$shashia)));
+					}
+				}
+				else
+				{
+					$sub_cat_prod = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$shashia)));
+				}
+				
+				//$sub_cat_prod[$id_first] = $id_first;
+				
+				//$products_id = $this->Produc_master->find('list', array('conditions'=>array('Produc_master.catid'=>$sub_cat_prod)));
+				
+				//$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
+				
+				$products_id = $this->Produc_master->find('list', array('conditions'=>array('Produc_master.catid'=>$sub_cat_prod)));
+				
+				foreach($data_fin_new as $data_in)
+				{
+					if(in_array($data_in, $products_id))
+						$final[] = $data_in;
+				}
+				
+				unset($data_fin_new);
+				
+				if(isset($final))
+				{					
+					$data_fin_new = $final;
+					
+				/*
+				foreach($products_id as $d)
+				{
+					$data_prod_one[] = $d;
+				}
+				
+				echo "data_prod_one<pre>";
+				print_r($data_prod_one);
+				echo "<pre>";
+				*/
+				
+				
+				
+				
+				if((isset($min_price)) && (isset($max_price)))
+						{
+							$this->paginate = array(
+					
+							 'limit' => 8,
+							 'conditions'=>array('Produc_master.id'=>$data_fin_new, 'Produc_master.del_status'=>0, 'Produc_master.prodprice >=' => $min_price, 'Produc_master.prodprice <=' => $max_price));		
+							
+							$products_first_one = $this->paginate('Produc_master');
+						}
+						else
+						{
+							$this->paginate = array(
+							 'limit' => 8,
+							 'conditions'=>array('Produc_master.id'=>$data_fin_new, 'Produc_master.del_status'=>0));		
+							
+							 $products_first_one = $this->paginate('Produc_master');
+						}
+
 				
 				foreach($products_first_one as $product_first_one)
 				{
@@ -464,6 +608,8 @@ App::uses('AppController', 'Controller');
 						$final_search[] = $products;
 					}
 					
+					
+					
 					if(isset($final_search))
 					{
 						foreach($final_search as $fin)
@@ -486,135 +632,130 @@ App::uses('AppController', 'Controller');
 						$products = $search_newa_new;
 						
 						
-						
-						
-								if($this->Session->check('add_cart_session') == 1)
-		$add_cart_session = $this->Session->read('add_cart_session');						
-	
-		if($this->Auth->user())
-		{
-			$user_data = $this->Auth->user();
-			
-			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
-		
-			foreach($all_products as $product)
-			{
-				$product = $product['Cart_master'];
-				
-				$product_id[] = $product['product_id'];
-			}
-		}
-		
-		if(isset($add_cart_session) && isset($product_id))
-		$product_id = array_merge($product_id, $add_cart_session);
-		elseif(isset($add_cart_session))
-		$product_id = $add_cart_session;
-		elseif(isset($product_id))
-		$product_id = $product_id;
-		
-		if(isset($product_id))
-		{
-			if(count($product_id)>1)
-			{				
-				$add_cart = array_unique($product_id);
-				
-				foreach($products as $key=>$product)
-				{
-					$product = $product['Produc_master'];
+						if($this->Session->check('add_cart_session') == 1)
+						$add_cart_session = $this->Session->read('add_cart_session');						
 					
-					if(isset($add_cart))			
-					{
-						if(in_array($product['id'], $add_cart))
-						$products[$key]['Produc_master']['add_to_cart'] = 1;
+						if($this->Auth->user())
+						{
+							$user_data = $this->Auth->user();
+							
+							$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+						
+							foreach($all_products as $product)
+							{
+								$product = $product['Cart_master'];
+								
+								$product_id[] = $product['product_id'];
+							}
+						}
+						
+						if(isset($add_cart_session) && isset($product_id))
+						$product_id = array_merge($product_id, $add_cart_session);
+						elseif(isset($add_cart_session))
+						$product_id = $add_cart_session;
+						elseif(isset($product_id))
+						$product_id = $product_id;
+						
+						if(isset($product_id))
+						{
+							if(count($product_id)>1)
+							{				
+								$add_cart = array_unique($product_id);
+								
+								foreach($products as $key=>$product)
+								{
+									$product = $product['Produc_master'];
+									
+									if(isset($add_cart))			
+									{
+										if(in_array($product['id'], $add_cart))
+										$products[$key]['Produc_master']['add_to_cart'] = 1;
+										else
+										$products[$key]['Produc_master']['add_to_cart'] = 0;	
+									}
+									else
+										$products[$key]['Produc_master']['add_to_cart'] = 0;	
+									
+									$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+										'id' => 'DESC'
+									)));
+									
+									foreach($product_images as $image)
+									{
+										$image = $image['Produc_image'];		
+										
+										if($image['isdefault']==1)
+										$products[$key]['Produc_master']['images']['Default'] = $image;
+										else
+										$products[$key]['Produc_master']['images']['all'] = $image;				
+									}
+								}			
+							}
+							else
+							{
+								$add_cart = $product_id;
+								
+								foreach($products as $key=>$product)
+								{
+									$product = $product['Produc_master'];
+									
+									if(isset($add_cart))			
+									{
+										if($product['id'] == $add_cart)
+										$products[$key]['Produc_master']['add_to_cart'] = 1;
+										else
+										$products[$key]['Produc_master']['add_to_cart'] = 0;	
+									}
+									else
+										$products[$key]['Produc_master']['add_to_cart'] = 0;	
+									
+									$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+										'id' => 'DESC'
+									)));
+									
+									foreach($product_images as $image)
+									{
+										$image = $image['Produc_image'];		
+										
+										if($image['isdefault']==1)
+										$products[$key]['Produc_master']['images']['Default'] = $image;
+										else
+										$products[$key]['Produc_master']['images']['all'] = $image;				
+									}
+								}
+							}
+						}
 						else
-						$products[$key]['Produc_master']['add_to_cart'] = 0;	
-					}
-					else
-						$products[$key]['Produc_master']['add_to_cart'] = 0;	
-					
-					$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
-						'id' => 'DESC'
-					)));
-					
-					foreach($product_images as $image)
-					{
-						$image = $image['Produc_image'];		
-						
-						if($image['isdefault']==1)
-						$products[$key]['Produc_master']['images']['Default'] = $image;
-						else
-						$products[$key]['Produc_master']['images']['all'] = $image;				
-					}
-				}			
-			}
-			else
-			{
-				$add_cart = $product_id;
-				
-				foreach($products as $key=>$product)
-				{
-					$product = $product['Produc_master'];
-					
-					if(isset($add_cart))			
-					{
-						if($product['id'] == $add_cart)
-						$products[$key]['Produc_master']['add_to_cart'] = 1;
-						else
-						$products[$key]['Produc_master']['add_to_cart'] = 0;	
-					}
-					else
-						$products[$key]['Produc_master']['add_to_cart'] = 0;	
-					
-					$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
-						'id' => 'DESC'
-					)));
-					
-					foreach($product_images as $image)
-					{
-						$image = $image['Produc_image'];		
-						
-						if($image['isdefault']==1)
-						$products[$key]['Produc_master']['images']['Default'] = $image;
-						else
-						$products[$key]['Produc_master']['images']['all'] = $image;				
-					}
-				}
-			}
-		}
-		else
-		{
-			foreach($products as $key=>$product)
-			{
-				$product = $product['Produc_master'];
-				
-				if(isset($add_cart))			
-				{
-					if($product['id'] == $add_cart)
-					$products[$key]['Produc_master']['add_to_cart'] = 1;
-					else
-					$products[$key]['Produc_master']['add_to_cart'] = 0;	
-				}
-				else
-					$products[$key]['Produc_master']['add_to_cart'] = 0;	
-				
-				$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
-					'id' => 'DESC'
-				)));
-				
-				foreach($product_images as $image)
-				{
-					$image = $image['Produc_image'];		
-					
-					if($image['isdefault']==1)
-					$products[$key]['Produc_master']['images']['Default'] = $image;
-					else
-					$products[$key]['Produc_master']['images']['all'] = $image;				
-				}
-			}
-		}
-
-						
-						
+						{
+							foreach($products as $key=>$product)
+							{
+								$product = $product['Produc_master'];
+								
+								if(isset($add_cart))			
+								{
+									if($product['id'] == $add_cart)
+									$products[$key]['Produc_master']['add_to_cart'] = 1;
+									else
+									$products[$key]['Produc_master']['add_to_cart'] = 0;	
+								}
+								else
+									$products[$key]['Produc_master']['add_to_cart'] = 0;	
+								
+								$product_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product['id']), 'order' => array(
+									'id' => 'DESC'
+								)));
+								
+								foreach($product_images as $image)
+								{
+									$image = $image['Produc_image'];		
+									
+									if($image['isdefault']==1)
+									$products[$key]['Produc_master']['images']['Default'] = $image;
+									else
+									$products[$key]['Produc_master']['images']['all'] = $image;				
+								}
+							}
+						}
 						
 						$i=1;
 						if(isset($products))
@@ -629,8 +770,11 @@ App::uses('AppController', 'Controller');
 									$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
 								}
 								
+								if(count($low_cat)>1)
 								$max_discount_cat = max($low_cat);
-								
+								else
+								$max_discount_cat = $low_cat[0];
+							
 								unset($low_cat);				
 							}
 							
@@ -642,10 +786,16 @@ App::uses('AppController', 'Controller');
 								{
 									$low[] = $lowest_price['Offer_master']['discount'];
 								}
-								if(isset($low))
-								$max_discount = max($low);
 								
-								unset($low);
+								if(isset($low))
+								{
+									if(count($low)>1)
+										$max_discount = max($low);
+									else
+										$max_discount = $low[0];
+									
+									unset($low);
+								}
 							}
 							
 							if(isset($max_discount_cat) && isset($max_discount))
@@ -673,13 +823,12 @@ App::uses('AppController', 'Controller');
 							$i++;
 						}
 						
-						
-						
 						if(isset($products))
 						$this->set('products', $products);		
 					}			
 				}
 			}
+		}
 		}
 		else
 		{
@@ -691,12 +840,106 @@ App::uses('AppController', 'Controller');
 			
 			//$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.catid'=>$id_first, 'Produc_master.del_status'=>0)));
 		
+			/*
+			$filter_one = $this->category_tree_filter($id_first);
+			
+			foreach($filter_one as $data)
+			{
+				if(count($data)>1)
+				{
+					foreach($data as $data_one)
+					{
+						if(!empty($data_one[0]))
+							$shashi[$data_one[0]] = $data_one[0];
+					}					
+				}
+				else
+				{
+					if(!empty($data[0]))
+						$shashi[$data[0]] = $data[0];
+				}
+			}
+			
+			$shashia = array_unique($shashi);
+			
+			if($this->Session->check('cat_one') == 1)
+			{
+				$cat_one = $this->Session->read('cat_one');
+				
+				$shashia[$cat_one] = $cat_one;
+			}
+			*/
+			
+			$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+		
+				if(isset($id_first))
+				$category_all[$id_first] = $id_first;
+				
+				//foreach($category_all)
+
+				foreach($category_all as $key=>$cate_id)
+				{
+					$data = $this->sub_cat($cate_id);
+					
+					if(isset($data))
+					{
+						$mayur_data[$key] = $data;
+					
+						$key_two = key($mayur_data);
+						
+						$end_key = end($mayur_data[$key_two]);
+						
+						$key_one = key($mayur_data[$key_two]);
+						
+						$key_one = $key_one+1;
+						
+						$mayur_data[$key_two][$key_one] = $cate_id;			
+						
+						$shashi[] = $mayur_data;
+					}			
+				}
+				
+				if(isset($mayur_data))
+				{
+					$mayur_data = reset($mayur_data);
+					$category_all = $mayur_data;
+				}
+				
+				foreach($category_all as $one)
+					$shashia[$one] = $one;
+			
+			$cat_prod_final = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id_first)));
+
+			if(!empty($cat_prod_final['Category']['parentid']))
+			{
+				if($cat_prod_final['Category']['parentid'] !=0)
+				{
+					$sub_cat_prod = $this->Category->find('list', array('conditions'=>array('Category.id'=>$shashia)));
+				}
+			}
+			else
+			{
+				$shashia[$id_first] = $id_first;
+		
+				$sub_cat_prod = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$shashia)));
+			}
+			
+			//$sub_cat_prod[$id_first] = $id_first;
+			
+			//$products_id = $this->Produc_master->find('list', array('conditions'=>array('Produc_master.catid'=>$sub_cat_prod)));
+			
+			//$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
+			
+			$products_id = $this->Produc_master->find('list', array('conditions'=>array('Produc_master.catid'=>$sub_cat_prod)));
+			
+			//$products_id[$id_first] = $id_first;
+			
 			if((isset($min_price)) && (isset($max_price)))
 			{							
 				$this->paginate = array(
 
 					 'limit' => 8,
-					 'conditions'=>array('Produc_master.catid'=>$id_first, 'Produc_master.del_status'=>0, 'Produc_master.prodprice >='=>$min_price, 'Produc_master.prodprice <='=>$max_price)
+					 'conditions'=>array('Produc_master.id'=>$products_id, 'Produc_master.del_status'=>0, 'Produc_master.prodprice >='=>$min_price, 'Produc_master.prodprice <='=>$max_price)
 				);
 			}
 			else
@@ -704,7 +947,7 @@ App::uses('AppController', 'Controller');
 				$this->paginate = array(
 
 					 'limit' => 8,
-					 'conditions'=>array('Produc_master.catid'=>$id_first, 'Produc_master.del_status'=>0)
+					 'conditions'=>array('Produc_master.del_status'=>0, 'Produc_master.id'=>$products_id)
 				);
 			}
 			
@@ -863,10 +1106,15 @@ App::uses('AppController', 'Controller');
 					{
 						$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
 					}
-					
-					$max_discount_cat = max($low_cat);
-					
-					unset($low_cat);				
+					if(isset($low_cat))
+					{
+						if(count($low_cat)>0)
+							$max_discount_cat = max($low_cat);
+						else
+							$max_discount_cat = $low_cat[0];
+						
+						unset($low_cat);				
+					}
 				}
 				
 				$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['id'] .'\',Offer_master.offerprod)')));
@@ -878,7 +1126,12 @@ App::uses('AppController', 'Controller');
 						$low[] = $lowest_price['Offer_master']['discount'];
 					}
 					if(isset($low))
-					$max_discount = max($low);
+					{
+						if(count($low)>0)
+							$max_discount = max($low);
+						else
+							$max_discount = $low[0];						
+					}
 					
 					unset($low);
 				}
@@ -889,7 +1142,9 @@ App::uses('AppController', 'Controller');
 					$final_max_discount = $max_discount_cat;
 				elseif(isset($max_discount))
 					$final_max_discount = $max_discount;
-									
+				else
+					$final_max_discount = 0;	
+																		
 				unset($max_discount_cat);	 
 				unset($max_discount);
 							
@@ -903,14 +1158,53 @@ App::uses('AppController', 'Controller');
 				$i++;
 			}
 			
-			
 			$this->set('products', $products);
-		}
-		
-		
-		
+		}		
 	 }
 	 
+	 
+	 Public function category_tree_filter($catid)
+	 {
+		$shashi[] = $catid;
+		  
+		$new_data = array();  
+	    $category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$catid)));
+		
+		foreach($category_data as $key=>$data)
+		{
+			//$first_cat_dataaa[] = $data['Category']['id'];
+			
+			if($this->Session->check('cat_one') == 1)
+			{
+				//$this->Session->delete('cat_one');				
+			}
+			else
+			{
+				if(!empty($data['Category']['id']))
+					$this->Session->write('cat_one', $data['Category']['id']);
+			}
+			
+			$one_data = $this->category_tree_filter($data['Category']['id']);
+			
+			//$new_data[] = $first_cat_dataaa;
+			
+			if(!empty($one_data))
+			{
+				$first_cat_data = $one_data;
+				$new_data[] = $first_cat_data;
+				unset($first_cat_data);
+			}	
+		}
+		
+		$one_final = $new_data + $shashi;
+		
+		unset($new_data);
+		unset($shashi);
+		
+		return $one_final;		
+	 }
+	 
+	 //Dynamic Category tree function
 	 Public function category_tree($catid){
 		  
 		$new_data = array();  
@@ -926,58 +1220,61 @@ App::uses('AppController', 'Controller');
 			
 			$new_data[] = $first_cat_data;
 		}
-		
 		return $new_data;		
 	 }
-
-	/**
-	 * This controller does not use a model
-	 *
-	 * @var array
-	 */
-		//public $uses = array();
-	
-	/**
-	 * Displays a view
-	 *
-	 * @param mixed What page to display
-	 * @return void
-	 * @throws NotFoundException When the view file could not be found
-	 *	or MissingViewException in debug mode.
-	 */
-	
-	  Public function disp($sub_cat){
-		  
-			foreach($sub_cat as $cat)
+	  
+	 Public function disp_filter($sub_cat)
+	 {	
+		$shashi = array();
+		
+		foreach($sub_cat as $cat)
+		{	
+			$shashi[] = $cat;
+			if(!empty($cat['sub_type']))
 			{
-				?>
-				<div class="megapanels">
-					<div class="row">
-						<div class="col1">
-							<div class="h_nav">
-								<ul class="megamenu skyblue">
-									<li style="margin-left:40px;" class="active grid"><a class="color1" href="<?php echo $cat['Category']['url'] ?>"><?php echo $cat['Category']['catname']?></a>
-									<?php 
-									
-									if($cat['Category']['sub_type'] !='')
-									{
-										$this->disp($cat['Category']['sub_type']);
-									}
-									else
-									{
-										echo '</li>';
-									}
-									
-									?>
-								</ul>
-							</div>							
-						</div>							
-				  </div>
-			  </div>
-			  <?php
-			}
+				$this->disp_filter($cat['sub_type']);
+			}			
+		}
+		
+		return $shashi;		
 	  }
 	  
+	  
+	  //Dynamic category display
+	  Public function disp($sub_cat){
+		  
+		foreach($sub_cat as $cat)
+		{
+			?>
+			<div class="megapanels">
+				<div class="row">
+					<div class="col1">
+						<div class="h_nav">
+							<ul class="megamenu skyblue">
+								<li style="margin-left:40px;" class="active grid"><a class="color1" href="<?php echo $cat['Category']['url'] ?>"><?php echo $cat['Category']['catname']?></a>
+								<?php 
+								
+								if($cat['Category']['sub_type'] !='')
+								{
+									$this->disp($cat['Category']['sub_type']);
+								}
+								else
+								{
+									echo '</li>';
+								}
+								
+								?>
+							</ul>
+						</div>							
+					</div>							
+			  </div>
+		  </div>
+		  <?php
+		}
+	  }
+	
+
+    //Sort functionality
 	public function sort_products() {
 		
 		$this->layout='';
@@ -1018,7 +1315,6 @@ App::uses('AppController', 'Controller');
 				 );
 				 
 				 $products = $this->paginate('Produc_master');		
-				
 			}
 		
 			if($_REQUEST['type_id'] == 3)
@@ -1032,7 +1328,6 @@ App::uses('AppController', 'Controller');
 				 );
 				 
 				$products = $this->paginate('Produc_master');		
-				
 			}
 			
 			if($_REQUEST['type_id'] == 4)
@@ -1055,6 +1350,12 @@ App::uses('AppController', 'Controller');
 			if($this->Session->check('id_first') == 1)
 			$id_first = $this->Session->read('id_first');
 			
+			$sub_cat_prod = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
+		
+			$products_id = $this->Produc_master->find('list', array('conditions'=>array('Produc_master.catid'=>$sub_cat_prod)));
+			
+			$products_id[$id_first] = $id_first;
+			
 			if($_REQUEST['type_id'] == 1)
 			{
 				//$products = $this->Produc_master->find('all', array('order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$id_first)));
@@ -1062,23 +1363,10 @@ App::uses('AppController', 'Controller');
 				$this->paginate = array(
 			
 					 'limit' => 8,
-					 'order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
+					 'order' => array('prodname' => 'ASC'), 'conditions'=>array('OR'=>array('Produc_master.catid'=>$id_first, 'Produc_master.id'=>$products_id))
 				 );
 				 
 				$products = $this->paginate('Produc_master');		
-				
-				if(empty($products))
-				{
-					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
-					
-					$this->paginate = array(
-			
-						 'limit' => 8,
-						 'order' => array('prodname' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
-					);
-					
-					$products = $this->paginate('Produc_master');		
-				}				 
 			}
 			
 			if($_REQUEST['type_id'] == 2)
@@ -1088,23 +1376,10 @@ App::uses('AppController', 'Controller');
 				$this->paginate = array(
 		
 					 'limit' => 8,
-					 'order' => array('date_added' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
+					 'order' => array('date_added' => 'DESC'), 'conditions'=>array('OR'=>array('Produc_master.catid'=>$id_first, 'Produc_master.id'=>$products_id))
 				 );
 
 				$products = $this->paginate('Produc_master');		
-				
-				if(empty($products))
-				{
-					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
-					
-					$this->paginate = array(
-			
-						 'limit' => 8,
-						 'order' => array('date_added' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
-					);
-					
-					$products = $this->paginate('Produc_master');		
-				}				 
 			}
 		
 			if($_REQUEST['type_id'] == 3)
@@ -1114,23 +1389,10 @@ App::uses('AppController', 'Controller');
 				$this->paginate = array(
 		
 					 'limit' => 8,
-					 'order' => array('prodprice' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
+					 'order' => array('prodprice' => 'DESC'), 'conditions'=>array('OR'=>array('Produc_master.catid'=>$id_first, 'Produc_master.id'=>$products_id))
 				 );
 				 
-				 $products = $this->paginate('Produc_master');		
-				 
-				if(empty($products))
-				{
-					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
-					
-					$this->paginate = array(
-			
-						 'limit' => 8,
-						 'order' => array('prodprice' => 'DESC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
-					);
-					
-					$products = $this->paginate('Produc_master');		
-				}				 
+				 $products = $this->paginate('Produc_master');						 
 			}
 			
 			if($_REQUEST['type_id'] == 4)
@@ -1140,28 +1402,12 @@ App::uses('AppController', 'Controller');
 				$this->paginate = array(
 	
 					 'limit' => 8,
-					 'order' => array('prodprice' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$id_first)
+					 'order' => array('prodprice' => 'ASC'), 'conditions'=>array('OR'=>array('Produc_master.catid'=>$id_first, 'Produc_master.id'=>$products_id))
 				);
 				
 				$products = $this->paginate('Produc_master');		
-				
-				if(empty($products))
-				{
-					$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
-					
-					$this->paginate = array(
-			
-						 'limit' => 8,
-						 'order' => array('prodprice' => 'ASC'), 'conditions'=>array('Produc_master.catid'=>$category_all)
-					);
-					
-					$products = $this->paginate('Produc_master');		
-				}				 
-				
 			}		
 		}
-		
-		
 		
 		foreach($products as $key=>$product)
 		{
@@ -1180,9 +1426,70 @@ App::uses('AppController', 'Controller');
 			}
 		}
 		
+		$i=1;
+		foreach($products as $key=>$product)
+		{
+			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+			
+			if(!empty($offer_master_cat_data))
+			{
+				foreach($offer_master_cat_data as $lowest_price_cat)
+				{
+					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+				}
+				
+				if(count($low_cat)>1)
+				$max_discount_cat = max($low_cat);
+				else
+				$max_discount_cat = $low_cat[0];	
+				unset($low_cat);				
+			}
+			
+			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+			
+			if($offer_master_data !='')
+			{
+				foreach($offer_master_data as $lowest_price)
+				{
+					$low[] = $lowest_price['Offer_master']['discount'];
+				}
+				
+				if(isset($low))
+				$max_discount = max($low);
+				
+				unset($low);
+			}
+			
+			if(isset($max_discount_cat) && isset($max_discount))
+				$final_max_discount = max($max_discount_cat, $max_discount);
+			elseif(isset($max_discount_cat))
+				$final_max_discount = $max_discount_cat;
+			elseif(isset($max_discount))
+				$final_max_discount = $max_discount;
+			else
+				$final_max_discount = 0;
+			
+			unset($max_discount_cat);	 
+			unset($max_discount);
+			
+			if(isset($final_max_discount))
+			{
+				$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
+			
+				$discounted_price = ($product['Produc_master']['prodprice']-(($final_max_discount/100)*$product['Produc_master']['prodprice']));
+				
+				$products[$key]['Produc_master']['discounted_price'] = $discounted_price; 		
+				
+				unset($final_max_discount);
+			}
+
+			$i++;
+		}
+		
 		$this->set('products', $products);
 	}
 	
+	//This is the Index page 
 	public function index() {
 		
 		$this->layout='';
@@ -1232,9 +1539,7 @@ App::uses('AppController', 'Controller');
 		
 		$slider_images = $this->Slider_image->find('all', array('conditions'=>array('Slider_image.del_status'=>0), 'order' => array(
                 'Slider_image.picture_order' => 'ASC'
-            )));
-		
-		
+        )));
 		
 		$this->set(compact('slider_images'));
 		
@@ -1257,13 +1562,78 @@ App::uses('AppController', 'Controller');
 			}
 		}
 		
-		$this->set('products', $products);
+		$i=1;
+		foreach($products as $key=>$product)
+		{
+			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+			
+			if(!empty($offer_master_cat_data))
+			{
+				foreach($offer_master_cat_data as $lowest_price_cat)
+				{
+					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+				}
+				
+				if(count($low_cat)>1)
+				$max_discount_cat = max($low_cat);
+				else
+				$max_discount_cat = $low_cat[0];	
+				unset($low_cat);				
+			}
+			
+			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+			
+			if($offer_master_data !='')
+			{
+				foreach($offer_master_data as $lowest_price)
+				{
+					$low[] = $lowest_price['Offer_master']['discount'];
+				}
+				
+				if(isset($low))
+				$max_discount = max($low);
+				
+				unset($low);
+			}
+			
+			if(isset($max_discount_cat) && isset($max_discount))
+				$final_max_discount = max($max_discount_cat, $max_discount);
+			elseif(isset($max_discount_cat))
+				$final_max_discount = $max_discount_cat;
+			elseif(isset($max_discount))
+				$final_max_discount = $max_discount;
+			else
+				$final_max_discount = 0;
+			
+			unset($max_discount_cat);	 
+			unset($max_discount);
+			
+			if(isset($final_max_discount))
+			{
+				$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
+			
+				$discounted_price = ($product['Produc_master']['prodprice']-(($final_max_discount/100)*$product['Produc_master']['prodprice']));
+				
+				$products[$key]['Produc_master']['discounted_price'] = $discounted_price; 		
+				
+				unset($final_max_discount);
+			}
+
+			$i++;
+		}
+		
+		$this->set('product_slider', $products);
 	  }
-	 
+	
+	//This is the Products page functionality
 	public function products($id) 
 	{
+		$category = $this->Category->find('first', array('conditions'=>array('Category.id'=>$id)));
+		
+		$this->set('category_seo', $category);
+		
 		$category = $this->Category->find('list', array('conditions'=>array('Category.del_status'=>0)));
-
+		
 		$products = $this->Produc_master->find('all', array('conditions'=>array('Produc_master.isfeatured'=>1, 'Produc_master.catid'=>$category)));
 		
 		$cat_data = $this->Category->find('all');
@@ -1287,6 +1657,67 @@ App::uses('AppController', 'Controller');
 				else
 				$products[$key]['Produc_master']['images']['all'] = $image;				
 			}
+		}
+		
+		$i=1;
+		foreach($products as $key=>$product)
+		{
+			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+			
+			if(!empty($offer_master_cat_data))
+			{
+				foreach($offer_master_cat_data as $lowest_price_cat)
+				{
+					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+				}
+				
+				if(count($low_cat)>1)
+					$max_discount_cat = max($low_cat);
+				else
+					$max_discount_cat = $low_cat[0];	
+				
+				unset($low_cat);				
+			}
+			
+			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+			
+			if($offer_master_data !='')
+			{
+				foreach($offer_master_data as $lowest_price)
+				{
+					$low[] = $lowest_price['Offer_master']['discount'];
+				}
+				
+				if(isset($low))
+				$max_discount = max($low);
+				
+				unset($low);
+			}
+			
+			if(isset($max_discount_cat) && isset($max_discount))
+				$final_max_discount = max($max_discount_cat, $max_discount);
+			elseif(isset($max_discount_cat))
+				$final_max_discount = $max_discount_cat;
+			elseif(isset($max_discount))
+				$final_max_discount = $max_discount;
+			else
+				$final_max_discount = 0;
+			
+			unset($max_discount_cat);	 
+			unset($max_discount);
+			
+			if(isset($final_max_discount))
+			{
+				$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
+			
+				$discounted_price = ($product['Produc_master']['prodprice']-(($final_max_discount/100)*$product['Produc_master']['prodprice']));
+				
+				$products[$key]['Produc_master']['discounted_price'] = $discounted_price; 		
+				
+				unset($final_max_discount);
+			}
+
+			$i++;
 		}
 		
 		$this->set('product_slider', $products);
@@ -1333,7 +1764,7 @@ App::uses('AppController', 'Controller');
 			$id_first = $id;
 			
 			 $category_att = $this->Attribute_category->find('all',array('conditions'=>array('Attribute_category.catid'=>$id_first, 'Attribute_category.del_status'=>0)));
-			 
+				
 			 foreach($category_att as $cat_key=>$att)
 			 {
 				 $att_master = $this->Attribute_master->find('first',array('conditions'=>array('Attribute_master.id'=>$att['Attribute_category']['attid']), 'Attribute_master.del_status'=>0));
@@ -1347,47 +1778,59 @@ App::uses('AppController', 'Controller');
 			 
 			 $this->set('category_att', $category_att);
 		 }
-	
+				
 		if($this->Session->check('one') == 1)
 		$this->Session->delete('one');
 		
 		$category_all = $this->Category->find('list', array('conditions'=>array('Category.parentid'=>$id_first)));
 		
-		$category_all[] = $id_first;
+		if(isset($id_first))
+		$category_all[$id_first] = $id_first;
 		
 		//foreach($category_all)
-				
+
 		foreach($category_all as $key=>$cate_id)
 		{
 			$data = $this->sub_cat($cate_id);
 			
-			$mayur_data[$key] = $data;
+			if(isset($data))
+			{
+				$mayur_data[$key] = $data;
 			
-			$key_two = key($mayur_data);
-			
-			$end_key = end($mayur_data[$key_two]);
-			
-			$key_one = key($mayur_data[$key_two]);
-			
-			$key_one = $key_one+1;
-			
-			$mayur_data[$key_two][$key_one] = $cate_id;			
-			
-			$shashi[] = $mayur_data;
+				$key_two = key($mayur_data);
+				
+				$end_key = end($mayur_data[$key_two]);
+				
+				$key_one = key($mayur_data[$key_two]);
+				
+				$key_one = $key_one+1;
+				
+				$mayur_data[$key_two][$key_one] = $cate_id;			
+				
+				$shashi[] = $mayur_data;
+			}			
 		}
 		
-		$mayur_data = reset($mayur_data);
+		if(isset($mayur_data))
+		{
+			$mayur_data = reset($mayur_data);
+			$category_all = $mayur_data;
+		}
 		
-		$category_all = $mayur_data;
-				
+		foreach($category_all as $one)
+			$one_data[$one] = $one;
+		
+		//echo "<br>Id_first".$id_first;
+		
+		//, 'Produc_master.id'=>$id_first
 		if(isset($category_all))
 		{
 			//$products = $this->Produc_master->find('all', array('conditions'=>array('OR'=>array('Produc_master.catid'=>$category_all), 'Produc_master.del_status'=>0)));		
-			
+			//category_all
 			$this->paginate = array(
 		
 				 'limit' => 8,
-				 'conditions'=>array('OR'=>array('Produc_master.catid'=>$category_all), 'Produc_master.del_status'=>0)
+				 'conditions'=>array('OR'=>array('Produc_master.catid'=>$one_data), 'Produc_master.del_status'=>0)
 			);
 			
 			$products = $this->paginate('Produc_master');		
@@ -1405,9 +1848,17 @@ App::uses('AppController', 'Controller');
 			$products = $this->paginate('Produc_master');
 		}
 		
+		/*
+		echo "products<pre>";
+		print_r($products);
+		echo "<pre>";
+		
+		die();
+		*/
+		
 		if($this->Session->check('add_cart_session') == 1)
 		$add_cart_session = $this->Session->read('add_cart_session');						
-	
+		
 		if($this->Auth->user())
 		{
 			$user_data = $this->Auth->user();
@@ -1602,11 +2053,16 @@ App::uses('AppController', 'Controller');
 		}				
 	}
 	
-	public function buy_product($id=null, $original_price=null, $discounted_price=null) 
-	{
+	//This is the single product buy process
+	public function buy_product($id=null, $quantity_data=null, $original_price=null, $original_discounted_price=null, $coupon_discounted_price=null, $coupon_info=null) 
+	{		
 		$single_data['prodid'] = $id;
+		$single_data['quantity_data'] = $quantity_data;
 		$single_data['original_price'] = $original_price;
-		$single_data['discounted_price'] = $discounted_price;
+		$single_data['discounted_price'] = $original_discounted_price;
+		$single_data['coupon_discounted_price'] = $coupon_discounted_price;
+		
+		$single_data['coupon_info'] = $coupon_info;
 		
 		$single_product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id' =>$id)));
 		
@@ -1617,11 +2073,266 @@ App::uses('AppController', 'Controller');
 		$this->redirect('place_order');
 	}
 	
+	//This is the paypal functionality
+	public function paypal_pro() 
+	{
+		$_REQUEST = $this->Session->read('place_order_data');
+		
+		$original_price = $this->Session->read('original_price');
+			//$this->Session->delete('original_price');
+		
+		$discounted_price = $this->Session->read('discounted_price');
+			//$this->Session->delete('discounted_price');
+		
+		$product_data_new = $this->Session->read('product_data_new');
+			//$this->Session->delete('product_data_new');
+		
+		/** DoDirectPayment NVP example; 
+		 *
+		 *  Process a credit card payment. 
+		*/
+		 
+		$environment = 'sandbox';	// 'sandbox' or 'beta-sandbox' or 'live'
+		 
+		$paymentType = urlencode('Sale');				// 'Authorization' or 'Sale'
+		$creditCardType = urlencode($_REQUEST['customer_credit_card_type']);
+		$creditCardNumber = urlencode($_REQUEST['customer_credit_card_number']);
+		$expDateMonth = $_REQUEST['cc_expiration_month'];
+		$padDateMonth = urlencode(str_pad($expDateMonth, 2, '0', STR_PAD_LEFT));
+		$expDateYear = urlencode($_REQUEST['cc_expiration_year']);
+		$cvv2Number = urlencode($_REQUEST['cc_cvv2_number']);
+		
+		if(empty($_REQUEST['example_payment_amuont']))
+		{
+			if(isset($original_price))
+				$_REQUEST['example_payment_amuont'] = $original_price;
+			if(isset($discounted_price))
+				$_REQUEST['example_payment_amuont'] = $discounted_price;
+		}
+			
+		$amount = urlencode($_REQUEST['example_payment_amuont']);
+		
+		$currencyID = urlencode('USD');							// or other currency ('GBP', 'EUR', 'JPY', 'CAD', 'AUD')
+		 
+		/**
+		 * Send HTTP POST Request
+		 *
+		 * @param	string	The API method name
+		 * @param	string	The POST Message fields in &name=value pair format
+		 * @return	array	Parsed HTTP Response body
+		 */
+		 
+		// Set request-specific fields.
+		
+		//$firstName = urlencode($_POST['customer_first_name']);
+		//$lastName = urlencode($_POST['customer_last_name']);
+		
+		/*
+		$paymentType = urlencode('Sale');				// 'Authorization' or 'Sale'
+		$creditCardType = urlencode($_POST['customer_credit_card_type']);
+		$creditCardNumber = urlencode($_POST['customer_credit_card_number']);
+		$expDateMonth = $_POST['cc_expiration_month'];
+		$padDateMonth = urlencode(str_pad($expDateMonth, 2, '0', STR_PAD_LEFT));
+		$expDateYear = urlencode($_POST['cc_expiration_year']);
+		$cvv2Number = urlencode($_POST['cc_cvv2_number']);
+		$amount = urlencode($_POST['example_payment_amuont']);
+		$currencyID = urlencode('USD');							// or other currency ('GBP', 'EUR', 'JPY', 'CAD', 'AUD')
+		*/
+		
+		// Month must be padded with leading zero
+		
+		//$address1 = urlencode($_POST['customer_address1']);
+		//$address2 = urlencode($_POST['customer_address2']);
+		//$city = urlencode($_POST['customer_city']);
+		//$state = urlencode($_POST['customer_state']);
+		//$zip = urlencode($_POST['customer_zip']);
+		//$country = urlencode($_POST['customer_country']);				// US or other valid country code
+		
+		// Add request-specific fields to the request string.
+		/*
+		
+		$nvpStr =	"&PAYMENTACTION=$paymentType&AMT=$amount&CREDITCARDTYPE=$creditCardType&ACCT=$creditCardNumber".
+					"&EXPDATE=$padDateMonth$expDateYear&CVV2=$cvv2Number&FIRSTNAME=$firstName&LASTNAME=$lastName".
+					"&STREET=$address1&CITY=$city&STATE=$state&ZIP=$zip&COUNTRYCODE=$country&CURRENCYCODE=$currencyID";
+		*/
+		
+		$amount = round($amount);
+		
+		$nvpStr =	"&PAYMENTACTION=$paymentType&AMT=$amount&CREDITCARDTYPE=$creditCardType&ACCT=$creditCardNumber".
+				"&EXPDATE=$padDateMonth$expDateYear&CVV2=$cvv2Number&CURRENCYCODE=$currencyID";		
+		
+		// Execute the API operation; see the PPHttpPost function above.
+		
+		$httpParsedResponseAr = $this->PPHttpPost('DoDirectPayment', $nvpStr);
+		
+		//$httpParsedResponseAr["ACK"] = "SUCCESS";
+		
+		if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
+			
+			//exit('Direct Payment Completed Successfully: '.print_r($httpParsedResponseAr, true));
+			
+			$this->redirect('success_payment');
+		} 
+		else  
+		{			
+			foreach($httpParsedResponseAr as $key=>$data)
+			{
+				if(strpos($key,'L_LONGMESSAGE') !== false) {
+					
+					$data = substr($data, 0, -1);
+					
+					$data = preg_replace("/[^ea-zA-Z]/", " ", $data).".";
+					
+					$data = str_replace(" e ","",$data);
+					
+					$data = str_replace("This   transaction   cannot   be   processed   ","",$data);
+					
+					$data = str_replace(" e ","",$data);
+					
+					$message_data[] = $data;
+
+					//$message_data[] = substr($data, 0, -1);
+				}
+			}
+			
+			$i=0;
+			foreach($message_data as $data)
+			{
+				$data = $data;
+				
+				if($i==0)
+					$data_msg = "<br>".$data;
+				else
+					$data_msg = $data_msg."<br>".$data;
+				
+				$i++;
+			}
+			
+			$this->Session->setFlash('Sorry, Payment was not occure successfully. <br>You have following problems.'. $data_msg);
+			
+			//exit('DoDirectPayment failed: ' . print_r($httpParsedResponseAr, true));
+			
+			$this->redirect('place_order/'.$original_price.'/'.$discounted_price.'/'.$_REQUEST['coupon_info']);
+		}
+	}
+	
+	//Do direct method of the paypal
+	public function PPHttpPost($methodName_, $nvpStr_) {
+		
+		global $environment;
+		
+		$environment = 'sandbox';	// 'sandbox' or 'beta-sandbox' or 'live'
+		
+		// Set up your API credentials, PayPal end point, and API version.
+		
+		/*	
+		$API_UserName = urlencode('sdk-three_api1.sdk.com'); // set your spi username //Receiver-1_api1.example.com
+		$API_Password = urlencode('QFZCWN5HZM8VBG7Q'); // set your spi password //1376438244
+		$API_Signature = urlencode('A.d9eRKfd1yVkRrtmMfCFLTqa6M9AyodL0SJkhYztxUi8W9pCXF6.4NI'); // set your spi Signature //AFcWxV21C7fd0v3bYYYRCpSSRI31AGmzqCOSewVu-JVUn9kkAyYV-xUQ
+		
+		
+		
+		// Set up your API credentials, PayPal end point, and API version.
+		$API_UserName = urlencode('Receiver-1_api1.example.com'); // set your spi username //Receiver-1_api1.example.com
+		$API_Password = urlencode('1376438244'); // set your spi password //1376438244
+		$API_Signature = urlencode('AFcWxV21C7fd0v3bYYYRCpSSRI31AGmzqCOSewVu-JVUn9KKAyYV-xUQ'); // set your spi Signature //AFcWxV21C7fd0v3bYYYRCpSSRI31AGmzqCOSewVu-JVUn9kkAyYV-xUQ
+		
+		// Set up your API credentials, PayPal end point, and API version.
+		$API_UserName = urlencode('shashikant.chobhe-facilitator_api1.sibzsolutions.com'); // set your spi username //shashikant.chobhe-facilitator_api1.sibzsolutions.com
+		$API_Password = urlencode('XP3HXY38W5FK99WJ'); // set your spi password //XP3HXY38W5FK99WJ
+		$API_Signature = urlencode('AFcWxV21C7fd0v3bYYYRCpSSRl31ANpP1KRpPmhAJKj8mlANKmikqgM3'); // set your spi Signature //AFcWxV21C7fd0v3bYYYRCpSSRl31ANpP1KRpPmhAJKj8mlANKmikqgM3
+		
+		
+		// Set up your API credentials, PayPal end point, and API version.
+		$API_UserName = urlencode('shashikant.chobhe-facilitator-1_api1.sibzsolutions.com'); // set your spi username //shashikant.chobhe-facilitator-1_api1.sibzsolutions.com
+		$API_Password = urlencode('GKFMT5T4ZN4SPK6P'); // set your spi password //GKFMT5T4ZN4SPK6P
+		$API_Signature = urlencode('AEdy4sVCKpCbKPdARiw9kjLCSoIBAAaWIzRGMTZxqOnSFZ3w1UsTfXvA'); // set your spi Signature //AEdy4sVCKpCbKPdARiw9kjLCSoIBAAaWIzRGMTZxqOnSFZ3w1UsTfXvA
+		*/
+		
+		$paypal_data = $this->Payment_master->find('first');
+		
+		// Set up your API credentials, PayPal end point, and API version.
+		$API_UserName = urlencode($paypal_data['Payment_master']['key']); // set your spi username //shashikant.chobhe-facilitator-1_api1.sibzsolutions.com
+		$API_Password = urlencode($paypal_data['Payment_master']['password']); // set your spi password //GKFMT5T4ZN4SPK6P
+		$API_Signature = urlencode($paypal_data['Payment_master']['desc']); // set your spi Signature //AEdy4sVCKpCbKPdARiw9kjLCSoIBAAaWIzRGMTZxqOnSFZ3w1UsTfXvA
+		
+		// Set up your API credentials, PayPal end point, and API version.
+		/*
+		$API_UserName = urlencode('amit.jagtap_api1.sibzsolutions.com'); // set your spi username //shashikant.chobhe-facilitator-1_api1.sibzsolutions.com
+		$API_Password = urlencode('R7EQ9T2WQPM5DXSL'); // set your spi password //GKFMT5T4ZN4SPK6P
+		$API_Signature = urlencode('An5ns1Kso7MWUdW4ErQKJJJ4qi4-ABKaKTnEkKMzSXh-ABhNRX3acZMR'); // set your spi Signature //AEdy4sVCKpCbKPdARiw9kjLCSoIBAAaWIzRGMTZxqOnSFZ3w1UsTfXvA
+		*/
+		
+		
+		$API_Endpoint = "https://api-3t.paypal.com/nvp";
+		if("sandbox" === $environment || "beta-sandbox" === $environment) {
+			$API_Endpoint = "https://api-3t.$environment.paypal.com/nvp";
+		}
+		$version = urlencode('51.0');
+	 
+		// Set the curl parameters.
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $API_Endpoint);
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+	 
+		// Turn off the server and peer verification (TrustManager Concept).
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+	 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+	 
+		// Set the API operation, version, and API signature in the request.
+		$nvpreq = "METHOD=$methodName_&VERSION=$version&PWD=$API_Password&USER=$API_UserName&SIGNATURE=$API_Signature$nvpStr_";
+	 
+		// Set the request as a POST FIELD for curl.
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
+	 
+		// Get response from the server.
+		$httpResponse = curl_exec($ch);
+	 	
+		if(!$httpResponse) {
+			exit("$methodName_ failed: ".curl_error($ch).'('.curl_errno($ch).')');
+		}
+	 
+		// Extract the response details.
+		$httpResponseAr = explode("&", $httpResponse);
+	 
+		$httpParsedResponseAr = array();
+		foreach ($httpResponseAr as $i => $value) {
+			$tmpAr = explode("=", $value);
+			if(sizeof($tmpAr) > 1) {
+				$httpParsedResponseAr[$tmpAr[0]] = $tmpAr[1];
+			}
+		}
+		
+		if((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
+			exit("Invalid HTTP Response for POST request($nvpreq) to $API_Endpoint.");
+		}
+	 
+		return $httpParsedResponseAr;
+	}
+	
+	//This is the success payment page after the product is buy.
 	public function success_payment() 
 	{
+		if($this->Session->check('place_order_info') == 1)
+			$this->Session->delete('place_order_info');
+		
 		if($this->Session->check('place_order_data') == 1)
 		{
 			$_REQUEST = $this->Session->read('place_order_data');
+			
+			if(!empty($_REQUEST['coupon_info']))
+			{
+				$coupon_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.coupon_number'=>$_REQUEST['coupon_info'])));
+				
+				if($coupon_data['Coupon_master']['discount_prcnt']!='')
+					$_REQUEST['coupon_info_data'] = "You get the ".$coupon_data['Coupon_master']['discount_prcnt']." % discount";
+				else
+					$_REQUEST['coupon_info_data'] = "You get the ".$coupon_data['Coupon_master']['discount_price']." off";
+				
+			}	
 			
 			$place_order_address['Place_Order'] = $_REQUEST;			
 		}
@@ -1649,21 +2360,25 @@ App::uses('AppController', 'Controller');
 			//$order_data['Order_master']['shippingid'] = 0;			
 			
 			if($this->Session->check('original_price') == 1)
-			{
 				$original_price = $this->Session->read('original_price');						
-				$this->Session->delete('original_price');						
-			}
 			
 			if($this->Session->check('discounted_price') == 1)
-			{
 				$discounted_price = $this->Session->read('discounted_price');						
-				$this->Session->delete('discounted_price');						
-			}
-
+			
 			if(isset($discounted_price))
 				$order_data['Order_master']['ordervalue'] = $discounted_price;
-			else
+			
+			if(isset($original_price))
 				$order_data['Order_master']['ordervalue'] = $original_price;
+			
+			if($this->Session->check('discounted_price') == 1)
+				$this->Session->delete('discounted_price');											
+			
+			if($this->Session->check('original_price') == 1)
+				$this->Session->delete('original_price');						
+			
+			if(isset($_REQUEST['example_payment_amuont']))
+				$order_data['Order_master']['ordervalue'] = $_REQUEST['example_payment_amuont'];
 			
 			$order_data['Order_master']['del_status'] = 0;
 			
@@ -1675,6 +2390,7 @@ App::uses('AppController', 'Controller');
 			$order_data['Order_master']['payment_id'] = $place_order_address['Place_Order']['user_payment_id'];
 			
 			$order_data['Order_master']['shipping_id'] = $place_order_address['Place_Order']['user_payment_id'];
+			
 			*/
 			
 			$this->Order_master->save($order_data);
@@ -1690,7 +2406,6 @@ App::uses('AppController', 'Controller');
 			$order_status['Order_status']['del_status'] = 0;
 			
 			$this->Order_status->save($order_status);
-			
 			
 			if($this->Session->check('product_data_final') == 1)
 			{
@@ -1736,7 +2451,7 @@ App::uses('AppController', 'Controller');
 					}
 					
 					$product_details['Order_detail']['orderid'] = $last_inserted_orderid;					
-				}
+				}			
 			}
 			
 			if(isset($product_data_final))
@@ -1793,7 +2508,7 @@ App::uses('AppController', 'Controller');
 				
 				$product_details['Order_detail']['prodqty'] = 1;
 				
-				$product_details['Order_detail']['orderdate'] = date('Y-m-d H:i:s',time());			;
+				$product_details['Order_detail']['orderdate'] = date('Y-m-d H:i:s',time());
 				
 				/*
 				if(isset($data['Produc_master']['discount']))
@@ -1802,7 +2517,7 @@ App::uses('AppController', 'Controller');
 					$product_details['Order_detail']['offer'] = 0;
 				*/
 				
-				$product_details['Order_detail']['comments'] = 'N/A';			;
+				$product_details['Order_detail']['comments'] = 'N/A';
 				
 				$product_details['Order_detail']['pattid'] = $product_details['Order_detail']['attvid'];
 				
@@ -1844,21 +2559,50 @@ App::uses('AppController', 'Controller');
 			
 			$product_data_final = $this->Session->read('product_data_final');						
 			
+			$product_data_new = $this->Session->read('product_data_new');
+			
 			$i=1;
+			
+			$data_product_count = count($product_data_final);
+			$data_count = 1;
+			
 			if(isset($product_data_final))
 			foreach($product_data_final as $key=>$email_data)
-			{
+			{	
 				$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$email_data['prodid'])));
+				
+				$product = $product_data;
+				
+				$product_data['Produc_master']['original_price'] = $product_data['Produc_master']['prodprice']; 		
 				
 				//email_data['prodid'];
 				$aemail_data = 1;
 				
-				$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $aemail_data .'\',Offer_master.offerprod)')));
+				$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+				
+				if(!empty($offer_master_cat_data))
+				{
+					foreach($offer_master_cat_data as $lowest_price_cat)
+					{
+						$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+					}
+					
+					if(count($low_cat)>1)
+						$max_discount_cat = max($low_cat);
+					else
+						$max_discount_cat = $low_cat[0];	
+					
+					unset($low_cat);				
+				}
+				
+				$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
 				
 				if($offer_master_data !='')
 				{
 					foreach($offer_master_data as $lowest_price)
+					{
 						$low[] = $lowest_price['Offer_master']['discount'];
+					}
 					
 					if(isset($low))
 					$max_discount = max($low);
@@ -1866,23 +2610,29 @@ App::uses('AppController', 'Controller');
 					unset($low);
 				}
 				
-				if(isset($max_discount))
-				{
+				if(isset($max_discount_cat) && isset($max_discount))
+					$final_max_discount = max($max_discount_cat, $max_discount);
+				elseif(isset($max_discount_cat))
+					$final_max_discount = $max_discount_cat;
+				elseif(isset($max_discount))
 					$final_max_discount = $max_discount;
-									
-					unset($max_discount);
-					
-					$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
-					
-					$product_data['Produc_master']['original_price'] = $product_data['Produc_master']['prodprice']; 		
-					
-					$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
+				else
+					$final_max_discount = 0;
+				
+				unset($max_discount_cat);	 
+				unset($max_discount);
+				
+				if(isset($final_max_discount))
+				{
+					//$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
 					
 					$product_data['Produc_master']['discount'] = $final_max_discount; 		
 					
+					$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
+					
+					$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
+					
 					unset($final_max_discount);
-
-					$i++;
 				}
 				
 				$attvid_data = explode(',', $email_data['attvid']);
@@ -1890,6 +2640,31 @@ App::uses('AppController', 'Controller');
 				foreach($attvid_data as $attvid)
 				{
 					$attvid_txt_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid)));
+					
+					$prod_att_data = $this->Produc_attribute->find('first', array('conditions'=>array('Produc_attribute.attvid'=>$attvid_txt_data['Attribute_value']['id'], 'Produc_attribute.prodid'=>$product_data['Produc_master']['id'])));
+					
+					if(!empty($prod_att_data['Produc_attribute']['add_cost']))
+					{
+						$cost_change = $prod_att_data['Produc_attribute']['add_cost'];
+						$product_data['Produc_master']['discounted_price'] = ($product_data['Produc_master']['discounted_price'] + $cost_change);
+					}
+					else
+					{
+						$cost_change = $prod_att_data['Produc_attribute']['less_cost'];
+						$product_data['Produc_master']['discounted_price'] = ($product_data['Produc_master']['discounted_price'] - $cost_change);
+					}
+					
+					/*
+					echo "<br>Cost_changed".$cost_change;
+					
+					echo "<br>Product_discount".$product_data['Produc_master']['discount'];
+					
+					echo "<br>Final_max_discount".$product_data['Produc_master']['discount'];
+					
+					$product_data['Produc_master']['discount'] = $final_max_discount; 		
+					
+					die();
+					*/
 					
 					$attid_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$attvid_txt_data['Attribute_value']['attid'])));
 					
@@ -1904,17 +2679,79 @@ App::uses('AppController', 'Controller');
 				
 				$email_final['attributes'] = $att_final;
 				
-				$email_one[] = $email_final;
-				
 				unset($product_data);
 				
 				unset($att_final);
+				
+				if($data_count == 1)
+				{
+					$userdata = $this->Auth->user();
+					
+					$userdata['email'] = 'shashikant.chobhe@sibzsolutions.com';
+					
+					$email_final['userdata'] = $userdata;					
+				}
+				
+				if($data_count == $data_product_count)
+				{
+					if(!empty($_REQUEST['coupon_info_data']))
+					{
+						$email_final['coupon_info_data'] = $_REQUEST['coupon_info_data'];
+			
+						$email_final['final_price'] = $_REQUEST['example_payment_amuont'];
+					}
+				}
+				
+				$email_one[] = $email_final;
+				
+				$data_count++;
 			}
 			
-			$userdata = $this->Auth->user();
+			/*
+			foreach($email_one as $keyaa=>$one)
+			{
+				foreach($product_data_final as $data)
+				{
+					if($data['prodid'] == $one['product_data']['id'])
+					{							
+						$data_attvi = explode(',', $data['attvid']);
+					}
+				}
+				
+				$product_price = $one['product_data']['discounted_price'];
+				
+				$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $one['product_data']['id'], 'Produc_attribute.attvid' => $data_attvi)));
+				
+				unset($data_attvi);
+				
+				foreach($product_att_data as $data_patt)
+				{
+					if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+					{
+						$additional_cost = $data_patt['Produc_attribute']['add_cost'];
+						
+						$product_price = $product_price + $additional_cost;
+					}
+					else
+					{
+						$less_cost = $data_patt['Produc_attribute']['less_cost'];
+						
+						$product_price = $product_price - $less_cost;
+					}
+				}
+				
+				$email_one[$keyaa]['product_data']['discounted_price'] = $product_price;					
+				
+			}
+			
+			*/
 			
 			$site_setting_data = $this->Site_setting->find('first');
 			
+			//$email_one['coupon_info_data'] = $_REQUEST['coupon_info_data'];
+			
+			//$email_one['final_price'] = $_REQUEST['example_payment_amuont'];
+
 			//Send email at the time of registration
 			$Email = new CakeEmail();
 			$Email->template('Order_product');
@@ -1922,17 +2759,39 @@ App::uses('AppController', 'Controller');
 			$Email->to($userdata['email']);
 			$Email->from($site_setting_data['Site_setting']['orderemail']);
 			$Email->viewVars(array('email_product_data' => $email_one));
-			$Email->subject('Login details');
+			$Email->subject('Order Details');
 			$Email->send();			
+						
+			/*
+			if($this->Session->check('single_data') == 1)
+				$this->Session->delete('single_data');
 			
-			echo "Shashikant chobhe is saved the data into database";
+			if($this->Session->check('single_product') == 1)
+				$this->Session->delete('single_product');
 			
-			die();
+			if($this->Session->check('product_data_final') == 1)
+				$this->Session->delete('product_data_final');			
+			*/
+			
+			$this->redirect('thanku');			
 		}
 	}
 	
+	//This is the thank you page
+	public function thanku() 
+	{
+		
+	}
+	
+	//This is the payment page after place order functionality.
 	public function payment_page() 
 	{
+		$userdata = $this->Auth->user();
+		
+		$this->set('userdata', $userdata);
+		
+		$_REQUEST = $this->Session->read('place_order_data');
+		
 		if($this->Session->check('place_order_data') == 1)
 		{
 			$_REQUEST = $this->Session->read('place_order_data');
@@ -1952,28 +2811,195 @@ App::uses('AppController', 'Controller');
 					$original_price = $this->Session->read('original_price');											
 					
 					$this->set('price_data', $original_price);
+					
+					//$this->Session->delete('original_price');											
 				}			
 				if($this->Session->check('discounted_price') == 1)
 				{
 					$discounted_price = $this->Session->read('discounted_price');											
 					
-					$this->set('price_data', $original_price);
+					$this->set('price_data', $discounted_price);
+					
+					//$this->Session->delete('discounted_price');											
 				}
+				
+				/*
+				if($this->Session->check('coupon_discounted_price') == 1)
+				{
+					$coupon_discounted_price = $this->Session->read('coupon_discounted_price');											
+					
+					$this->set('coupon_discounted_price', $coupon_discounted_price);
+					
+					$this->Session->delete('coupon_discounted_price');											
+				}
+				*/
 				
 				foreach($product_data_final as $key_prod=>$prod)
 				{
 					$product_data = $this->Produc_master->find('first',array('conditions'=>array('Produc_master.id'=>$key_prod)));
 					
-					$data_prod[] = $product_data;					
+					$data_prod[] = $product_data['Produc_master'];					
 				}
 				
-				$this->set('product_data', $data_prod);
+				$products_checkout = $data_prod;	
+				
+				$i=0;				
+				if(isset($products_checkout))
+				foreach($products_checkout as $key=>$product)
+				{					
+					$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['catid'] .'\',Offer_master.offercat)')));
+					
+					if(!empty($offer_master_cat_data))
+					{
+						foreach($offer_master_cat_data as $lowest_price_cat)
+						{
+							$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+						}
+						
+						$max_discount_cat = max($low_cat);					
+						unset($low_cat);				
+					}
+					
+					$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['id'] .'\',Offer_master.offerprod)')));
+					
+					if(!empty($offer_master_data))
+					{
+						foreach($offer_master_data as $lowest_price)
+						{
+							$low[] = $lowest_price['Offer_master']['discount'];
+						}
+						if(isset($low))
+						$max_discount = max($low);
+						
+						unset($low);
+					}
+					
+					if(isset($max_discount_cat) && isset($max_discount))
+						$final_max_discount = max($max_discount_cat, $max_discount);
+					elseif(isset($max_discount_cat))
+						$final_max_discount = $max_discount_cat;
+					elseif(isset($max_discount))
+						$final_max_discount = $max_discount;
+					else
+						$final_max_discount = 0;
+					
+					unset($max_discount_cat);	 
+					unset($max_discount);
+					
+					$products_checkout[$key]['discount'] = $final_max_discount; 		
+					
+					$discounted_price = ($product['prodprice']-(($final_max_discount/100)*$product['prodprice']));
+					
+					$products_checkout[$key]['discounted_price'] = $discounted_price; 		
+						
+					unset($final_max_discount);
+					$i++;
+				}
+				
+				foreach($products_checkout as $keyaa=>$prod)
+				{
+					foreach($product_data_final as $data)
+					{
+						if($data['prodid'] == $prod['id'])
+						{
+							$data_attvi = explode(',', $data['attvid']);
+						}
+					}
+					
+					$product_price = $prod['discounted_price'];
+					
+					$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $prod['id'], 'Produc_attribute.attvid' => $data_attvi)));
+					
+					unset($data_attvi);
+					
+					foreach($product_att_data as $data_patt)
+					{
+						if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+						{
+							$additional_cost = $data_patt['Produc_attribute']['add_cost'];
+							
+							$product_price = $product_price + $additional_cost;
+						}
+						else
+						{
+							$less_cost = $data_patt['Produc_attribute']['less_cost'];
+							
+							$product_price = $product_price - $less_cost;
+						}
+					}
+					
+					$products_checkout[$keyaa]['discounted_price'] = $product_price;					
+				}
+				
+				$this->set('product_data', $products_checkout);								
 			}
-		}			
+			
+			$this->Session->write('product_data_new', $products_checkout);
+			
+			$this->redirect('paypal_pro');
+		}					
+		else
+		{
+			$this->Session->setFlash('Sorry, Something went wrong. . . !!!');
+			$this->redirect('place_order_data');
+		}
 	}
 
-	public function place_order($original_price=null, $discounted_price=null) 
+	//This is the add new address function which in place order page
+	public function add_new_addr() 
 	{
+		$user_data = $this->Auth->user();
+		
+		$_REQUEST['usrid'] = $user_data['id'];
+		
+		$data['User_address'] = $_REQUEST;
+		
+		$this->User_address->create();
+		if($this->User_address->save($data))
+		{
+			echo "yes";
+			die();		
+		}
+		else
+		{
+			echo "no";
+			die();		
+		}
+	}
+
+	//This is the functionality for the buy multiple products(checkout page)
+	public function place_order_info() 
+	{	
+		if(isset($_REQUEST))
+		{			
+			$this->Session->write('place_order_info', $_REQUEST);
+			echo "yes";
+		}
+		else
+			echo "no";
+					
+		die();
+	}
+	
+	//This is the place order functionality.
+	public function place_order($original_price=null, $discounted_price=null, $coupon_info=null) 
+	{		
+		if($this->Session->check('place_order_info') == 1)
+		{
+			$req_data = $this->Session->read('place_order_info');
+			
+			if(!empty($req_data['total_price_id']))
+				$original_price = $req_data['total_price_id'];
+			
+			if(!empty($req_data['coupon_price_id']))
+				$discounted_price = $req_data['coupon_price_id'];
+			
+			if(!empty($req_data['coupon_info']))
+				$coupon_info = $req_data['coupon_info'];
+			
+			//$this->Session->delete('place_order_info');
+		}
+			
 		if(!empty($_REQUEST['user_comment']))
 		{
 			$place_order_address['Place_Order'] = $_REQUEST;
@@ -1982,16 +3008,41 @@ App::uses('AppController', 'Controller');
 				$this->redirect('payment_page');
 		}
 		
+		
+		//For single product
 		if($this->Session->check('single_product') == 1)
 		{
+			echo "shashikant is in the single product function";
+			
 			$single_data = $this->Session->read('single_data');
 			
-			if(isset($single_data['original_price']))
+			if(!empty($single_data['coupon_info']))
+			{
+				$this->set('coupon_info', $single_data['coupon_info']);
+			}
+			
+			if(!empty($single_data['quantity_data']))
+			{
+				$this->Session->write('quantity_data', $single_data['quantity_data']);						
+			}
+			if(!empty($single_data['original_price']))
+			{
 				$this->Session->write('original_price', $single_data['original_price']);						
-			
-			if(isset($single_data['discounted_price']))
+				$this->set('original_price', $single_data['original_price']);
+			}
+				
+			if(!empty($single_data['discounted_price']))
+			{
 				$this->Session->write('discounted_price', $single_data['discounted_price']);						
-			
+				$this->set('discounted_price', $single_data['discounted_price']);
+			}
+				
+			if(!empty($single_data['coupon_discounted_price']))
+			{
+				$this->Session->write('coupon_discounted_price', $single_data['coupon_discounted_price']);						
+				$this->set('coupon_discounted_price', $single_data['coupon_discounted_price']);
+			}
+				
 			if(isset($single_data['prodid']))
 				$this->Session->write('single_prodid', $single_data['prodid']);						
 			
@@ -2003,7 +3054,7 @@ App::uses('AppController', 'Controller');
 			
 			$user_data = $this->Auth->user();
 			
-			$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'])));
+			$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'], 'User_address.del_status'=>0)));
 			
 			$user_data['Addresses'] = $user_address_data;
 			
@@ -2011,10 +3062,34 @@ App::uses('AppController', 'Controller');
 			
 			if($this->Auth->user())
 			{
-				$all_products = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.product_id'=>$single_product_data['Produc_master']['id'], 'Cart_master.del_status'=>0)));
+				$product = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.product_id'=>$single_product_data['Produc_master']['id'], 'Cart_master.del_status'=>0)));
 				
+				if(!empty($product))
+				{
+					if(isset($product['Cart_master']['quantity']))
+						$data['quantity'] = $product['Cart_master']['quantity'];	
+					else
+						$data['quantity'] = 1;
+						
+					$product = $product['Cart_master'];
+					
+					$data['prodid'] = $product['product_id'];
+					
+					$data['attvid'] = $product['attvid'];
+					
+					$product_data[$product['product_id']] = $data;
+				}
+				
+				/*
+				if(isset($all_products))
 				foreach($all_products as $product)
 				{
+					echo "product<pre>";
+					print_r($product);
+					echo "<pre>";
+					
+					die();
+					
 					if(isset($product['Cart_master']['quantity']))
 						$data['quantity'] = $product['Cart_master']['quantity'];	
 					else
@@ -2029,7 +3104,6 @@ App::uses('AppController', 'Controller');
 					$product_data[] = $data;
 				}
 				
-				/*
 				if($this->Session->check('add_cart_session') == 1)
 				{
 					$add_cart_session = $this->Session->read('add_cart_session');						
@@ -2050,6 +3124,8 @@ App::uses('AppController', 'Controller');
 				*/
 			}
 			
+			//$this->Session->delete('cart_data');
+
 			if($this->Session->check('cart_data') == 1)
 				$att_add_cart_session = $this->Session->read('cart_data');						
 			
@@ -2065,7 +3141,7 @@ App::uses('AppController', 'Controller');
 						if($key_ses == 'Quantity')
 						{
 							$data_second[$ses['prodid']]['quantity'] = $ses['attvid'];									
-							$data_one = $ses['attvid'];
+							//$data_one = $ses['attvid'];
 						}							
 						else
 						{						
@@ -2084,7 +3160,7 @@ App::uses('AppController', 'Controller');
 									$data_one = $data_one.$ses['attvid'].',';
 							}					
 						$i++;
-						}
+						}						
 					}
 				}
 				
@@ -2099,12 +3175,13 @@ App::uses('AppController', 'Controller');
 					if($si==0)
 						$data_third = $data_second;
 					else
-						$data_third = $data_third+$data_second;
+						$data_third = ($data_third+$data_second);
 					
 					$si++;
-					
-					unset($data_one);
-				}				
+				}			
+
+				unset($data_second);
+				unset($data_one);
 			}
 			
 			if(isset($product_data) && isset($data_third))
@@ -2122,43 +3199,47 @@ App::uses('AppController', 'Controller');
 			if(isset($data_final))
 				$this->set('data_final', $data_final);
 			
-			$this->Session->delete('single_data');
-			$this->Session->delete('single_product');
+			if($this->Session->check('single_product') == 1)
+				$this->Session->delete('single_product');			
+			
+			if($this->Session->check('single_data') == 1)
+				$this->Session->delete('single_data');			
 		}
 		else
 		{
+			//For multiple product(checkout page)
+			if(!empty($coupon_info))
+				$this->set('coupon_info', $coupon_info);
+			
 			$redirect_page = $this->request->params['action'];
 		
 			$this->Session->write('redirect_page', $redirect_page);
 			
 			$user_data = $this->Auth->user();
 			
-			$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'])));
+			$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'], 'User_address.del_status'=>0)));
 			
 			$user_data['Addresses'] = $user_address_data;
 			
 			$this->set('userdata', $user_data);
 			
-			/*
-			
-			echo "<br>Original Price".$original_price;
-			
-			echo "<br>Discounted Price".$discounted_price;
-			
-			echo "<br>Requested_data<pre>";
-			print_r($_REQUEST);
-			echo "<pre>";
-			
-			*/
-			
 			if(isset($original_price))
+			{
 				$this->Session->write('original_price', $original_price);						
-			
+				$this->set('original_price', $original_price);
+			}
+							
 			if(isset($discounted_price))
+			{
 				$this->Session->write('discounted_price', $discounted_price);						
+				$this->set('discounted_price', $discounted_price);
+			}				
 			
 			if($this->Session->check('add_cart_session') == 1)
+			{
 				$add_cart_session = $this->Session->read('add_cart_session');						
+				$this->set('add_cart_session', $add_cart_session);
+			}				
 			
 			if($this->Auth->user())
 			{
@@ -2178,7 +3259,7 @@ App::uses('AppController', 'Controller');
 					if(isset($product['attvid']))
 					$data['attvid'] = $product['attvid'];
 					
-					$product_data[] = $data;
+					$product_data[$product['product_id']] = $data;
 				}
 				
 				/*
@@ -2207,13 +3288,35 @@ App::uses('AppController', 'Controller');
 			if($this->Session->check('cart_data') == 1)
 				$att_add_cart_session = $this->Session->read('cart_data');						
 			
-			$si=0;
+			if($this->Session->check('add_cart_session') == 1)
+				$add_cart_session = $this->Session->read('add_cart_session');						
 			
-			if(isset($add_cart_session))
+			/*
+			if($this->Session->check('add_cart_session') == 1)
+				$add_cart_session = $this->Session->read('add_cart_session');						
+			*/
+			
+			if($this->Session->check('products_check') == 1)
+				$products_check = $this->Session->read('products_check');						
+			
+			if(isset($products_check))
 			foreach($att_add_cart_session as $data_ses)
 			{
 				$i=1;
-				$data_count_ses = count($data_ses);
+				$data_count_ses = count($data_ses)-1;
+				foreach($data_ses as $key_ses=>$ses)
+				{
+					if(in_array($ses['prodid'], $products_check))
+						$shashi[$ses['prodid']] = $data_ses;																	
+				}
+			}
+			
+			$si=0;			
+			if(isset($add_cart_session))
+			foreach($shashi as $data_ses)
+			{
+				$i=1;
+				$data_count_ses = count($data_ses)-1;
 				foreach($data_ses as $key_ses=>$ses)
 				{					
 					if($key_ses== 'Quantity')
@@ -2236,9 +3339,10 @@ App::uses('AppController', 'Controller');
 								$data_one = $data_one.$ses['attvid'];								
 							else
 								$data_one = $data_one.$ses['attvid'].',';								
-						}
-						$i++;											
-					}					
+							
+							$i++;																
+						}						
+					}						
 				}
 				
 				$data_second[$ses['prodid']]['prodid'] = $ses['prodid'];
@@ -2251,11 +3355,11 @@ App::uses('AppController', 'Controller');
 				else
 					$data_third = $data_third + $data_second;
 				
-				$si++;
+				$si++;				
 			}
 			
 			if(isset($product_data) && isset($data_third)) //$data_final = $product_data + $data_third;
-				$data_final = array_merge($product_data, $data_third);
+				$data_final = ($product_data + $data_third); //array_merge($product_data, $data_third);
 			elseif((isset($product_data)) && (!isset($data_third)))
 				$data_final = $product_data;
 			elseif((!isset($product_data)) && (isset($data_third)))
@@ -2277,26 +3381,40 @@ App::uses('AppController', 'Controller');
 		$this->set('shipping_master', $shipping_data);
 	}
 	
+	//This is the functionality after the paypal payment is not successed.
+	public function cancel($id) {
+		
+	}
+	
+	//Dynamically fetched the subcategory
 	public function sub_cat($id) {
 		
 		$new_data = array();  
 		
-		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id)));
+		$category_data = $this->Category->find('all', array('conditions'=>array('Category.parentid'=>$id, 'Category.del_status'=>0)));
 		
+		if(!empty($category_data))
 		foreach($category_data as $cat)
 		{
-			$data = $this->sub_cat($cat['Category']['id']);
-			
-			
+			$data = $this->sub_cat($cat['Category']['id']);			
 			
 			$new_data[] = $cat['Category']['id'];
 		}	
-		
-		return $new_data;
+
+		if(isset($new_data))
+			return $new_data;
 	}
 	
+	//This is the product details page
 	public function product_details($id) 
 	{
+		$product_seo = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$id)));
+		
+		$this->set('product_seo', $product_seo);
+		
+		if($this->Session->check('one') == 1)
+			$this->Session->delete('one');
+		
 		$reviews = $this->Review_master->find('all', array('conditions'=>array('Review_master.approval'=>1, 'Review_master.prodid'=>$id)));
 		
 		$this->set('reviews', $reviews);
@@ -2324,6 +3442,66 @@ App::uses('AppController', 'Controller');
 				else
 				$products[$key]['Produc_master']['images']['all'] = $image;				
 			}
+		}
+		
+		$i=1;
+		foreach($products as $key=>$product)
+		{
+			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+			
+			if(!empty($offer_master_cat_data))
+			{
+				foreach($offer_master_cat_data as $lowest_price_cat)
+				{
+					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+				}
+				
+				if(count($low_cat)>1)
+				$max_discount_cat = max($low_cat);
+				else
+				$max_discount_cat = $low_cat[0];	
+				unset($low_cat);				
+			}
+			
+			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+			
+			if($offer_master_data !='')
+			{
+				foreach($offer_master_data as $lowest_price)
+				{
+					$low[] = $lowest_price['Offer_master']['discount'];
+				}
+				
+				if(isset($low))
+				$max_discount = max($low);
+				
+				unset($low);
+			}
+			
+			if(isset($max_discount_cat) && isset($max_discount))
+				$final_max_discount = max($max_discount_cat, $max_discount);
+			elseif(isset($max_discount_cat))
+				$final_max_discount = $max_discount_cat;
+			elseif(isset($max_discount))
+				$final_max_discount = $max_discount;
+			else
+				$final_max_discount = 0;
+			
+			unset($max_discount_cat);	 
+			unset($max_discount);
+			
+			if(isset($final_max_discount))
+			{
+				$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
+			
+				$discounted_price = ($product['Produc_master']['prodprice']-(($final_max_discount/100)*$product['Produc_master']['prodprice']));
+				
+				$products[$key]['Produc_master']['discounted_price'] = $discounted_price; 		
+				
+				unset($final_max_discount);
+			}
+
+			$i++;
 		}
 		
 		$this->set('product_slider', $products);
@@ -2566,31 +3744,93 @@ App::uses('AppController', 'Controller');
 		$this->set('product', $product['Produc_master']);					
 	}
 	
+	//This is the price change functionality call from the product details page(attributes).
 	public function price_changed() 
 	{
-		if($_REQUEST['checkid'] == 1)
+		if(!$this->Auth->user())
 		{
+			echo "not_logged";
+			die();
+		}
+		
+		if(isset($_REQUEST['checkid']))
+			$_REQUEST['checked'] = $_REQUEST['checkid'];			
+		
+		if(isset($_REQUEST['attid']))
+			$att_type_data = $_REQUEST['attid'];
+		
+		if($_REQUEST['checked'] == 1)
+		{
+			if($this->Session->check('one') == 1)
+			{
+				$one = $this->Session->read('one');			
+				
+				$data_first_element[$att_type_data] = $_REQUEST;
+				
+				$data_first = ($data_first_element + $one);
+				
+				$this->Session->write('one', $data_first);						
+				
+				$this->Session->write('one', $data_first);						
+			}
+			else
+			{
+				$data_first_element[$att_type_data] = $_REQUEST;
+				$data_first[$att_type_data] = $_REQUEST;
+				
+				$this->Session->write('one', $data_first);			
+			}
+		}
+		else
+		{
+			if($this->Session->check('one') == 1)
+				$one = $this->Session->read('one');
+			
+				unset($one[$_REQUEST['attid']]);
+			
+			$this->Session->write('one', $one);						
+		}
+		
+		if($this->Session->check('one') == 1)
+			$one = $this->Session->read('one');
+		
+		if(!empty($one))
+		{
+			foreach($one as $data)
+			$attvid_arr[] = $data['attvid'];
+		
 			$data = $_REQUEST;
+			
+			$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => $_REQUEST['prodid'], 'Produc_quantity.attvid' => $attvid_arr)));
 			
 			//$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => $_REQUEST['prodid'], 'Produc_quantity.attvid' => $_REQUEST['attvid'])));
 			
 			//$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => 33, 'Produc_quantity.attvid' => 21)));
 			
-			$product_qty_data['Produc_quantity']['qty'] = 0;
+			//$product_qty_data['Produc_quantity']['qty'] = 0;
 			
-			if(isset($product_qty_data['Produc_quantity']['qty']))
-			{
+			$product_qty_data['Produc_quantity']['qty'] = 100;
+			
+			if((isset($product_qty_data['Produc_quantity']['qty'])) || ($product_qty_data['Produc_quantity']['qty'] == 0))
+			{				
+				if(!isset($product_qty_data['Produc_quantity']['qty']))
+					$product_qty_data['Produc_quantity']['qty'] = 0;
+				
+				$product_qty_data['Produc_quantity']['qty'] = 100;
+				
 				if($product_qty_data['Produc_quantity']['qty'] == 0)
-				{					
+				{
 					if($this->Auth->user())
 					{
 						$user_data = $this->Auth->user();
 						
 						$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$data['prodid'])));
 						
+						$data['userdata'] = $user_data;
+						
 						$data['product'] = $product_data;
 						
-						$att_vdata = $this->Attribute_value->find('first', array('conditions'=>array('attribute_value.id'=>$data['attvid'])));
+						$att_vdata = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data['attvid'])));
 						
 						$att_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$att_vdata['Attribute_value']['attid'])));
 						
@@ -2602,178 +3842,144 @@ App::uses('AppController', 'Controller');
 						
 						$site_setting_data = $this->Site_setting->find('first');
 						
-						//Send email at the time of registration
-						$Email = new CakeEmail();
-						$Email->template('Order_product_unavailable');
-						$Email->emailFormat('html');
-						$Email->to($user_data['email']);
-						$Email->from($site_setting_data['Site_setting']['orderemail']);
-						$Email->viewVars(array('email_unavailable_product' => $data));
-						$Email->subject('Login details');
-						$Email->send();									
+						$notify_prod_email['Notify_prod_email']['attid'] = $data['attribute_master']['id'];
+						
+						$notify_prod_email['Notify_prod_email']['attvid'] = $data['attribute_value']['id'];
+						
+						$notify_prod_email['Notify_prod_email']['prodid'] = $data['product']['id'];
+						
+						$notify_prod_email['Notify_prod_email']['usrid'] = $user_data['id'];
+						
+						$user_data['email'] = "shashikant.chobhe@sibzsolutions.com";
+						
+						if($this->Notify_prod_email->save($notify_prod_email))
+						{
+							//Send email at the time of registration
+							$Email = new CakeEmail();
+							$Email->template('Order_product_unavailable');
+							$Email->emailFormat('html');
+							$Email->to($user_data['email']);
+							$Email->from($site_setting_data['Site_setting']['orderemail']);
+							$Email->viewVars(array('email_unavailable_product' => $data));
+							$Email->subject('Order Unavailable');
+							$Email->send();		
+							
+							echo "N/A";
+							die();
+							
+						}
+						else
+						{
+							echo "N/A";
+							die();						
+						}						
 					}
 					else
 					{
-						$this->Session->setFlash('To buy this product plase logged in first..!!');
-						$this->redirect('login');
+						echo "Please Logged in First";
+						die();
+					}					
+				}
+				else
+				{
+					$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id' => $_REQUEST['prodid'])));
+			
+					$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+					
+					if(!empty($offer_master_cat_data))
+					{
+						foreach($offer_master_cat_data as $lowest_price_cat)
+						{
+							$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+						}
+						
+						if(count($low_cat)>1)
+						$max_discount_cat = max($low_cat);
+						else
+						$max_discount_cat = $low_cat[0];	
+						unset($low_cat);				
 					}
 					
-					echo "N/A";
-					die();
-				}
-			}
-			
-			$product_att_data = $this->Produc_attribute->find('first', array('Produc_attribute.prodid' => $_REQUEST['prodid'], 'Produc_attribute.attvid' => $_REQUEST['attvid']));
-			
-			$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id' => $_REQUEST['prodid'])));
-			
-			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
-			
-			if(!empty($offer_master_cat_data))
-			{
-				foreach($offer_master_cat_data as $lowest_price_cat)
-				{
-					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
-				}
-				
-				if(count($low_cat)>1)
-				$max_discount_cat = max($low_cat);
-				else
-				$max_discount_cat = $low_cat[0];	
-				unset($low_cat);				
-			}
-			
-			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
-			
-			if($offer_master_data !='')
-			{
-				foreach($offer_master_data as $lowest_price)
-				{
-					$low[] = $lowest_price['Offer_master']['discount'];
-				}
-				
-				if(isset($low))
-				$max_discount = max($low);
-				
-				unset($low);
-			}
-			
-			if(isset($max_discount_cat) && isset($max_discount))
-				$final_max_discount = max($max_discount_cat, $max_discount);
-			elseif(isset($max_discount_cat))
-				$final_max_discount = $max_discount_cat;
-			elseif(isset($max_discount))
-				$final_max_discount = $max_discount;
-			else
-				$final_max_discount = 0;
-			
-			unset($max_discount_cat);	 
-			unset($max_discount);
-			
-			if(isset($final_max_discount))
-			{
-				$product_data['Produc_master']['discount'] = $final_max_discount; 		
-			
-				$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
-				
-				$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
-				
-				unset($final_max_discount);
-			}
-			
-			$product_price = $product_data['Produc_master']['discounted_price'];
-			
-			if(!(empty($product_att_data['Produc_attribute']['add_cost'])))
-			{
-				$additional_cost = $product_att_data['Produc_attribute']['add_cost'];
-				
-				$product_price = $product_price + $additional_cost;
+					$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+					
+					if($offer_master_data !='')
+					{
+						foreach($offer_master_data as $lowest_price)
+						{
+							$low[] = $lowest_price['Offer_master']['discount'];
+						}
+						
+						if(isset($low))
+						$max_discount = max($low);
+						
+						unset($low);
+					}
+					
+					if(isset($max_discount_cat) && isset($max_discount))
+						$final_max_discount = max($max_discount_cat, $max_discount);
+					elseif(isset($max_discount_cat))
+						$final_max_discount = $max_discount_cat;
+					elseif(isset($max_discount))
+						$final_max_discount = $max_discount;
+					else
+						$final_max_discount = 0;
+					
+					unset($max_discount_cat);	 
+					unset($max_discount);
+					
+					if(isset($final_max_discount))
+					{
+						$product_data['Produc_master']['discount'] = $final_max_discount; 		
+					
+						$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
+						
+						$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
+						
+						unset($final_max_discount);
+					}
+					
+					$product_price = $product_data['Produc_master']['discounted_price'];
+					
+					if(!empty($attvid_arr))
+					{
+						$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $_REQUEST['prodid'], 'Produc_attribute.attvid' => $attvid_arr)));
+						
+						foreach($product_att_data as $data_patt)
+						{
+							if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+							{
+								$additional_cost = $data_patt['Produc_attribute']['add_cost'];
+								
+								$product_price = $product_price + $additional_cost;
+							}
+							else
+							{
+								$less_cost = $data_patt['Produc_attribute']['less_cost'];
+								
+								$product_price = $product_price - $less_cost;
+							}
+						}
+					}					
+					echo $product_price;				
+				}				
 			}
 			else
-			{
-				$less_cost = $product_att_data['Produc_attribute']['less_cost'];
-				
-				$product_price = $product_price - $less_cost;
-			}
-			
-			echo $product_price;
-		}
+				echo "N/A";
+		}		
 		else
-		{				
-			$product_att_data = $this->Produc_attribute->find('first', array('Produc_attribute.prodid' => $_REQUEST['prodid'], 'Produc_attribute.attvid' => $_REQUEST['attvid']));
-	
-			$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id' => $_REQUEST['prodid'])));
-			
-			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
-			
-			if(!empty($offer_master_cat_data))
-			{
-				foreach($offer_master_cat_data as $lowest_price_cat)
-				{
-					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
-				}
-				
-				if(count($low_cat)>1)
-				$max_discount_cat = max($low_cat);
-				else
-				$max_discount_cat = $low_cat[0];	
-				unset($low_cat);				
-			}
-			
-			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
-			
-			if($offer_master_data !='')
-			{
-				foreach($offer_master_data as $lowest_price)
-				{
-					$low[] = $lowest_price['Offer_master']['discount'];
-				}
-				
-				if(isset($low))
-				$max_discount = max($low);
-				
-				unset($low);
-			}
-			
-			if(isset($max_discount_cat) && isset($max_discount))
-				$final_max_discount = max($max_discount_cat, $max_discount);
-			elseif(isset($max_discount_cat))
-				$final_max_discount = $max_discount_cat;
-			elseif(isset($max_discount))
-				$final_max_discount = $max_discount;
-			else
-				$final_max_discount = 0;
-			
-			unset($max_discount_cat);	 
-			unset($max_discount);
-			
-			if(isset($final_max_discount))
-			{
-				$product_data['Produc_master']['discount'] = $final_max_discount; 		
-			
-				$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
-				
-				$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
-				
-				unset($final_max_discount);
-			}
-			
-			$product_price = $product_data['Produc_master']['discounted_price'];
-			
-			echo $product_price;				
-		}
+			echo "no_data";
 		
 		die();
 	}
+	
+	//This is the color change images functionality
 	public function color_change_imgs() 
 	{
-		//$this->layout='';
-		
 		if($_REQUEST['checkid'] == 1)
-		$color_images_data = $this->Produc_color_image->find('all', array('order' => array('order' => 'ASC'), 'conditions'=>array('Produc_color_image.prodid'=>$_REQUEST['prodid'], 'Produc_color_image.attvid'=>$_REQUEST['attvid'])));
+			$color_images_data = $this->Produc_color_image->find('all', array('order' => array('order' => 'ASC'), 'conditions'=>array('Produc_color_image.prodid'=>$_REQUEST['prodid'], 'Produc_color_image.attvid'=>$_REQUEST['attvid'], 'Produc_color_image.del_status'=>0)));
 		else
 		{
-			$color_images_data = $this->Produc_image->find('all', array('order' => array('order' => 'ASC'), 'conditions'=>array('Produc_image.prodid'=>$_REQUEST['prodid'])));
+			$color_images_data = $this->Produc_image->find('all', array('order' => array('order' => 'ASC'), 'conditions'=>array('Produc_image.prodid'=>$_REQUEST['prodid'], 'Produc_image.del_status'=>0)));
 			
 			foreach($color_images_data as $data)
 			{
@@ -2794,19 +4000,17 @@ App::uses('AppController', 'Controller');
 		$this->set('color_images_data', $color_images_data);
 	}
 	
+	
+	//This is the search results functionality
 	public function search_results() 
 	{ 
 		if(isset($_REQUEST['search_text']))
-		$search_text = $_REQUEST['search_text'];
+			$search_text = $_REQUEST['search_text'];
 		
 		if($this->Session->check('search_text') == 1)
-		{
-			$search_text = $this->Session->read('search_text');
-		}				
+			$search_text = $this->Session->read('search_text');				
 		else
-		{
-			$this->Session->write('search_text', $search_text);
-		}				
+			$this->Session->write('search_text', $search_text);				
 		
 		if($this->Auth->user())
 		{
@@ -2816,7 +4020,7 @@ App::uses('AppController', 'Controller');
 		}
 		
 		if($this->Session->check('add_cart_session') == 1)
-		$add_cart_session = $this->Session->read('add_cart_session');			
+			$add_cart_session = $this->Session->read('add_cart_session');			
 		
 		if((isset($list_add_to_cart)) && (isset($add_cart_session)))
 			$add_cart = $list_add_to_cart + $add_cart_session;
@@ -2847,9 +4051,7 @@ App::uses('AppController', 'Controller');
 			//$conditions = array('Produc_master.del_status'=>0, 'Produc_master.prodname LIKE'=>'%'.$search_text.'%');
 			
 			if($this->Session->check('con') == 1)
-			{
-				$con = $this->Session->read('con');
-			}				
+				$con = $this->Session->read('con');				
 			else
 			{
 				$con = array('Produc_master.del_status'=>0, 'Produc_master.del_status'=>0, 'Produc_master.prodname LIKE'=>'%'.$search_text.'%');
@@ -2870,8 +4072,7 @@ App::uses('AppController', 'Controller');
 			$product = $product['Produc_master'];
 			
 			if(isset($add_cart))			
-			{
-				
+			{				
 				if(in_array($product['id'], $add_cart))
 				$products[$key]['Produc_master']['add_to_cart'] = 1;
 				else
@@ -2906,6 +4107,7 @@ App::uses('AppController', 'Controller');
 		}				
 	}
 	
+	//This is the add to wishlist functionality.
 	public function add_to_cart_wishlist() { 
 		
 		$product_data = $_REQUEST;
@@ -2927,10 +4129,9 @@ App::uses('AppController', 'Controller');
 		die();
 	}
 	
+	//This is the add to cart functionality
 	public function add_to_cart() 
 	{ 
-		$this->layout='';
-		
 		$product_data = $_REQUEST;
 		
 		$quantity = $product_data['quantity_data'];
@@ -2944,7 +4145,7 @@ App::uses('AppController', 'Controller');
 			foreach($cart_data as $key_cart_first=>$cart)
 			{
 				$i=1;
-				$count_cart = count($cart);
+				$count_cart = count($cart)-1;
 				foreach($cart as $key_cart=>$cart_first)
 				{
 					if($key_cart != 'Quantity')
@@ -2959,19 +4160,23 @@ App::uses('AppController', 'Controller');
 						else
 						{
 							if($i == $count_cart)
-								$mayur_cart = $cart_first['attvid'];
+								$mayur_cart = $mayur_cart.$cart_first['attvid'];
 							else
-								$mayur_cart = $cart_first['attvid'].',';
+								$mayur_cart = $mayur_cart.$cart_first['attvid'].',';
 						}
 						
+						/*
 						if($i==1)
 							$shashi_cart = $mayur_cart;
 						else
 							$shashi_cart = $shashi_cart.$mayur_cart;					
+						*/
 						
 						$i++;					
 					}					
 				}
+				
+				$shashi_cart = $mayur_cart;
 				
 				if(isset($shashi_cart))
 				$cart_data[$key_cart_first]['attvid_set'] = $shashi_cart;
@@ -3043,8 +4248,9 @@ App::uses('AppController', 'Controller');
 					$add_to_cart['Cart_master']['product_id'] = $product_data['product_id'];
 				}
 			}
-		
+			
 			$add_to_cart['Cart_master']['quantity'] = $quantity;
+			
 			
 			$this->Cart_master->save($add_to_cart);		
 			
@@ -3078,15 +4284,12 @@ App::uses('AppController', 'Controller');
 		die();
 	}
 	
+	//This is the registration process
 	public function register() 
 	{
 		if ($this->request->is('post'))
 		{
-			echo "Shashikant is in the register functionality";
-			
 			$this->Session->write('registration_data', $this->request->data);
-			
-			//$this->redirect('address');
 			
 			$this->request->data['User']['usrtype']=0;
 			$this->request->data['User']['del_status']=1;
@@ -3098,13 +4301,13 @@ App::uses('AppController', 'Controller');
 				$usrid = $this->User->getLastInsertId();
 				
 				$this->Session->write('usrid', $usrid);
-				
-				$this->Session->setFlash('Successfully registered');
+			
 				$this->redirect('address');
 			}
 		}
 	}
 	
+	//This is the address functionality(My account page)
 	public function address() {	
 		
 		if($this->request->is('post'))
@@ -3127,7 +4330,7 @@ App::uses('AppController', 'Controller');
 					
 					$this->User->save($usrdata);
 					
-					$this->Session->setFlash('Successfully registered');
+					$this->Session->setFlash('Thanx.. You Successfully completed the registration process');
 					$this->redirect('login');
 				}
 				else
@@ -3136,7 +4339,7 @@ App::uses('AppController', 'Controller');
 					
 					$this->User->delete($user['User']['id']);
 					
-					$this->Session->setFlash('Sorry registration is not completed');
+					$this->Session->setFlash('Sorry registration is not completed.. Something went wrong');
 					$this->redirect('register');					
 				}
 			}
@@ -3148,13 +4351,14 @@ App::uses('AppController', 'Controller');
 				
 				if($this->User_address->save($this->request->data))
 				{
-					$this->Session->setFlash('Successfully registered');
+					$this->Session->setFlash('Thanx.. You Successfully completed the registration process');
 					$this->redirect('myaccount');
 				}
 			}
 		}		
 	}
 	
+	//This is the login functionality
 	public function login() {
 		
 		if ($this->request->is('post')) {
@@ -3170,6 +4374,7 @@ App::uses('AppController', 'Controller');
 			 }
 			 else
 			 {
+				 /*
 				 if($this->Session->check('redirect_page')==1)
 				 {
 					$redirect_page = $this->Session->read('redirect_page');
@@ -3179,20 +4384,24 @@ App::uses('AppController', 'Controller');
 					$this->redirect($redirect_page);			  
 				 }
 				 else
-				 	$this->redirect('myaccount');			  
+				 */
+				 
+				 $this->redirect('myaccount');			  
 			 }			 
 		}
 	}
 	
+	//This is the logout functionality
 	public function logout() 
 	{
 		return $this->redirect($this->Auth->logout());
 	}
 	
+	//This is the checkout page. Display the all product which is in the cart.
 	public function checkout() 
 	{
 		if($this->Session->check('add_cart_session') == 1)
-		$add_cart_session = $this->Session->read('add_cart_session');						
+			$add_cart_session = $this->Session->read('add_cart_session');						
 		
 		if($this->Auth->user())
 		{
@@ -3257,8 +4466,6 @@ App::uses('AppController', 'Controller');
 						$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
 					}
 					
-					
-					
 					$max_discount_cat = max($low_cat);					
 					unset($low_cat);				
 				}
@@ -3308,6 +4515,10 @@ App::uses('AppController', 'Controller');
 		if(isset($products_checkout))
 		foreach($products_checkout as $key=>$products)
 		{
+			if(isset($user_data['id']))
+				$cart_data_master = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.product_id'=>$products['id'], 'Cart_master.user_id'=>$user_data['id'])));
+						
+			if(!empty($att_add_cart_session))
 			foreach($att_add_cart_session as $key_prod=>$session_cart_att)
 			{
 				if($key_prod == $products['id'])
@@ -3321,7 +4532,7 @@ App::uses('AppController', 'Controller');
 						else
 						{
 							$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id' => $session_one['attvid'])));
-						
+							
 							$products_checkout[$key]['att'][$key_att] = $attvid_data['Attribute_value'];
 						}
 						
@@ -3329,15 +4540,97 @@ App::uses('AppController', 'Controller');
 					}
 				}
 			}
+			
+			/*
+			else
+			{
+				$products_checkout[$key]['att']['Quantity'] = $cart_data_master['Cart_master']['quantity'];
+				
+				$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id' => $cart_data_master['Cart_master']['attvid'])));
+			
+				$att_master_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id' => $attvid_data['Attribute_value']['attid'])));
+			
+				$products_checkout[$key]['att'][$att_master_data['Attribute_master']['attname']] = $attvid_data['Attribute_value'];				
+			}
+			*/
 		}
 		
 		if(isset($products_checkout))
 		foreach($products_checkout as $key=>$products)
 		{
+			if(!empty($products['att']))
+			{
+				foreach($products['att'] as $keya=>$att_one)
+				{
+					if($keya !='Quantity')
+						$attvid_arr[] = $att_one['id'];
+				}
+				
+				$product_price = $products['discounted_price'];
+			
+				$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $products['id'], 'Produc_attribute.attvid' => $attvid_arr)));
+				
+				unset($attvid_arr);
+				
+				foreach($product_att_data as $data_patt)
+				{
+					if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+					{
+						$additional_cost = $data_patt['Produc_attribute']['add_cost'];
+						
+						$product_price = $product_price + $additional_cost;
+					}
+					else
+					{
+						$less_cost = $data_patt['Produc_attribute']['less_cost'];
+						
+						$product_price = $product_price - $less_cost;
+					}
+				}
+				
+				$products_checkout[$key]['discounted_price'] = $product_price;
+			}
+			
+			/*
+			if(!empty($products['att']['Color']['id']))
+			{
+				$prod_attributes_data = $this->Produc_attribute->find('first', array('conditions'=>array('Produc_attribute.prodid' => $products['id'], 'Produc_attribute.attvid' => $products['att']['Color']['id'])));
+				
+				echo "Prod_attributes_data<pre>";
+				print_r($prod_attributes_data);
+				echo "<pre>";
+				
+				die();
+				
+				$discounted_price_final = ($products['att']['Quantity'] * $products['discounted_price']);
+				
+				
+				
+				if(!empty($prod_attributes_data['Produc_attribute']['add_cost']))
+				{
+					$price_change = $prod_attributes_data['Produc_attribute']['add_cost'];
+					
+					$discounted_price_final = $discounted_price_final + ($price_change* $products['att']['Quantity']);									
+				}				
+				else
+				{
+					$price_change = $prod_attributes_data['Produc_attribute']['less_cost'];
+					
+					$discounted_price_final = $discounted_price_final - ($price_change* $products['att']['Quantity']);				
+				}
+
+				//echo "<br>Discounted_price_final".$discounted_price_final;
+
+				//die();				
+						
+				$products_checkout[$key]['discounted_price'] = $discounted_price_final;
+			}
+			*/
+			
 			if($this->Auth->user())
 			{
 				if(!isset($products['att']))
-				{					
+				{
 					$attvid_data = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.product_id' => $products['id'], 'Cart_master.user_id' => $user_data['id'])));
 					
 					$attvid_data = explode(',', $attvid_data['Cart_master']['attvid']);
@@ -3347,14 +4640,19 @@ App::uses('AppController', 'Controller');
 					{
 						$val_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data_second)));
 						
+						if(isset($val_data['Attribute_value']['attid']))
 						$att_val_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$val_data['Attribute_value']['attid'])));
 						
+						if(isset($val_data['Attribute_value']))
 						$shashi_data[$att_val_data['Attribute_master']['attname']] = $val_data['Attribute_value'];
 						
-						if($i==0)
-						$data_second_shashi = $shashi_data;
-						else
-						$data_second_shashi = $data_second_shashi + $shashi_data;
+						if(isset($shashi_data))
+						{
+							if($i==0)
+							$data_second_shashi = $shashi_data;
+							else
+							$data_second_shashi = $data_second_shashi + $shashi_data;
+						}
 						
 						unset($shashi_data);
 						
@@ -3364,7 +4662,7 @@ App::uses('AppController', 'Controller');
 					$products_checkout[$key]['att'] = $data_second_shashi;				
 					
 					unset($data_second_shashi);					
-				}				
+				}					
 			}
 			
 			/*
@@ -3383,12 +4681,18 @@ App::uses('AppController', 'Controller');
 			*/
 		}
 		
+		foreach($products_checkout as $data)
+			$products_check[] = $data['id'];
+		
+		$this->Session->write('products_check', $products_check);
+		
 		if(isset($products_checkout))
 		$this->set('products_checkout', $products_checkout);		
 
 		}
 	}
 	
+	//This is the remove wishlist functionality.
 	public function remove_from_wishlist($id) { 
 		
 		if($this->Auth->user())
@@ -3408,6 +4712,8 @@ App::uses('AppController', 'Controller');
 		die();				
 	}
 	
+	
+	//This is the remove from cart functionality.
 	public function remove_from_cart($id) { 
 		
 		$_REQUEST['product_id'] = $id;
@@ -3483,17 +4789,74 @@ App::uses('AppController', 'Controller');
 		
 		die();						
 	}
-	public function contact_us() { 
-
+	
+	//This is the tell a friend functionality.
+	public function tell_a_friend() 
+	{		
+		if ($this->request->is('post')) 
+		{
+			$name_data = $this->request->data['Tell_a_friend']['name'];
+			
+			$email_data = $this->request->data['Tell_a_friend']['email'];
+			
+			$friends_data = array_slice($this->request->data,0,-1);
+			
+			$friends_chunk_data  = array_chunk($friends_data,2);
+			
+			foreach($friends_chunk_data as $key=>$friends_send_data)
+			{
+				$friends_final_data['name_from'] = $name_data;
+				$friends_final_data['email_from'] = $email_data;
+				$friends_final_data['name_to'] = $friends_send_data[0];
+				$friends_final_data['email_to'] = $friends_send_data[1];
+				
+				$Email = new CakeEmail();
+				$Email->template('tell_friends');
+				$Email->emailFormat('html');
+				$Email->to($friends_send_data[1]);
+				$Email->from($email_data);
+				$Email->viewVars(array('tell_friends_data' => $friends_final_data));
+				$Email->subject('Invitation');
+				$Email->send();	
+			}
+			
+			$this->request->data = '';
+			
+			$this->Session->setFlash(__('You Successfully send the request to friends.... '));					
+			
+			$this->redirect(array(
+				'action'=>'tell_a_friends'
+			));		
+		}		
+	}
+	
+	//This is the contact us functionality.
+	public function contact_us() 
+	{ 
 		$contact_us_data['Contact_us'] = $_REQUEST;
 			
 		if(!empty($contact_us_data['Contact_us']))
 		{
 			if($this->Contact_us->save($contact_us_data))
-			$this->redirect('contact_us');			
+			{
+				$this->Session->setFlash(__('Thanx For contact us... '));
+				
+				$site_setting_data = $this->Site_setting->find('first');
+				
+				//Send email at the time of registration
+				$Email = new CakeEmail();
+				$Email->template('Contact_us');
+				$Email->emailFormat('html');
+				$Email->to($site_setting_data['Site_setting']['orderemail']);
+				$Email->from($contact_us_data['Contact_us']['email']);
+				$Email->viewVars(array('contact_us_data' => $contact_us_data));
+				$Email->subject('Contact_us');
+				$Email->send();		
+			}
 		}
 	}	
 	
+	//This is the order details functionality.
 	public function order_details($id) 
 	{
 		$this->Session->Write('id', $id);
@@ -3507,15 +4870,10 @@ App::uses('AppController', 'Controller');
 			$order_details[$key]['Product_details'] = $product_details;
 		}
 		
-		echo "Order_details<pre>";
-		print_r($order_details);
-		echo "<pre>";
-		
-		die();
-		
 		$this->set('order_details', $order_details);
 	}
 	
+	//This is the my account functionality.
 	public function myaccount() 
 	{ 
 		$redirect_page = $this->request->params['action'];
@@ -3569,23 +4927,11 @@ App::uses('AppController', 'Controller');
 					
 					$this->User->save();
 				}
-				
-				/*
-				else 
-				{
-					$errors = $this->User->validationErrors;
-					
-					echo "Errors<pre>";
-					print_r($errors);
-					echo "<pre>";
-					die();
-					// handle errors
-				}
-				*/				
 			}
 		}		
 	}
 	
+	//This is the wishlist management.
 	public function wishlist_mgt() 
 	{
 		$quantity_data = $_REQUEST['quantity_data'];
@@ -3660,6 +5006,7 @@ App::uses('AppController', 'Controller');
 		die();		
 	}
 	
+	//This is the review management.
 	public function review_mgt() 
 	{ 
 		$userdata = $this->Auth->user();	
@@ -3681,6 +5028,7 @@ App::uses('AppController', 'Controller');
 		die();
 	}
 	
+	//This is the my wishlist functionality
 	public function my_wishlist() 
 	{
 		$userdata = $this->Auth->user();	
@@ -3832,8 +5180,6 @@ App::uses('AppController', 'Controller');
 			unset($max_discount_cat);	 
 			unset($max_discount);
 						
-						
-						
 			$wishlist_all[$key]['Wishlist_detail']['prod_details']['discount'] = $final_max_discount; 		
 			
 			if(isset($product['Wishlist_detail']['prod_details']))
@@ -3845,63 +5191,86 @@ App::uses('AppController', 'Controller');
 			$i++;
 		}
 		
+		
+		
+		
 		$this->set('wishlist', $wishlist_all);			
 	}
 	
+	//This is the coupon management.
 	public function coupon_mgt() 
 	{
+		if(isset($_REQUEST['discounted_price']) && isset($_REQUEST['quantity_data']))
+			$final_price = ($_REQUEST['discounted_price'] * $_REQUEST['quantity_data']);
+		else			
+			$final_price = $_REQUEST['total_price'];
+		
 		if($this->Auth->user())
 		{
-			$userdata = $this->Auth->user();
-			
+			$userdata = $this->Auth->user();			
 			$coupon_details['Coupon_detail']['usrid'] = $userdata['id'];
-		}
-		
-		if(isset($_REQUEST['total_price']))
-			$prodprice = $_REQUEST['total_price'];
-		else
-		{
-			$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$_REQUEST['product_id'])));
-			$prodprice = $product_data['Produc_master']['prodprice'];
-		}
-		
-		$coupon_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.coupon_number'=>$_REQUEST['coupon_txt'])));
-		
-		$coupon_details['Coupon_detail']['coupon_id'] = $coupon_data['Coupon_master']['id'];
-		
-		$count_coupon_details = $this->Coupon_detail->find('count', array('conditions'=>array('Coupon_detail.usrid'=>$userdata['id'], 'Coupon_detail.coupon_id'=>$coupon_data['Coupon_master']['id'])));
-		
-		if($count_coupon_details>0)
-		{
-			echo 0;
-			die();
-		}
-		else
-		{
-			$this->Coupon_detail->save($coupon_details);
 			
-			if($coupon_data !='')
+			/*
+			if(isset($_REQUEST['total_price']))
+				$prodprice = $_REQUEST['total_price'];
+			else
 			{
-				if($coupon_data['Coupon_master']['discount_prcnt']!='')
+				$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$_REQUEST['product_id'])));
+				$prodprice = $product_data['Produc_master']['prodprice'];
+			}
+			*/
+			
+			$prodprice = $final_price;
+			
+			$coupon_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.coupon_number'=>$_REQUEST['coupon_txt'])));
+			
+			if(!empty($coupon_data))
+			{
+				$coupon_details['Coupon_detail']['coupon_id'] = $coupon_data['Coupon_master']['id'];
+			
+				$count_coupon_details = $this->Coupon_detail->find('count', array('conditions'=>array('Coupon_detail.usrid'=>$userdata['id'], 'Coupon_detail.coupon_id'=>$coupon_data['Coupon_master']['id'])));
+				
+				if($count_coupon_details>0)
 				{
-					$final_price = ($prodprice-(($coupon_data['Coupon_master']['discount_prcnt']/100)*$prodprice));
+					echo 0;
+					die();
 				}
 				else
 				{
-					$final_price = (($prodprice)-$coupon_data['Coupon_master']['discount_price']);
+					$this->Coupon_detail->save($coupon_details);
+					
+					if($coupon_data !='')
+					{
+						if($coupon_data['Coupon_master']['discount_prcnt']!='')
+						{
+							$final_price = ($prodprice-(($coupon_data['Coupon_master']['discount_prcnt']/100)*$prodprice));
+						}
+						else
+						{
+							$final_price = (($prodprice)-$coupon_data['Coupon_master']['discount_price']);
+						}			
+						
+						echo $final_price;
+					}
+					else
+					{
+						echo 0;
+					}
 				}			
-				
-				echo $final_price;
 			}
 			else
-			{
 				echo 0;
-			}
+		}
+		else
+		{
+			echo "Please Logged in first";			
+			die();
 		}
 		
 		die();				
 	}
 	
+	//This is the functionality which was occure at the time of choosing attributes for product.
 	public function att_cart() 
 	{
 		//$this->Session->delete('cart_data');
@@ -4035,6 +5404,7 @@ App::uses('AppController', 'Controller');
 		}
 	}
 	
+	//This is the address edit functionality.
 	public function address_edit($id) 
 	{
 		//$address_data = $this->User_address->find('first', array('conditions'=>array('User_address.id'=>$id)));
@@ -4054,6 +5424,7 @@ App::uses('AppController', 'Controller');
 		$this->request->data = $this->User_address->findById($id);
 	}
 	
+	//This is the address change status functionality
 	public function address_status_change($id) 
 	{
 		$address_data = $this->User_address->find('first', array('conditions'=>array('User_address.id'=>$id)));
@@ -4068,6 +5439,124 @@ App::uses('AppController', 'Controller');
 		$this->redirect('myaccount');
 	}
 	
+	//This is the our strory functionality
+	public function our_story() 
+	{
+		
+	}
 	
+	//This is the friendly policies functionality
+	public function friendly_policies() 
+	{
+		
+	}
+	
+	//This is the legal functionality
+	public function legal() 
+	{
+		
+	}
+	
+	//This is the color disclaimer functionality
+	public function color_disclaimer() 
+	{
+		
+	}
+	
+	//This is the faq functionality
+	public function faq() 
+	{
+		
+	}
+	
+	//This is the privacy_policy functionality
+	public function privacy_policy() 
+	{
+		
+	}
+	
+	//This is the ourterms and conditions functionality
+	public function terms_and_conditions() 
+	{
+		
+	}
+	
+	//This is the catalog download functionality
+	public function catalog_download() 
+	{
+		
+	}
+	
+	//This is the catalog request functionality
+	public function catalog_request() 
+	{
+		
+	}
+	
+	//This is the hollowaysportswear functionality	
+	public function hollowaysportswear() 
+	{
+		
+	}
+	
+	//This is the productvideos functionality
+	public function productvideos() 
+	{
+		
+	}
+	
+	//This is the our strory functionality
+	public function instructional_videos() 
+	{
+		
+	}
+	
+	//This is the prebuilt personalized flyers functionality
+	public function prebuilt_personalized_flyers() 
+	{
+		
+	}
+	
+	//This is the web links functionality
+	public function web_links() 
+	{
+		
+	}
+	
+	//This is the sizing fit guide functionality
+	public function sizing_fit_guide() 
+	{
+		
+	}
+	
+	//This is the decoration techniques functionality
+	public function decoration_techniques() 
+	{
+		
+	}
+	
+	//This is the our strory functionality
+	public function stock_decoration_library() 
+	{
+		
+	}
+	
+	//This is the uniform decoration guides functionality
+	public function uniform_decoration_guides() 
+	{
+		
+	}
+	
+	//This is the our knowledge center functionality
+	public function knowledge_center() 
+	{
+		
+	}
+	
+	//This is the about us functionality
+	public function about_us() 
+	{
+		
+	}
 }
 ?>

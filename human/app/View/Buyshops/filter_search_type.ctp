@@ -1,4 +1,4 @@
-<div id="result_sort" class="grids_of_4">						
+<div id="result_sort" class="col-md-9 w_content">						
 <?php 	
 			
 	$i=1;
@@ -21,54 +21,73 @@
 		
 		?>
 		  <div class="grid1_of_4 simpleCart_shelfItem">
-				<div class="content_box"><a href="<?php echo $this->webroot.'buy_shops/product_details/'.$product['id']; //single.html?>">
+				<div class="product_box">
+                <a href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; //single.html?>">
 				  <div class="view view-fifth">
 					
 					<?php
 						if(isset($product['images']['Default']['imagepath']))
 						{
 							?>
-							<img style="max-width: 190px; max-height: 250px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['Default']['imagepath'];?>" class="img-responsive" alt=""/>
+							<img style="max-width: 190px; max-height: 250px; display:inline" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['Default']['imagepath'];?>" class="img-responsive" alt=""/>
 							<?php
 						}
 						else
 						{
 							?>
-							<img style="max-width: 190px; max-height: 250px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['all']['imagepath'];?>" class="img-responsive" alt=""/>
+							<img style="max-width: 190px; max-height: 250px; display:inline" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['all']['imagepath'];?>" class="img-responsive" alt=""/>
 							<?php
 						}
 					?>
 						<div class="mask1">
 							<div class="info"> </div>
 						</div>
-					  </a>
+					  
 				   </div>
-					<h5><a href="<?php echo $this->webroot.'buy_shops/product_details/'.$product['id']; //single.html?>"> <?php echo $product['prodname']; //Duis autem ?></a></h5>
-					<h6>
+					<div class="pro_heading"><strong>
+                    
+                     <?php //echo $product['prodname']; //Duis autem 
+					 
+					 if(strlen($product['prodname'])<=40)
+							  {
+								echo $product['prodname'];
+							  }
+							  else
+							  {
+								$page_content = substr($product['prodname'],0,40) . '...';
+								echo $page_content;
+							  }
+					 
+					 ?>
+                     </strong>
+                     
+                     </div>
+                     </a>
+					<div class="width100 text12_black" style="padding:0 0 7px 0">
 					<?php 
 					
 						echo substr($product['prodscdes'],0,30); //It is a long establishe 
 						
-					?></h6>
+					?>
+                    </div>
 					
-					 <div class="size_1">
-								<!--<span class="item_price"><?php //echo 'MSRP: $'.$product['prodprice']; // $187.95 ?></span>-->
-								
-								<strong><?php echo '$'.$product['prodprice']; // $187.95 ?></strong>
-								<br>
-								<strong><?php echo 'Discount '.$product['discount'].'%'; // $187.95 ?></strong>
-								<br>
-								<br>
-								<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
-								
-							   <!--<select class="item_Size">
-								<option value="Small">L</option>
-								<option value="Medium">S</option>
-								<option value="Large">M</option>	
-								<option value="Large">XL</option>	
-								</select>-->
-								<div class="clearfix"></div>
-							  </div>
+					 <div class="pro_price">
+						<?php echo '$'.$product['prodprice']; // $187.95 ?>
+                        <br />
+                        <div style="float: left; width: 100%; text-align: center; text-transform: none; font-size: 17px;">
+                        <?php echo 'Discount '.$product['discount'].'%'; // $187.95 ?>
+                        <br />
+                        <?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?>
+                        </div>
+                        
+                        <!--<select class="item_Size">
+                        <option value="Small">L</option>
+                        <option value="Medium">S</option>
+                        <option value="Large">M</option>	
+                        <option value="Large">XL</option>	
+                        </select>-->
+                        <div class="clearfix"></div>
+                     </div>
 							  <!--<div class="size_2">
 								<div class="size_2-left"> 
 								   <input type="text" class="item_quantity quantity_1" value="1" />
@@ -88,7 +107,7 @@
 								?>							 
 								
 								 <div class="size_2">
-                                   <div style="width: 100%; float: left; min-height: 37px;">
+                                   <div style="width: 65%; float: left; min-height: 37px;">
 									<div class="size_2-left"> 
 									   <!--<input type="text" class="item_quantity quantity_1" value="1" />-->
 									</div>
@@ -171,8 +190,6 @@
 				
 				?>
 				<div class="clearfix"></div>
-				</div>
-				<div class="grids_of_4">						
 				<?php
 			}
 			
@@ -202,8 +219,8 @@
 		
 	}
 	?>
-	</div>
-	</div>
+	
+	
 	<?php	
 	
 	if($this->Session->check('id_first')== 1)
@@ -211,14 +228,16 @@
 	
 	if(!empty($products))
 	{	
+	echo "<div class='pagination'>";
 		?>		
+        
 		<?php $this->paginator->options(array('update' => '#result_sort','before' => $this->Js->get('#spinner')->effect('fadeIn', array('buffer' => false)),'complete' => $this->Js->get('#spinner')->effect('fadeOut', array('buffer' => false))));?>
-		Showing Page <?php echo $this->paginator->counter(); ?>
-		<br />
+		<!--Showing Page <?php echo $this->paginator->counter(); ?><br />-->
 		<?php echo $this->paginator->prev(); ?> – &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<?php echo $this->paginator->numbers(array('separator'=>' | ')); ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<?php echo $this->paginator->next('Next Page'); ?>
 		<?php echo $this->Js->writeBuffer();
+		echo "</div>";
 	}
 	
 	/*
@@ -234,12 +253,18 @@
 		echo "</div>";
 	}
 	*/
-	
 	}
 	else
 	{
 		echo "No Products Found For This Category";
 	}
+	
+	?>
+	
+	</div>
+	
+	<?php
+	
 	
 
 	

@@ -76,8 +76,11 @@
 <!-- page script -->
 
 <script>
+	
+   alert = function() {};
+
   $(function () {
-	$("#example2").DataTable();
+
 	$('#example1').DataTable({
 	  "aaSorting": [],
 	  "paging": true,
@@ -87,5 +90,8 @@
 	  "info": true,
 	  "autoWidth": true
 	});
+	
+	return false;
+	
   });
 </script>

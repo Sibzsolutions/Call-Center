@@ -1,9 +1,3 @@
-<!--A Design by W3layouts
-Author: W3layout
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -52,7 +46,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							$('.cart-header_rmv<?php echo $product['id']; ?>').fadeOut('slow', function(c){
 								$('.cart-header_rmv<?php echo $product['id']; ?>').remove();
 							});
-							});	  
+							});	  							
 						});
 					
 					</script>
@@ -104,7 +98,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<!--<li><p>Qty : 1</p></li>-->
 							</ul>
 							<div class="delivery">
-								<p>Service Charges : Rs.<?php echo $product['prodprice'];?></p>
+								<!--<p>Service Charges : Rs.<?php //echo $product['prodprice'];?></p>-->
 								 
 								<br>
 								<br>
@@ -127,11 +121,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		?>
 		</div>
 		<?php 
+		
 		if(isset($products_checkout))
 		{
-		?>
-		<div id="total_update">
-		 <div class="col-md-3 cart-total">
+			?>
+			<div id="total_update">
+			 <div class="col-md-3 cart-total">
 			 <a class="continue" href="<?php echo $this->webroot.'buyshops/index'; ?>">Continue to basket</a>
 			 
 			 <div class="price-details">
@@ -148,7 +143,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					if($i==0)
 					$total_price = $product['discounted_price'];
 					else
-					$total_price = ($total_price+$product['discounted_price']);
+					$total_price = ($total_price + $product['discounted_price']);
 
 					$i++;
 				}
@@ -158,19 +153,22 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				?>
 				
 				 </span>
-				 <span>Discount</span>
-				 <span class="total1">---</span>
+				 
+				 <!--<span>Discount</span>
+				 <span class="total1">---</span>-->
+				 
 				 <span>Delivery Charges</span>
 				 <span class="total1"> --- </span>
+				 
 				 <div class="clearfix"></div>				 
 			 </div>	
 			 <ul class="total_price">
 			   <li class="last_price"> <h4>TOTAL</h4></li>	
-			   <li class="last_price">
+			   <li class="last_price input_box">
 			   <span>
 			   <?php echo $total_price; //6350.00  ?>
 			   
-			   <input id="total_price_id" type="text" value="<?php echo $total_price; //6350.00  ?>" name="price_data">
+			   <input id="total_price_id" type="hidden" value="<?php echo $total_price; //6350.00  ?>" name="price_data" style="clear: both; width: 90%; font-size: 17px;">
 			   
 			   </span></li>
 			   <div class="clearfix"> </div>
@@ -180,15 +178,18 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 			 
 			 <div class="total-item">
-				 <h3>OPTIONS</h3>
-				 <h4>COUPONS</h4>
-				 <a class="cpns" href="#">Apply Coupons</a>
+				 <!--<h3>OPTIONS</h3>
+				 <h4>COUPONS</h4>-->
 				 
-				  <div class="apply_box">
+				 <!--<a class="cpns" href="#">Apply Coupons</a>-->
+				 
+				  <div class="apply_box" style="padding: 10px 0">
 						
-					<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;">Apply Coupon</a></div>
+					<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;background-color:#3a3a3a">Apply Coupon</a></div>
 					
-					<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both">
+					<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both; width:190px; height:39px;">
+					
+					<div id="coupon_msg"> </div>
 					
 					<button id="coupon_apply_btn"  class="apply_btn">Apply</button>
 					
@@ -196,13 +197,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					
 					<button id="discounted_price"  class="apply_btn"></button>
 					
-					<input type="text" value="" id="coupon_price_id">
+					<input type="hidden" value="" id="coupon_info">
+					
+					<input type="hidden" value="" id="coupon_price_id">
 					
 				  </div>
 				  
 				  <div class="clearfix"></div>
 				  
-				  <button class="order" id="place_order">Place Order</button>
+				  <button class="add_cart_btm order" id="place_order">Place Order</button>
 				  
 				  <!--<a class="order" href="">Place Order</a>-->
 				  
@@ -212,18 +215,23 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						
 						$('#place_order').click(function(){
 							
-							//alert("shashikant");
-							
 							var total_price_id = $('#total_price_id').val();
-							
-							//alert(total_price_id);
 							
 							var coupon_price_id = $('#coupon_price_id').val();
 							
-							//alert(coupon_price_id);
+							var coupon_info = $('#coupon_info').val();
 							
-							$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>/'+total_price_id+'/'+coupon_price_id);
-						
+							$.post("<?=$this->webroot?>buyshops/place_order_info", {total_price_id: total_price_id, coupon_price_id: coupon_price_id, coupon_info: coupon_info}, function(result){
+								
+								if(result == 'yes')
+								{
+									$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>');
+								}
+							});						
+							
+							//$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>/'+total_price_id+'/'+coupon_price_id+'/'+coupon_info);
+							
+							
 						});
 						
 						$('#discounted_price').hide();
@@ -231,6 +239,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						$('#coupon_apply_btn').click(function(){
 							
 							$('#discounted_price').show();
+							
+							if($('#coupon_txt').val() == '' )
+							{
+								$('#coupon_msg').html("Please enter the coupon number");
+								return false;
+							}	
 							
 							var total_price = '<?php echo $total_price; ?>';
 							
@@ -240,10 +254,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								
 								$("#coupon_price_id").val(result);
 								
-								if(result == 0)
-								$("#discounted_price").html("Sorry, you entered wrong coupon number/ Already used this coupon.");								    
+								if(result == 'Please Logged in first')
+									$("#discounted_price").html(result);								    
+								else if(result == 0)
+									$("#discounted_price").html("Sorry, you entered wrong coupon number/ Already used this coupon.");								    
 								else
-								$("#discounted_price").html("Discounted prices is "+result);								    
+								{
+									$('#coupon_info').val(coupon_txt);
+									
+									$("#discounted_price").html("Discounted prices is "+result);								    
+								}
+									
 							});								
 						});
 						
@@ -252,7 +273,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							
 							$('#coupon_btn').click(function(){
 								
-								alert("Coupon_button_click");
+								//alert("Coupon_button_click");
 								
 								//$('#coupon_btn').show();								
 								
@@ -263,7 +284,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						
 				</script> 
 				 
-				 <p><a href="#">Log In</a> to use accounts - linked coupons</p>
+				 <!--<p><a href="#">Log In</a> to use accounts - linked coupons</p>-->
 			 </div>
 
 			 </div>

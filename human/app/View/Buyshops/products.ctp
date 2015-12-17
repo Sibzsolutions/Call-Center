@@ -17,7 +17,6 @@
 <script src="<?php echo $this->webroot.'js/home_slider/ion.rangeSlider.js';?>"></script>
 <link rel="stylesheet" href="<?php echo $this->webroot; ?>css/home_slider/templatemo_style.css" type="text/css" media="screen" />
 
-
 <!-- <div class="width1220">  
       <div class="inner_heading" style="padding: 0px">
         <div class="refine_box">
@@ -109,7 +108,7 @@
 					//from: 500,
 
 					min: 0,
-					max: 1000,
+					max: 10000,
 
 					onFinish: function (data) {
 						
@@ -200,18 +199,18 @@
 			
 			}
 		}
+
 		?>
 		
    </div>
    <div class="inner_banner2"><img src="<?php echo $this->webroot.'img/only_human_userside/inner_banner.jpg';?>" /></div>
-	<div class="col-md-9 w_content">
-	    <div class="women">
+   <div class="col-md-9 w_content">
+   <div class="women" style="float:left; width:100%">
 			<a href="#"><h4>
 			
 			<?php echo $catname; //Enthecwear -  ?>
 			<span><?php //echo count($products).' ';itemms ?></span> </h4></a>
-			<ul class="w_nav">
-			<li>Sort : </li>
+			<ul class="w_nav sort_box">
 			
 			<!-- 
 			<li class="alphabeticle_list_products" id="1"><a class="active" href="#">alphabeticle</a></li> |
@@ -220,10 +219,12 @@
 			<li class="low_to_high_list_products" id="4"><a href="#" class="">price: Low High </a></li> 
 			-->
 			
-			<li class="alphabeticle_list_products" id="1">alphabeticle</li> |
-			<li class="new_list_products" id="2">new</li> |
-			<li class="high_to_low_list_products" id="3">price:High Low</li> |
-			<li class="low_to_high_list_products" id="4">price: Low High</li> 
+			<!--
+			<li>Sort : </li>
+			<li class="alphabeticle_list_products" id="1">Alphabeticle</li> |
+			<li class="new_list_products" id="2">New</li> |
+			<li class="high_to_low_list_products" id="3">Price:High Low</li> |
+			<li class="low_to_high_list_products" id="4">Price: Low High</li> -->
 			
 			<script>
 
@@ -277,13 +278,12 @@
 		     </ul>
 		     <div class="clearfix"></div>	
 		</div>
+   </div>
+   <div id="result_sort">
+	<div class="col-md-9 w_content">
+	    
 		
 		
-		
-		
-		
-		
-		<div id="result_sort">
 		<?php 	
 			
 			$i=1;
@@ -310,20 +310,21 @@
 				
 				?>
 				  <div class="grid1_of_4 simpleCart_shelfItem">
-						<div class="product_box"><a href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; //single.html?>">
+						<div class="product_box">
+                        <a href="<?php echo $this->webroot.'buyshops/product_details/'.$product['id']; //single.html?>">
 						  <div class="view view-fifth">
 							
 							<?php
 								if(isset($product['images']['Default']['imagepath']))
 								{
 									?>
-									<img style="max-width: 190px; max-height: 250px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['Default']['imagepath'];?>" class="img-responsive" alt=""/>
+									<img style="max-width: 190px; max-height: 250px; display:inline" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['Default']['imagepath'];?>" class="img-responsive" alt=""/>
 									<?php
 								}
 								else
 								{
 									?>
-									<img style="max-width: 190px; max-height: 250px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['all']['imagepath'];?>" class="img-responsive" alt=""/>
+									<img style="max-width: 190px; max-height: 250px; display:inline" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product['images']['all']['imagepath'];?>" class="img-responsive" alt=""/>
 									<?php
 								}
 							?>
@@ -333,7 +334,7 @@
 							  
 						   </div>
 							
-							<strong>
+							<div class="pro_heading"><strong>
 							
 							<?php 
 							
@@ -351,7 +352,8 @@
 
 							?>
 							
-							</strong></a>
+							</strong></div>
+                            </a>
 							<div class="width100 text12_black" style="padding:0 0 7px 0">
 							<?php 
 							
@@ -370,26 +372,22 @@
 									if($product['discount'] == 0)
 									{
 										?>
-										<strong>
+										<strong style="color:#f18c00">
 										<?php
-										echo 'Discount N/A'
+										echo '<br>Discount N/A'
 										?>
 										</strong>
-										<br>
-										<br>
 										<?php
 									}
 									else
 									{
 										?>
-										<strong>
+										<div style="float: left; width: 100%; text-align: center; text-transform: none; font-size: 17px;">
 										<?php
 										echo 'Discount '.$product['discount'].'%'; // $187.95 	
 										?>
-										</strong>
-										<br>
-										<br>
-										<strong><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></strong>
+										<br /><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?>
+                                        </div>
 										<?php
 									}
 									
@@ -414,7 +412,7 @@
 								?>							 
 								
 								 <div class="size_2">
-                                   <div style="width: 100%; float: left; min-height: 37px;">
+                                   <div style="width: 65%; float: left; min-height: 37px;">
 									<div class="size_2-left"> 
 									   <!--<input type="text" class="item_quantity quantity_1" value="1" />-->
 									</div>

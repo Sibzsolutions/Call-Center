@@ -1,5 +1,6 @@
+<div id="shashi">
+</div>
 <?php 
-
 	App::import('Controller', 'Admins');
 	$Superadmin = new SuperadminController;
 	//$department_id = 4 ; // put here department ID as per your need
@@ -11,13 +12,18 @@
 		
 		$('#att_select').change(function(){
 		
+		//alert("shashikant is in the attribute_changes edit function");
+		
 		var cat_type_data = $('#att_select').val();
 		
-		$.post("<?=$this->webroot?>Admin/product_attribute_change_edit", {
+		$.post("<?=$this->webroot?>Superadmin/product_attribute_change_edit", {
 												 cat_id : cat_type_data ,
 												 product_id : '<?php echo $page_id; ?>'},
 		
 												 function(result){
+													 
+				//$('#shashi').html(result);			 									 
+													 
  				$('#att_one').html(result);			 
 			});
 		});
@@ -60,7 +66,9 @@
 	  <label for="exampleInputEmail1"><?php echo $data['Attribute_master']['attname']; ?></label>
 	  
       <?php
-	  	  
+	  	 
+		$attname = $data['Attribute_master']['attname'];
+		 
 	  foreach($data['Attribute_value'] as $data_att)
 	  {
 		  $i=0;
@@ -71,187 +79,187 @@
 				if($product_select['att_master'] == 'Color')
 				{
 					?>
-			<div class="width100">
-              <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
-              
-			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
-              <div style="float:right">
-				Status
-                <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
-              <?php 
-	
-				  if($product_select['del_status'] == 1)
-				  {
-					  ?>
-					  <option selected="selected" value="1">Yes</option>
-					  <option value="0">No</option>
-					  <?php
-				  }
-				  if($product_select['del_status'] == 0)
-				  {
-					  ?>
-					  <option value="1">Yes</option>
-					  <option selected="selected" value="0">No</option>
-					  <?php
-				  }
-				  ?>
-                  
-				</select>
-          	  </div>
-              <div class="width100">
-			  
-			  <input class="form-control" type="file" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][color_imgs][]"  placeholder="Enter Product Images"/>				  					  
+					<div class="width100">
+					  <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
 					  
-					  <input class="form-control" type="number" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][product_quantity]"  placeholder="Enter Product Quantity" value="<?php echo $product_select['qty']; ?>"/>				  				
-			  
-              <!--<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php //echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
-              
-              <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php //echo $product_select['less_cost'] ?>"/>-->
-    		  
-			  
-			  <div style="float:right">
-				Cost
-              <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
-				<?php 
-	
-				  if($product_select['add_cost'] != '')
-				  {
-					  ?>
-					  <option selected="selected" value="1">Additional Cost</option>
-					  <?php
-				  }
-				  else
-				  {
-					  ?>
-					  <option value="1">Additional Cost</option>
-					  <?php
-				  }
-				  if($product_select['less_cost'] != '')
-				  {
-					  ?>
-					  <option selected="selected" value="0">Less Cost</option>
-					  <?php
-				  }
-				  else
-				  {
-					  ?>
-					  <option value="0">Less Cost</option>
-					  <?php
-				  }
-				?>
-                </select>
-				
+					  <?php echo $data_att['Attribute_value']['attvalue']; ?>
+					  <div style="float:right">
+						Status
+						<select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
+					  <?php 
+			
+						  if($product_select['del_status'] == 1)
+						  {
+							  ?>
+							  <option selected="selected" value="1">Yes</option>
+							  <option value="0">No</option>
+							  <?php
+						  }
+						  if($product_select['del_status'] == 0)
+						  {
+							  ?>
+							  <option value="1">Yes</option>
+							  <option selected="selected" value="0">No</option>
+							  <?php
+						  }
+						  ?>
+						  
+						</select>
+					  </div>
+					  <div class="width100">
+					  
+					  <input class="form-control" type="file" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][color_imgs][]"  placeholder="Enter Product Images"/>				  					  
+							  
+							  <input class="form-control" type="number" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][product_quantity]"  placeholder="Enter Product Quantity" value="<?php echo $product_select['qty']; ?>"/>				  				
+					  
+					  <!--<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php //echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
+					  
+					  <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php //echo $product_select['less_cost'] ?>"/>-->
+					  
+					  
+					  <div style="float:right">
+						Cost
+					  <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
+						<?php 
+			
+						  if($product_select['add_cost'] != '')
+						  {
+							  ?>
+							  <option selected="selected" value="1">Additional Cost</option>
+							  <?php
+						  }
+						  else
+						  {
+							  ?>
+							  <option value="1">Additional Cost</option>
+							  <?php
+						  }
+						  if($product_select['less_cost'] != '')
+						  {
+							  ?>
+							  <option selected="selected" value="0">Less Cost</option>
+							  <?php
+						  }
+						  else
+						  {
+							  ?>
+							  <option value="0">Less Cost</option>
+							  <?php
+						  }
+						?>
+						</select>
+						
+						<?php
+						if($product_select['add_cost'] != '')
+						{
+							?>
+							<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
+							<?php
+						}
+						else
+						{
+							?>
+							<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['less_cost'] ?>" style="margin-right:5px;"/>
+							<?php
+						}
+						?>
+						
+					  </div>
+								  
+					  </div>
+					  </div>
 				<?php
-				if($product_select['add_cost'] != '')
-				{
-					?>
-					<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
-					<?php
 				}
 				else
 				{
-					?>
-					<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['less_cost'] ?>" style="margin-right:5px;"/>
-					<?php
-				}
-				?>
-				
-          	  </div>
-			  			  
-			  </div>
-              </div>
-				<?php
-				}
-				else
-				{
 				
 				?>
-				<div class="width100">
-              <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
-              
-			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
-              <div style="float:right">
-				Status
-                <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
-              <?php 
-	
-				  if($product_select['del_status'] == 1)
-				  {
+					<div class="width100">
+				  <input  type="checkbox" checked="checked" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
+				  
+				  <?php echo $data_att['Attribute_value']['attvalue']; ?>
+				  <div style="float:right">
+					Status
+					<select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
+				  <?php 
+		
+					  if($product_select['del_status'] == 1)
+					  {
+						  ?>
+						  <option selected="selected" value="1">Yes</option>
+						  <option value="0">No</option>
+						  <?php
+					  }
+					  if($product_select['del_status'] == 0)
+					  {
+						  ?>
+						  <option value="1">Yes</option>
+						  <option selected="selected" value="0">No</option>
+						  <?php
+					  }
 					  ?>
-					  <option selected="selected" value="1">Yes</option>
-					  <option value="0">No</option>
-					  <?php
-				  }
-				  if($product_select['del_status'] == 0)
-				  {
-					  ?>
-					  <option value="1">Yes</option>
-					  <option selected="selected" value="0">No</option>
-					  <?php
-				  }
-				  ?>
-                  
-				</select>
-          	  </div>
+					  
+					</select>
+				  </div>
 
-              <div class="width100">
-			  
-              <!--<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php //echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
-              
-              <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php //echo $product_select['less_cost'] ?>"/>-->
-    		  
-			  <div style="float:right">
-				Cost
-              <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
-				<?php 
-	
-				  if($product_select['add_cost'] != '')
-				  {
-					  ?>
-					  <option selected="selected" value="1">Additional Cost</option>
-					  
-					  <?php
-				  }
-				  else
-				  {
-					  ?>
-					  <option value="1">Additional Cost</option>
-					  <?php
-				  }
-				  if($product_select['less_cost'] != '')
-				  {
-					  ?>
-					  <option selected="selected" value="0">Less Cost</option>
-					  <?php
-				  }
-				  else
-				  {
-					  ?>
-					  <option value="0">Less Cost</option>
-					  <?php
-				  }
-				?>
-                </select>
-				
-				<?php
-				if($product_select['add_cost'] != '')
-				{
+				  <div class="width100">
+				  
+				  <!--<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][add_cost]" value="<?php //echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
+				  
+				  <input class="form-control" type="text"  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']?>][less_cost]" value="<?php //echo $product_select['less_cost'] ?>"/>-->
+				  
+				  <div style="float:right">
+					Cost
+				  <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
+					<?php 
+		
+					  if($product_select['add_cost'] != '')
+					  {
+						  ?>
+						  <option selected="selected" value="1">Additional Cost</option>
+						  
+						  <?php
+					  }
+					  else
+					  {
+						  ?>
+						  <option value="1">Additional Cost</option>
+						  <?php
+					  }
+					  if($product_select['less_cost'] != '')
+					  {
+						  ?>
+						  <option selected="selected" value="0">Less Cost</option>
+						  <?php
+					  }
+					  else
+					  {
+						  ?>
+						  <option value="0">Less Cost</option>
+						  <?php
+					  }
 					?>
-					<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
+					</select>
+					
 					<?php
-				}
-				else
-				{
+					if($product_select['add_cost'] != '')
+					{
+						?>
+						<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['add_cost'] ?>" style="margin-right:5px;"/>
+						<?php
+					}
+					else
+					{
+						?>
+						<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['less_cost'] ?>" style="margin-right:5px;"/>
+						<?php
+					}
 					?>
-					<input class="form-control" type="text"  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost]" value="<?php echo $product_select['less_cost'] ?>" style="margin-right:5px;"/>
-					<?php
-				}
-				?>
-				
-          	  </div>
-			  			  
-			  </div>
-              </div>
+					
+				  </div>
+							  
+				  </div>
+				  </div>
 					<?php
 				}
 			  ?>
@@ -269,19 +277,20 @@
 		  
 		  if($i==0)
 		  {
-			if($product_select['att_master'] == 'Color')
+			if($attname == 'Color')
 			{
 				?>				
 				
 			  <div class="width100">
 				 
-			  <input class="form-control" type="file" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][color_imgs][]"  placeholder="Enter Product Images"/>				  					  
+			  <!--<input class="form-control" type="file" multiple  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']; ?>][color_imgs][]"  placeholder="Enter Product Images"/>				  					  
 			  
-			  <input class="form-control" type="number" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][product_quantity]"  placeholder="Enter Product Quantity" <?php echo $product_select['qty']; ?>/>				  				
+			  <input class="form-control" type="number" multiple  name="data[Produc_master][attribute][<?php //echo $data_att['Attribute_value']['attvalue']; ?>][product_quantity]"  placeholder="Enter Product Quantity" <?php echo $product_select['qty']; ?>/>-->				  				
  
 			  <input type="checkbox" value="<?php echo $data_att['Attribute_value']['id']; ?>" name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][id]" value="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['id']?>][<?php echo $data_att['Attribute_value']['id']; ?>]"/>
 			  
 			  <?php echo $data_att['Attribute_value']['attvalue']; ?>
+			  
 			  <div style="float:right">
               Status
               <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][del_status]">
@@ -304,7 +313,7 @@
 				  ?>
                   </select>
                  
-              </div>
+
 			  
 			  <input class="form-control" type="file" multiple  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']; ?>][color_imgs][]"  placeholder="Enter Product Images"/>				  					  
 					  
@@ -357,7 +366,7 @@
 					<?php
 				}
 				?>
-				
+              </div>				
           	  </div>
 			  
               </div>
@@ -392,8 +401,6 @@
 				  ?>
                   </select>
                  
-              </div>
-			  
               <div style="float:right">
 				Cost
               <select  name="data[Produc_master][attribute][<?php echo $data_att['Attribute_value']['attvalue']?>][cost_type]">
@@ -443,7 +450,7 @@
 				?>
 				
           	  </div>
-			  
+			  </div>
               </div>
 				<?php
 			}
@@ -454,6 +461,7 @@
 			  
 			  <?php
 		  }
+		  $i++;
 	  }
 	  ?>
 

@@ -53,7 +53,9 @@
                       {
 							$review_data = $review['Review_master'];
 							$products_data = $review['Produc_master'];
-							$user_data = $review['User'];						  
+
+							if(isset($review['User']))
+								$user_data = $review['User'];						  
                       ?>
                         <tr>
 						
@@ -66,20 +68,24 @@
 						<td><?php echo $products_data['prodprice']; ?></td>
 						<td><?php echo $review_data['review_txt']; ?></td>
                         <td><?php if($review_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
-						<td>&nbsp;&nbsp;&nbsp;
-						<a title="Edit" href="<?php echo $this->webroot.'superadmin/review_approved/'.$review_data['id']; ?>">
+						<td>
+						
+						&nbsp;&nbsp;&nbsp;
+						<a title="Send Mail" class="fa fa-edit" href="<?php echo $this->webroot.'superadmin/review_edit/'.$review_data['id']; ?>">
+						&nbsp;&nbsp;&nbsp;
+						<a title="Approve/Disapprove" href="<?php echo $this->webroot.'superadmin/review_approved/'.$review_data['id']; ?>">
 						
 						<?php 
 						if($review_data['approval'] == 1)
 						{ 
 							?>
-							<i class="fa fa-thumbs-up"></i>
+							<i class="fa fa-thumbs-down"></i>
 							<?php 
 						}
 						else
 						{
 							?>
-							<i class="fa fa-thumbs-down"></i>
+							<i class="fa fa-thumbs-up"></i>
 							<?php 
 						}
 						?>

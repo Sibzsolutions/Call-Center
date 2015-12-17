@@ -55,7 +55,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					 </div>			
 					<div>
 						 <span>Email Address<label>*</label></span>
-						 <?=$this->Form->input('email',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+						 <?=$this->Form->input('email',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
 						 <!--<input type="text"> -->
 					 </div>
 					 <div class="clearfix"> </div>

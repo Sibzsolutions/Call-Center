@@ -22,7 +22,7 @@ body {
   <div class="login_logo"><img src="<?php echo $this->webroot.'img/local/login_logo.jpg';?>" width="403" height="50" alt="login_logo" /></div>
   <div class="login_main_box">
 
-	<?=$this->Session->flash('auth');?>
+	<div style="float:left"><?=$this->Session->flash('auth');?></div>
 	<?=$this->Form->create('User');?>
 
 	<div class="login_input_box" style="padding-top:87px;">

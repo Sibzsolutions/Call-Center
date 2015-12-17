@@ -435,6 +435,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<div class="pro_price">
 					<?php 
 					
+					  /*
+					  
 					  if(strlen($product['Produc_master']['prodprice'])<=40)
 					  {
 						echo "$".$product['Produc_master']['prodprice'];
@@ -445,6 +447,34 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						echo "$".$page_content;
 					  }
 					  
+					  */
+						
+						echo "$".$product['Produc_master']['prodprice'];
+					  
+						if(isset($product['Produc_master']['discount']))
+						{
+							if($product['Produc_master']['discount'] == 0)
+							{
+								?>
+								<strong style="color:#f18c00">
+								<?php
+								echo '<br>Discount N/A';
+								?>
+								</strong>
+								<?php
+							}
+							else
+							{
+								?>
+								<div style="float: left; width: 100%; text-align: center; text-transform: none; font-size: 17px;">
+								<?php
+								echo 'Discount '.$product['Produc_master']['discount'].'%'; // $187.95 	
+
+								echo '<br>Discounted Price $'.$product['Produc_master']['discounted_price']; // $187.95 ?>
+                                </div>
+								<?php
+							}									
+						}								
 					?>
 					</div>
 					<?php 

@@ -23,7 +23,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <div class="width1220 checkout_box">
 	<div class="" style="float:left; width:100%;">	 
 		<div class="col-md-9 cart-items">
-			<h1>My Shopping Bag</h1>
+			<h1>My Wishlist Bag</h1>
 				
 			<?php
 			
@@ -108,6 +108,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 									
 								</ul>
 								<div class="delivery">
+								
 									 <p>Service Charges : Rs.
 									 <?php 
 									 if(isset($product['Wishlist_detail']['prod_details']['prodprice']))

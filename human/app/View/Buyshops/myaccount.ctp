@@ -5,23 +5,34 @@
 <script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
 <!-- end menu -->
 
+<div style="float:left; width:100%" class="myaccount_box">
+<div class="width1220">
+
+<div class="women" style="float: left; width: 100%; margin-bottom:20px;">
 <?php 
 	
-	echo "<br>First Name:- ".$userdata['usrfname'];
+	echo "<div class='myaccount_name'>";
+	echo "<strong>First Name</strong>:- ".$userdata['usrfname'];
+	echo "</div>";
 	
-	echo "<br>Last Name:- ".$userdata['usrlname'];	
+	echo "<div class='myaccount_name'>";
+	echo "<strong>Last Name</strong>:- ".$userdata['usrlname'];	
+	echo "</div>";
 	
-	echo "<br>User Name:- ".$userdata['username'];		
+	echo "<div class='myaccount_name'>";
+	echo "<strong>User Name</strong>:- ".$userdata['username'];
+	echo "</div>";
 
 ?>
+</div>
 
 <br>
 
-<button  class="change_pass" value="Change Password">Change Password</button>
+<button  class="change_pass button" value="Change Password" style="margin:20px 0">Change Password</button>
 
 <br>
 
-<div id="one_change">
+<div id="one_change" style="width:50%">
 
 <div>
 	
@@ -33,7 +44,7 @@
 	<br>
 	<?=$this->Form->input('confirm_password',array('type'=>'text', 'class'=>'form-control', 'required'=>'required','label'=>'','div'=>false, 'Placeholder'=>'Please enter the new password again'));?>
 	<br>
-	<input type="submit" value="Save">
+	<input type="submit" value="Save" class="button">
 	
 	<?=$this->Form->end()?>
 
@@ -81,33 +92,31 @@
 
 
 <div class="row">
-	<div class="col-xs-12">
-	  
-	  <div class="box">
+	  <div class="box" style="float:left;">
 		<div class="box-header">
 		  <!--<h3 class="box-title">Data Table With Full Features</h3>-->
 		</div><!-- /.box-header -->
-		<div class="box-header" style="width:100%; float:left">
+		<div class="box-header" style="width:auto; float:right">
 		
-		<a class="login_button" href="<?php echo $this->webroot.'buyshops/address' ?>">Add Address</a>
+		<a class="button" style="margin:0px;" href="<?php echo $this->webroot.'buyshops/address' ?>">Add Address</a>
 		
 		</div><!-- /.box-header -->
-		<div class="box-body">
+		<div class="box-body overflow">
 		  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
 			<thead>
 			  <tr>
-				<th bgcolor="#00bcd4" class="text14_white">Id</th>
-				<th bgcolor="#00bcd4" class="text14_white">User Id</th>
-				<th bgcolor="#00bcd4" class="text14_white">First Address</th>
-				<th bgcolor="#00bcd4" class="text14_white">Second Address</th>
-				<th bgcolor="#00bcd4" class="text14_white">City</th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:70px">State</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Country</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Zip Code</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Phone Number</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Is Main</div></th>
-				<th bgcolor="#00bcd4" class="text14_white">Status</th>                        
-				<th bgcolor="#00bcd4" class="text14_white">Action</th>                        
+				<th bgcolor="#00bcd4" class="text12_white">Id</th>
+				<th bgcolor="#00bcd4" class="text12_white">User Id</th>
+				<th bgcolor="#00bcd4" class="text12_white">First Address</th>
+				<th bgcolor="#00bcd4" class="text12_white">Second Address</th>
+				<th bgcolor="#00bcd4" class="text12_white">City</th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:70px">State</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Country</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Zip Code</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Phone Number</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Is Main</div></th>
+				<th bgcolor="#00bcd4" class="text12_white">Status</th>                        
+				<th bgcolor="#00bcd4" class="text12_white">Action</th>                        
 			  </tr>
 			</thead>
 			<tbody>
@@ -118,17 +127,17 @@
 				 $address = $address['User_address'];
 			  
 			  ?>
-				<tr>
-				<td><?php echo $address['id']; ?></td>
-				<td><?php echo $address['usrid']; ?></td>
-				<td><?php echo $address['addr1']; ?></td>
-				<td><?php echo $address['addr2']; ?></td>
-				<td><?php echo $address['usrcity']; ?></td>
-				<td><?php echo $address['usrstate']; ?></td>
-				<td><?php echo $address['usrcountry']; ?></td>
-				<td><?php echo $address['usrzip']; ?></td>
-				<td><?php echo $address['usrphones']; ?></td>
-				<td><?php if($address['ismain'] == 1) echo "Yes"; else echo "No"; ?></td>
+				<tr class="text14_black">
+				<td class="text14_black"><?php echo $address['id']; ?></td>
+				<td class="text14_black"><?php echo $address['usrid']; ?></td>
+				<td class="text14_black"><?php echo $address['addr1']; ?></td>
+				<td class="text14_black"><?php echo $address['addr2']; ?></td>
+				<td class="text14_black"><?php echo $address['usrcity']; ?></td>
+				<td class="text14_black"><?php echo $address['usrstate']; ?></td>
+				<td class="text14_black"><?php echo $address['usrcountry']; ?></td>
+				<td class="text14_black"><?php echo $address['usrzip']; ?></td>
+				<td class="text14_black"><?php echo $address['usrphones']; ?></td>
+				<td class="text14_black"><?php if($address['ismain'] == 1) echo "Yes"; else echo "No"; ?></td>
 				
 				
 				<td><?php if($address['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
@@ -146,7 +155,6 @@
 		  </table>
 		</div><!-- /.box-body -->
 	  </div><!-- /.box -->
-	</div><!-- /.col -->
   </div>
 
 
@@ -164,21 +172,21 @@
 		<!--<a class="login_button" href="<?php //echo $this->webroot.'buyshops/address' ?>">Add Address</a>-->
 		
 		</div><!-- /.box-header -->
-		<div class="box-body">
+		<div class="box-body overflow">
 		  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1_order">
 			<thead>
 			  <tr>
-				<th bgcolor="#00bcd4" class="text14_white">Id</th>
-				<th bgcolor="#00bcd4" class="text14_white">Session Id</th>
-				<th bgcolor="#00bcd4" class="text14_white">Username</th>
-				<th bgcolor="#00bcd4" class="text14_white">Order Start Date</th>
-				<th bgcolor="#00bcd4" class="text14_white">Order End Date</th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:70px">Order Value</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Payment Id</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Shipping Id</div></th>
-				<th bgcolor="#00bcd4" class="text14_white"><div style="width:85px">Order Status</div></th>
-				<th bgcolor="#00bcd4" class="text14_white">Status</th>                        
-				<th bgcolor="#00bcd4" class="text14_white">Action</th>                        
+				<th bgcolor="#00bcd4" class="text12_white">Id</th>
+				<th bgcolor="#00bcd4" class="text12_white">Session Id</th>
+				<th bgcolor="#00bcd4" class="text12_white">Username</th>
+				<th bgcolor="#00bcd4" class="text12_white">Order Start Date</th>
+				<th bgcolor="#00bcd4" class="text12_white">Order End Date</th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:70px">Order Value</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Payment Id</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Shipping Id</div></th>
+				<th bgcolor="#00bcd4" class="text12_white"><div style="width:85px">Order Status</div></th>
+				<th bgcolor="#00bcd4" class="text12_white">Status</th>                        
+				<th bgcolor="#00bcd4" class="text12_white">Action</th>                        
 			  </tr>
 			</thead>
 			<tbody>
@@ -189,7 +197,7 @@
 				 $order = $order['Order_master'];
 			  
 			  ?>
-				<tr>
+				<tr class="text14_black">
 				<td><?php echo $order['id']; ?></td>
 				<td><?php echo $order['session_id']; ?></td>
 				<td><?php echo $userdata['usrfname'].' '.$userdata['usrlname']; ?></td>
@@ -219,8 +227,10 @@
 	  </div><!-- /.box -->
 	</div><!-- /.col -->
   </div>
-		  		  
-<!-- Bootstrap 3.3.5 -->
+	
+</div>	  		  
+</div>
+
 <!--<script src="<?php //echo $this->webroot.'bootstrap/js/bootstrap.min.js';?>"></script>-->
 <!-- DataTables -->
 <script src="<?php echo $this->webroot.'plugins/datatables/jquery.dataTables.min.js';?>"></script>

@@ -77,8 +77,14 @@
       <label for="exampleInputEmail1">Status</label>
       <?=$this->Form->input('status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
-  </div><!-- /.box-body -->
+  
 
+	<!--<div class="form-group">
+      <label for="exampleInputEmail1">Is Main</label>
+      <?php //echo $this->Form->input('is_main',array('type'=>'select', 'options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+    </div>-->
+	
+  </div><!-- /.box-body -->
   <div class="input_box">
     <?=$this->Form->button('Saved',array('class'=>'login_button'))?>
   </div>

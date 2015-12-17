@@ -16,12 +16,28 @@
     <div class="form-group">
     <label>Parent Category</label>
     
-    <select name="data[Category][parentid]" class="form-control select2" style="width: 100%;">
-
-    <?php
+	<?php 
+	
+		/*
+		echo "shashikant";
 		
-	$Superadmin -> category_tree_one(0, $category_data['parentid'], $category_data['id']);	
+		$Superadmin -> category_tree_one(0, $category_data['parentid'], $category_data['id']);			
+		
+		die();
+		*/
+		
+	?>
+	
+ 	<select name="data[Category][parentid]" class="form-control select2" style="width: 100%;">
+	
+	<option selected="selected" value="0">Main</option>
+	
+	<?php
+	
+		$Superadmin -> category_tree_one(0, $category_data['parentid'], $category_data['id']);			
+	
 	echo '</select>';
+	
 	//$this->Form->input('catname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Name'));		
 		
 	?>

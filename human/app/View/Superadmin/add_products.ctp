@@ -191,14 +191,19 @@
       <label for="exampleInputEmail1">Canonnical Url</label>
       <?=$this->Form->input('prodcanonical',array('type'=>'text','class'=>'form-control','label'=>'','div'=>false,  'placeholder'=>'Enter Canonnical Url'));?>
     </div>
-    <!--<div class="form-group">
+    
+	<!--<div class="form-group">
     <label for="exampleInputEmail1">Page Content</label>
     <?php //echo $this->Form->input('page_content',array('type'=>'textarea', 'id'=>'editor1', 'name'=>'editor1', 'rows'=>'10', 'cols'=>'80', 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,  'placeholder'=>'Enter Page Content'));?>
     </div>-->
+	
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
       <?=$this->Form->input('del_status',array('type'=>'select', 'options'=>array(0=>'Active', 1=>'Inactive'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
     </div>
+	
+	
+	
   </div><!-- /.box-body -->
   <div class="input_box">
     <?=$this->Form->button('Saved',array('id'=>'saved_btn', 'class'=>'login_button'))?>

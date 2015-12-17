@@ -10,7 +10,7 @@
           <?php					
 				if(AuthComponent::user()):
 				?>
-				<a href="<?php echo $this->webroot.'Superadmin/myaccount'; ?>">My Account</a>
+				<!--<a href="<?php //echo $this->webroot.'Superadmin/myaccount'; ?>">My Account</a>-->
 				<a href="<?php echo $this->webroot.'Superadmin/logout'; ?>">Logout</a>
 				
 				

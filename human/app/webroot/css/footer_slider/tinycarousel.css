@@ -10,7 +10,7 @@
 }
 
 #slider1 .viewport {
-    height: 350px;
+    height: 380px;
     overflow: hidden;
     position: relative;
 	width:100%;
@@ -59,10 +59,12 @@
     top: 0;
 }
 
+/* padding: 7px; */
+
 #slider1 .overview li {
     float: left;
     margin: 0 10px 0 0;
-    padding: 7px;
+    
     min-height: 300px;
     border: 1px solid #c6e6f1;
     width: 215px;
