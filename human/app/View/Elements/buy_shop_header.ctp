@@ -87,12 +87,12 @@
         </nav>
         <div class="search">
 			
-			<form method="post" action="<?php echo $this->webroot.'buyshops/search_results'; ?>">
+			<!--<form method="post" action="<?php //echo $this->webroot.'buyshops/search_results'; ?>">
 		
 			  <input type="text" name="search_text" id="textfield" placeholder="Search Here" />
 			  
 			  <input type="submit" name="button" id="button" value="Submit" class="search_icon" />
-		  </form>
+		  </form>-->
         </div>
       </div>
     </div>
