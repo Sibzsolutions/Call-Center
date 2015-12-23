@@ -39,9 +39,11 @@ html {
 			  	<div class="contact_heading"><strong>REGISTERED</strong> CUSTOMERS</div>
 				<div class="width100 text14_black" style="padding:0 0 20px 0">If you have an account with us, please log in.</div>
 				
+				<div class="error_box"><?=$this->Session->flash('auth');?></div>
 				
-				<?=$this->Session->flash('auth');?>
+				<div class="success_box"><?=$this->Session->flash();?></div>
 				<?=$this->Form->create('User');?>
+                
 				  <div>
 					<span>Username<label>*</label></span>
 					

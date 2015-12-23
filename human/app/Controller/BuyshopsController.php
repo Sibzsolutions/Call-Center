@@ -44,7 +44,7 @@ App::uses('AppController', 'Controller');
     ),'RequestHandler','Paginator', 'Session'); 
 	*/
 	
-	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master', 'Produc_color_image', 'Attribute_value', 'User_address', 'Order_master', 'Order_detail', 'Order_status', 'Payment_master', 'Shipping_master', 'Coupon_detail', 'Produc_quantity', 'Notify_prod_email');
+	public $uses = array('User', 'Site_setting', 'Category', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Cart_master', 'Slider_image', 'Contact_us', 'Home_page_box', 'Review_master', 'Wishlist_master', 'Wishlist_detail', 'Coupon_master', 'Produc_color_image', 'Attribute_value', 'User_address', 'Order_master', 'Order_detail', 'Order_status', 'Payment_master', 'Shipping_master', 'Coupon_detail', 'Produc_quantity', 'Notify_prod_email', 'Payment_master', 'Shipping_master');
 	
 	public $components = array('Auth' => array(
         'authenticate' => array(
@@ -69,7 +69,7 @@ App::uses('AppController', 'Controller');
 		 $this->Auth->loginRedirect = array('controller'=>'Buyshops','action'=>'myaccount');
 		 $this->Auth->authError = __('');
          $this->Auth->loginError = __('Invalid Username or Password entered, please try again.'); 
-		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt', 'color_change_imgs', 'att_cart', 'address', 'price_changed', 'add_new_addr', 'place_order_info', 'tell_a_friend', 'our_story', 'friendly_policies', 'legal', 'color_disclaimer', 'faq', 'privacy_policy', 'terms_and_conditions', 'about_us', 'catalog_download', 'catalog_request', 'hollowaysportswear', 'productvideos', 'instructional_videos', 'prebuilt_personalized_flyers', 'web_links', 'sizing_fit_guide', 'decoration_techniques', 'stock_decoration_library', 'uniform_decoration_guides', 'knowledge_center', 'tell_a_friends', 'disp_filter', 'category_tree_filter');  
+		 $this->Auth->allow('register','login', 'index', 'product_details', 'products', 'single', 'add_to_cart', 'checkout', 'remove_from_cart', 'sort_products', 'filter_search_type', 'contact_us', 'search_results', 'review_mgt', 'wishlist_mgt', 'add_to_cart_wishlist', 'remove_from_wishlist', 'coupon_mgt', 'color_change_imgs', 'att_cart', 'address', 'price_changed', 'add_new_addr', 'place_order_info', 'tell_a_friend', 'our_story', 'friendly_policies', 'legal', 'color_disclaimer', 'faq', 'privacy_policy', 'terms_and_conditions', 'about_us', 'catalog_download', 'catalog_request', 'hollowaysportswear', 'productvideos', 'instructional_videos', 'prebuilt_personalized_flyers', 'web_links', 'sizing_fit_guide', 'decoration_techniques', 'stock_decoration_library', 'uniform_decoration_guides', 'knowledge_center', 'tell_a_friends', 'disp_filter', 'category_tree_filter', 'place_order', 'place_order', 'quantity', 'changed_quantity');  
 		 
 		 $this->layout="buyshops_layout";   
 		 
@@ -82,6 +82,13 @@ App::uses('AppController', 'Controller');
 		 //For meta title, key and descriptions
 		 $site_setting = $this->Site_setting->find('first');
 		 $this->set('site_setting',$site_setting);
+		 
+		 $action_info = $this->request->params['action'];
+		
+		 if(($action_info !='login') && ($action_info !='register') && ($action_info !='address'))
+		 {
+			$this->Session->write('redirect_page_first', $this->referer()); 
+		 }
 		 
 		 if(isset($this->request->params['action']))
 		 {
@@ -110,7 +117,6 @@ App::uses('AppController', 'Controller');
 		 		 
 		if(isset($data_first))
 		$this->set('dynamic_menu', $data_first);		 
-		 
 		 
 		//Add to cart functionality
 		if($this->Auth->user())
@@ -224,7 +230,14 @@ App::uses('AppController', 'Controller');
 			$count_add_cart_session = count($add_cart_session_pr);
 			
 			$this->Session->write('count_add_cart_session', $count_add_cart_session);
-		}				
+		}		
+
+		
+		
+		
+
+		
+		
 	 }
 	 
 	 //Filter search result page
@@ -2041,6 +2054,14 @@ App::uses('AppController', 'Controller');
 			$i++;
 		}
 		
+		/*
+		echo "Products<pre>";
+		print_r($products);
+		echo "<pre>";
+		
+		die();
+		*/
+		
 		$this->set('products', $products);
 		
 		if($this->Auth->user())
@@ -2076,144 +2097,7 @@ App::uses('AppController', 'Controller');
 	//This is the paypal functionality
 	public function paypal_pro() 
 	{
-		$_REQUEST = $this->Session->read('place_order_data');
 		
-		$original_price = $this->Session->read('original_price');
-			//$this->Session->delete('original_price');
-		
-		$discounted_price = $this->Session->read('discounted_price');
-			//$this->Session->delete('discounted_price');
-		
-		$product_data_new = $this->Session->read('product_data_new');
-			//$this->Session->delete('product_data_new');
-		
-		/** DoDirectPayment NVP example; 
-		 *
-		 *  Process a credit card payment. 
-		*/
-		 
-		$environment = 'sandbox';	// 'sandbox' or 'beta-sandbox' or 'live'
-		 
-		$paymentType = urlencode('Sale');				// 'Authorization' or 'Sale'
-		$creditCardType = urlencode($_REQUEST['customer_credit_card_type']);
-		$creditCardNumber = urlencode($_REQUEST['customer_credit_card_number']);
-		$expDateMonth = $_REQUEST['cc_expiration_month'];
-		$padDateMonth = urlencode(str_pad($expDateMonth, 2, '0', STR_PAD_LEFT));
-		$expDateYear = urlencode($_REQUEST['cc_expiration_year']);
-		$cvv2Number = urlencode($_REQUEST['cc_cvv2_number']);
-		
-		if(empty($_REQUEST['example_payment_amuont']))
-		{
-			if(isset($original_price))
-				$_REQUEST['example_payment_amuont'] = $original_price;
-			if(isset($discounted_price))
-				$_REQUEST['example_payment_amuont'] = $discounted_price;
-		}
-			
-		$amount = urlencode($_REQUEST['example_payment_amuont']);
-		
-		$currencyID = urlencode('USD');							// or other currency ('GBP', 'EUR', 'JPY', 'CAD', 'AUD')
-		 
-		/**
-		 * Send HTTP POST Request
-		 *
-		 * @param	string	The API method name
-		 * @param	string	The POST Message fields in &name=value pair format
-		 * @return	array	Parsed HTTP Response body
-		 */
-		 
-		// Set request-specific fields.
-		
-		//$firstName = urlencode($_POST['customer_first_name']);
-		//$lastName = urlencode($_POST['customer_last_name']);
-		
-		/*
-		$paymentType = urlencode('Sale');				// 'Authorization' or 'Sale'
-		$creditCardType = urlencode($_POST['customer_credit_card_type']);
-		$creditCardNumber = urlencode($_POST['customer_credit_card_number']);
-		$expDateMonth = $_POST['cc_expiration_month'];
-		$padDateMonth = urlencode(str_pad($expDateMonth, 2, '0', STR_PAD_LEFT));
-		$expDateYear = urlencode($_POST['cc_expiration_year']);
-		$cvv2Number = urlencode($_POST['cc_cvv2_number']);
-		$amount = urlencode($_POST['example_payment_amuont']);
-		$currencyID = urlencode('USD');							// or other currency ('GBP', 'EUR', 'JPY', 'CAD', 'AUD')
-		*/
-		
-		// Month must be padded with leading zero
-		
-		//$address1 = urlencode($_POST['customer_address1']);
-		//$address2 = urlencode($_POST['customer_address2']);
-		//$city = urlencode($_POST['customer_city']);
-		//$state = urlencode($_POST['customer_state']);
-		//$zip = urlencode($_POST['customer_zip']);
-		//$country = urlencode($_POST['customer_country']);				// US or other valid country code
-		
-		// Add request-specific fields to the request string.
-		/*
-		
-		$nvpStr =	"&PAYMENTACTION=$paymentType&AMT=$amount&CREDITCARDTYPE=$creditCardType&ACCT=$creditCardNumber".
-					"&EXPDATE=$padDateMonth$expDateYear&CVV2=$cvv2Number&FIRSTNAME=$firstName&LASTNAME=$lastName".
-					"&STREET=$address1&CITY=$city&STATE=$state&ZIP=$zip&COUNTRYCODE=$country&CURRENCYCODE=$currencyID";
-		*/
-		
-		$amount = round($amount);
-		
-		$nvpStr =	"&PAYMENTACTION=$paymentType&AMT=$amount&CREDITCARDTYPE=$creditCardType&ACCT=$creditCardNumber".
-				"&EXPDATE=$padDateMonth$expDateYear&CVV2=$cvv2Number&CURRENCYCODE=$currencyID";		
-		
-		// Execute the API operation; see the PPHttpPost function above.
-		
-		$httpParsedResponseAr = $this->PPHttpPost('DoDirectPayment', $nvpStr);
-		
-		//$httpParsedResponseAr["ACK"] = "SUCCESS";
-		
-		if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
-			
-			//exit('Direct Payment Completed Successfully: '.print_r($httpParsedResponseAr, true));
-			
-			$this->redirect('success_payment');
-		} 
-		else  
-		{			
-			foreach($httpParsedResponseAr as $key=>$data)
-			{
-				if(strpos($key,'L_LONGMESSAGE') !== false) {
-					
-					$data = substr($data, 0, -1);
-					
-					$data = preg_replace("/[^ea-zA-Z]/", " ", $data).".";
-					
-					$data = str_replace(" e ","",$data);
-					
-					$data = str_replace("This   transaction   cannot   be   processed   ","",$data);
-					
-					$data = str_replace(" e ","",$data);
-					
-					$message_data[] = $data;
-
-					//$message_data[] = substr($data, 0, -1);
-				}
-			}
-			
-			$i=0;
-			foreach($message_data as $data)
-			{
-				$data = $data;
-				
-				if($i==0)
-					$data_msg = "<br>".$data;
-				else
-					$data_msg = $data_msg."<br>".$data;
-				
-				$i++;
-			}
-			
-			$this->Session->setFlash('Sorry, Payment was not occure successfully. <br>You have following problems.'. $data_msg);
-			
-			//exit('DoDirectPayment failed: ' . print_r($httpParsedResponseAr, true));
-			
-			$this->redirect('place_order/'.$original_price.'/'.$discounted_price.'/'.$_REQUEST['coupon_info']);
-		}
 	}
 	
 	//Do direct method of the paypal
@@ -2323,6 +2207,12 @@ App::uses('AppController', 'Controller');
 		{
 			$_REQUEST = $this->Session->read('place_order_data');
 			
+			/*
+			echo "Requested_data<pre>";
+			print_r($_REQUEST);
+			echo "<pre>";
+			*/
+			
 			if(!empty($_REQUEST['coupon_info']))
 			{
 				$coupon_data = $this->Coupon_master->find('first', array('conditions'=>array('Coupon_master.coupon_number'=>$_REQUEST['coupon_info'])));
@@ -2331,7 +2221,6 @@ App::uses('AppController', 'Controller');
 					$_REQUEST['coupon_info_data'] = "You get the ".$coupon_data['Coupon_master']['discount_prcnt']." % discount";
 				else
 					$_REQUEST['coupon_info_data'] = "You get the ".$coupon_data['Coupon_master']['discount_price']." off";
-				
 			}	
 			
 			$place_order_address['Place_Order'] = $_REQUEST;			
@@ -2345,9 +2234,15 @@ App::uses('AppController', 'Controller');
 			
 			//$order_data['Order_master']['orderstatus'] = $last_inserted_orderstatusid;
 			
+			/*
 			$order_data['Order_master']['paymentid'] = $place_order_address['Place_Order']['user_payment_id'];
 			
 			$order_data['Order_master']['shippingid'] = $place_order_address['Place_Order']['user_shipping_id'];
+			*/
+			
+			$order_data['Order_master']['paymentid'] = 1;
+			
+			$order_data['Order_master']['shippingid'] = 1;
 			
 			$order_data['Order_master']['usrid'] = $userdata['id'];
 			
@@ -2393,11 +2288,21 @@ App::uses('AppController', 'Controller');
 			
 			*/
 			
+			/*
+			echo "Order Data<pre>";
+			print_r($order_data);
+			echo "<pre>";
+			*/
+			
 			$this->Order_master->save($order_data);
 			
 			$last_inserted_orderid = $this->Order_master->getLastInsertId();
 			
-			$order_status['Order_status']['ordeerid'] = $last_inserted_orderid;
+			$order_status['Order_status']['orderid'] = $last_inserted_orderid;
+			
+			//$last_inserted_orderid = 478;
+			
+			//$order_status['Order_status']['orderid'] = 478;
 			
 			$order_status['Order_status']['ostatusname'] = 'pending';
 			
@@ -2406,6 +2311,12 @@ App::uses('AppController', 'Controller');
 			$order_status['Order_status']['del_status'] = 0;
 			
 			$this->Order_status->save($order_status);
+			
+			/*
+			echo "Order_status<pre>";
+			print_r($order_status);
+			echo "<pre>";
+			*/
 			
 			if($this->Session->check('product_data_final') == 1)
 			{
@@ -2457,7 +2368,85 @@ App::uses('AppController', 'Controller');
 			if(isset($product_data_final))
 			foreach($product_data_final as $data)
 			{
-				//$data['prodid'] = 19;
+				$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$data['prodid'])));
+				
+				$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
+				
+				if(!empty($offer_master_cat_data))
+				{
+					foreach($offer_master_cat_data as $lowest_price_cat)
+					{
+						$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
+					}
+					
+					if(count($low_cat)>1)
+						$max_discount_cat = max($low_cat);
+					else
+						$max_discount_cat = $low_cat[0];	
+					
+					unset($low_cat);				
+				}
+				
+				$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+				
+				if($offer_master_data !='')
+				{
+					foreach($offer_master_data as $lowest_price)
+					{
+						$low[] = $lowest_price['Offer_master']['discount'];
+					}
+					
+					if(isset($low))
+					$max_discount = max($low);
+					
+					unset($low);
+				}
+				
+				if(isset($max_discount_cat) && isset($max_discount))
+					$final_max_discount = max($max_discount_cat, $max_discount);
+				elseif(isset($max_discount_cat))
+					$final_max_discount = $max_discount_cat;
+				elseif(isset($max_discount))
+					$final_max_discount = $max_discount;
+				else
+					$final_max_discount = 0;
+				
+				unset($max_discount_cat);	 
+				unset($max_discount);
+				
+				if(isset($final_max_discount))
+				{
+					//$products[$key]['Produc_master']['discount'] = $final_max_discount; 		
+					
+					$data['Produc_master']['discount'] = $final_max_discount; 		
+					
+					$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
+					
+					$data['Produc_master']['discounted_price'] = $discounted_price; 		
+					
+					unset($final_max_discount);
+				}
+				
+				$attvid_data = explode(',', $data['attvid']);
+					
+				$one_count = 1;
+				foreach($attvid_data as $attvid)
+				{
+					$attvid_txt_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid)));
+					
+					$prod_att_data = $this->Produc_attribute->find('first', array('conditions'=>array('Produc_attribute.attvid'=>$attvid_txt_data['Attribute_value']['id'], 'Produc_attribute.prodid'=>$data['prodid'])));
+					
+					if(!empty($prod_att_data['Produc_attribute']['add_cost']))
+					{
+						$cost_change = $prod_att_data['Produc_attribute']['add_cost'];
+						$data['Produc_master']['discounted_price'] = ($data['Produc_master']['discounted_price'] + $cost_change);
+					}
+					else
+					{
+						$cost_change = $prod_att_data['Produc_attribute']['less_cost'];
+						$data['Produc_master']['discounted_price'] = ($data['Produc_master']['discounted_price'] - $cost_change);
+					}
+				}
 				
 				$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $data['prodid'] .'\',Offer_master.offerprod)')));
 				
@@ -2491,22 +2480,26 @@ App::uses('AppController', 'Controller');
 				
 				$product_details['Order_detail']['orderid'] = $last_inserted_orderid;
 				
-				if(isset($data['discounted_price']))
+				if(isset($data['Produc_master']['discounted_price']))
 					$product_details['Order_detail']['subtotal'] = $data['Produc_master']['discounted_price'];
 				else
 					$product_details['Order_detail']['subtotal'] = $data['Produc_master']['original_price'];
 				
-				if(isset($data['quantity']))
+				if(!empty($data['quantity']))
+				{
 					$product_details['Order_detail']['prodqty'] = $data['quantity'];
+					$product_details['Order_detail']['subtotal'] = ($data['quantity'] * $product_details['Order_detail']['subtotal']);
+				}					
 				else
+				{
 					$product_details['Order_detail']['prodqty'] = 1;
+					$product_details['Order_detail']['subtotal'] = $data['Produc_master']['discounted_price'];
+				}
 				
-				if(isset($data['original_price']))
+				if(isset($data['Produc_master']['original_price']))
 					$product_details['Order_detail']['prodprice'] = $data['Produc_master']['original_price'];
 				else
 					$product_details['Order_detail']['prodprice'] = 0;
-				
-				$product_details['Order_detail']['prodqty'] = 1;
 				
 				$product_details['Order_detail']['orderdate'] = date('Y-m-d H:i:s',time());
 				
@@ -2525,11 +2518,15 @@ App::uses('AppController', 'Controller');
 				
 				$data_att_vid = explode(',', $product_details['Order_detail']['attvid']);
 				
+				//echo "<br>Quantity".$data['quantity'];
+				
 				foreach($data_att_vid as $att_vid)
 				{
 					$data_first = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid'=>$data['prodid'], 'Produc_quantity.attvid'=>$att_vid)));
 					
 					//$data_first = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid'=>32, 'Produc_quantity.attvid'=>21)));
+					
+					//echo "<br>Total".$data_first['Produc_quantity']['qty'];
 					
 					if(!empty($data_first))
 					{
@@ -2541,7 +2538,7 @@ App::uses('AppController', 'Controller');
 						$this->Produc_quantity->save($data_quantity);						
 					}					
 				}
-				
+								
 				$this->Order_detail->create();
 				$this->Order_detail->save($product_details);
 				
@@ -2555,7 +2552,7 @@ App::uses('AppController', 'Controller');
 				$this->Order_status->create();
 				$this->Order_status->save($order_status);
 				*/				
-				}
+			}
 			
 			$product_data_final = $this->Session->read('product_data_final');						
 			
@@ -2637,6 +2634,7 @@ App::uses('AppController', 'Controller');
 				
 				$attvid_data = explode(',', $email_data['attvid']);
 				
+				$one_count = 1;
 				foreach($attvid_data as $attvid)
 				{
 					$attvid_txt_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid)));
@@ -2670,10 +2668,35 @@ App::uses('AppController', 'Controller');
 					
 					$att_one[$attid_data['Attribute_master']['attname']] = $attvid_txt_data['Attribute_value']['attvalue'];
 					
+					if(!empty($email_data['quantity']))
+						$att_one['Quantity'] = $email_data['quantity'];
+					else
+						$att_one['Quantity'] = 1;
+					
 					$att_final[] = $att_one;
+					
+					/*
+					if(!empty($email_data['quantity']))
+					{
+						if($one_count == 1)
+							$product_data['Produc_master']['discounted_price'] = ($product_data['Produc_master']['discounted_price'] * $email_data['quantity']);						
+					}
+					else
+					{
+						if($one_count == 1)
+							$product_data['Produc_master']['discounted_price'] = ($product_data['Produc_master']['discounted_price']);
+					}
+					*/
+					
+					$one_count++;
 					
 					unset($att_one);
 				}
+				
+				if(!empty($email_data['quantity']))
+					$product_data['Produc_master']['discounted_price'] = ($product_data['Produc_master']['discounted_price'] * $email_data['quantity']);						
+				else
+					$product_data['Produc_master']['discounted_price'] = ($product_data['Produc_master']['discounted_price']);
 				
 				$email_final['product_data'] = $product_data['Produc_master'];
 				
@@ -2751,7 +2774,13 @@ App::uses('AppController', 'Controller');
 			//$email_one['coupon_info_data'] = $_REQUEST['coupon_info_data'];
 			
 			//$email_one['final_price'] = $_REQUEST['example_payment_amuont'];
-
+			
+			/*
+			echo "Email_one<pre>";
+			print_r($email_one);
+			echo "<pre>";
+			*/
+			
 			//Send email at the time of registration
 			$Email = new CakeEmail();
 			$Email->template('Order_product');
@@ -2792,151 +2821,173 @@ App::uses('AppController', 'Controller');
 		
 		$_REQUEST = $this->Session->read('place_order_data');
 		
+		$requested_place_order = $this->Session->read('requested_place_order');
+		
+		echo "requested_place_order<pre>";
+		print_r($requested_place_order);
+		echo "<pre>";
+		
+		echo "<pre>";
+		print_r($_REQUEST);
+		echo "<pre>";
+		
 		if($this->Session->check('place_order_data') == 1)
 		{
 			$_REQUEST = $this->Session->read('place_order_data');
+		
+			echo "Requested_data<pre>";
+			print_r($_REQUEST);
+			echo "<pre>";
 			
-			$place_order_address['Place_Order'] = $_REQUEST;			
+			$original_price = $this->Session->read('original_price');
+				//$this->Session->delete('original_price');
 			
-			if($this->Session->check('product_data_final') == 1)
+			$discounted_price = $this->Session->read('discounted_price');
+				//$this->Session->delete('discounted_price');
+			
+			$product_data_new = $this->Session->read('product_data_new');
+				//$this->Session->delete('product_data_new');
+			
+			/** DoDirectPayment NVP example; 
+			 *
+			 *  Process a credit card payment. 
+			*/
+			 
+			$environment = 'sandbox';	// 'sandbox' or 'beta-sandbox' or 'live'
+			 
+			$paymentType = urlencode('Sale');				// 'Authorization' or 'Sale'
+			$creditCardType = urlencode($_REQUEST['customer_credit_card_type']);
+			
+			//$creditCardNumber = urlencode($_REQUEST['customer_credit_card_number']);
+			
+			$creditCardNumber = urlencode($_REQUEST['User_address']['customer_credit_card_number']);
+			
+			
+			$expDateMonth = $_REQUEST['cc_expiration_month'];
+			$padDateMonth = urlencode(str_pad($expDateMonth, 2, '0', STR_PAD_LEFT));
+			$expDateYear = urlencode($_REQUEST['cc_expiration_year']);
+			$cvv2Number = urlencode($_REQUEST['cc_cvv2_number']);
+			
+			if(empty($_REQUEST['example_payment_amuont']))
 			{
-				$product_data_final = $this->Session->read('product_data_final');						
+				if(isset($original_price))
+					$_REQUEST['example_payment_amuont'] = $original_price;
+				if(isset($discounted_price))
+					$_REQUEST['example_payment_amuont'] = $discounted_price;
+			}
 				
-				$this->set('product_data_final', $product_data_final);
+			$amount = urlencode($_REQUEST['example_payment_amuont']);
+			
+			$currencyID = urlencode('USD');							// or other currency ('GBP', 'EUR', 'JPY', 'CAD', 'AUD')
+			 
+			/**
+			 * Send HTTP POST Request
+			 *
+			 * @param	string	The API method name
+			 * @param	string	The POST Message fields in &name=value pair format
+			 * @return	array	Parsed HTTP Response body
+			 */
+			 
+			// Set request-specific fields.
+			
+			//$firstName = urlencode($_POST['customer_first_name']);
+			//$lastName = urlencode($_POST['customer_last_name']);
+			
+			/*
+			$paymentType = urlencode('Sale');				// 'Authorization' or 'Sale'
+			$creditCardType = urlencode($_POST['customer_credit_card_type']);
+			$creditCardNumber = urlencode($_POST['customer_credit_card_number']);
+			$expDateMonth = $_POST['cc_expiration_month'];
+			$padDateMonth = urlencode(str_pad($expDateMonth, 2, '0', STR_PAD_LEFT));
+			$expDateYear = urlencode($_POST['cc_expiration_year']);
+			$cvv2Number = urlencode($_POST['cc_cvv2_number']);
+			$amount = urlencode($_POST['example_payment_amuont']);
+			$currencyID = urlencode('USD');							// or other currency ('GBP', 'EUR', 'JPY', 'CAD', 'AUD')
+			*/
+			
+			// Month must be padded with leading zero
+			
+			//$address1 = urlencode($_POST['customer_address1']);
+			//$address2 = urlencode($_POST['customer_address2']);
+			//$city = urlencode($_POST['customer_city']);
+			//$state = urlencode($_POST['customer_state']);
+			//$zip = urlencode($_POST['customer_zip']);
+			//$country = urlencode($_POST['customer_country']);				// US or other valid country code
+			
+			// Add request-specific fields to the request string.
+			/*
+			
+			$nvpStr =	"&PAYMENTACTION=$paymentType&AMT=$amount&CREDITCARDTYPE=$creditCardType&ACCT=$creditCardNumber".
+						"&EXPDATE=$padDateMonth$expDateYear&CVV2=$cvv2Number&FIRSTNAME=$firstName&LASTNAME=$lastName".
+						"&STREET=$address1&CITY=$city&STATE=$state&ZIP=$zip&COUNTRYCODE=$country&CURRENCYCODE=$currencyID";
+			*/
+			
+			$amount = round($amount);
+			
+			$nvpStr =	"&PAYMENTACTION=$paymentType&AMT=$amount&CREDITCARDTYPE=$creditCardType&ACCT=$creditCardNumber".
+					"&EXPDATE=$padDateMonth$expDateYear&CVV2=$cvv2Number&CURRENCYCODE=$currencyID";		
+			
+			// Execute the API operation; see the PPHttpPost function above.
+			
+			echo "nvpStr<pre>";
+			print_r($nvpStr);
+			echo "<pre>";
+			
+			$httpParsedResponseAr = $this->PPHttpPost('DoDirectPayment', $nvpStr);
+				  
+			echo "httpParsedResponseAr<pre>";
+			print_r($httpParsedResponseAr);
+			echo "<pre>";
+			
+			//$httpParsedResponseAr["ACK"] = "SUCCESS";
+			
+			if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
 				
-				$prodid = key($product_data_final);
+				//exit('Direct Payment Completed Successfully: '.print_r($httpParsedResponseAr, true));
 				
-				if($this->Session->check('original_price') == 1)
+				$this->redirect('success_payment');
+			} 
+			else  
+			{			
+				foreach($httpParsedResponseAr as $key=>$data)
 				{
-					$original_price = $this->Session->read('original_price');											
-					
-					$this->set('price_data', $original_price);
-					
-					//$this->Session->delete('original_price');											
-				}			
-				if($this->Session->check('discounted_price') == 1)
-				{
-					$discounted_price = $this->Session->read('discounted_price');											
-					
-					$this->set('price_data', $discounted_price);
-					
-					//$this->Session->delete('discounted_price');											
-				}
-				
-				/*
-				if($this->Session->check('coupon_discounted_price') == 1)
-				{
-					$coupon_discounted_price = $this->Session->read('coupon_discounted_price');											
-					
-					$this->set('coupon_discounted_price', $coupon_discounted_price);
-					
-					$this->Session->delete('coupon_discounted_price');											
-				}
-				*/
-				
-				foreach($product_data_final as $key_prod=>$prod)
-				{
-					$product_data = $this->Produc_master->find('first',array('conditions'=>array('Produc_master.id'=>$key_prod)));
-					
-					$data_prod[] = $product_data['Produc_master'];					
-				}
-				
-				$products_checkout = $data_prod;	
-				
-				$i=0;				
-				if(isset($products_checkout))
-				foreach($products_checkout as $key=>$product)
-				{					
-					$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['catid'] .'\',Offer_master.offercat)')));
-					
-					if(!empty($offer_master_cat_data))
-					{
-						foreach($offer_master_cat_data as $lowest_price_cat)
-						{
-							$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
-						}
+					if(strpos($key,'L_LONGMESSAGE') !== false) {
 						
-						$max_discount_cat = max($low_cat);					
-						unset($low_cat);				
-					}
-					
-					$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product['id'] .'\',Offer_master.offerprod)')));
-					
-					if(!empty($offer_master_data))
-					{
-						foreach($offer_master_data as $lowest_price)
-						{
-							$low[] = $lowest_price['Offer_master']['discount'];
-						}
-						if(isset($low))
-						$max_discount = max($low);
+						$data = substr($data, 0, -1);
 						
-						unset($low);
+						$data = preg_replace("/[^ea-zA-Z]/", " ", $data).".";
+						
+						$data = str_replace(" e ","",$data);
+						
+						$data = str_replace("This   transaction   cannot   be   processed   ","",$data);
+						
+						$data = str_replace(" e ","",$data);
+						
+						$message_data[] = $data;
+
+						//$message_data[] = substr($data, 0, -1);
 					}
+				}
+				
+				$i=0;
+				foreach($message_data as $data)
+				{
+					$data = $data;
 					
-					if(isset($max_discount_cat) && isset($max_discount))
-						$final_max_discount = max($max_discount_cat, $max_discount);
-					elseif(isset($max_discount_cat))
-						$final_max_discount = $max_discount_cat;
-					elseif(isset($max_discount))
-						$final_max_discount = $max_discount;
+					if($i==0)
+						$data_msg = "<br>".$data;
 					else
-						$final_max_discount = 0;
+						$data_msg = $data_msg."<br>".$data;
 					
-					unset($max_discount_cat);	 
-					unset($max_discount);
-					
-					$products_checkout[$key]['discount'] = $final_max_discount; 		
-					
-					$discounted_price = ($product['prodprice']-(($final_max_discount/100)*$product['prodprice']));
-					
-					$products_checkout[$key]['discounted_price'] = $discounted_price; 		
-						
-					unset($final_max_discount);
 					$i++;
 				}
 				
-				foreach($products_checkout as $keyaa=>$prod)
-				{
-					foreach($product_data_final as $data)
-					{
-						if($data['prodid'] == $prod['id'])
-						{
-							$data_attvi = explode(',', $data['attvid']);
-						}
-					}
-					
-					$product_price = $prod['discounted_price'];
-					
-					$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $prod['id'], 'Produc_attribute.attvid' => $data_attvi)));
-					
-					unset($data_attvi);
-					
-					foreach($product_att_data as $data_patt)
-					{
-						if(!(empty($data_patt['Produc_attribute']['add_cost'])))
-						{
-							$additional_cost = $data_patt['Produc_attribute']['add_cost'];
-							
-							$product_price = $product_price + $additional_cost;
-						}
-						else
-						{
-							$less_cost = $data_patt['Produc_attribute']['less_cost'];
-							
-							$product_price = $product_price - $less_cost;
-						}
-					}
-					
-					$products_checkout[$keyaa]['discounted_price'] = $product_price;					
-				}
+				$this->Session->setFlash('Sorry, Payment was not occure successfully. <br>You have following problems.'. $data_msg);
 				
-				$this->set('product_data', $products_checkout);								
+				//exit('DoDirectPayment failed: ' . print_r($httpParsedResponseAr, true));
+				
+				$this->redirect('place_order/'.$original_price.'/'.$discounted_price.'/'.$_REQUEST['coupon_info']);
 			}
-			
-			$this->Session->write('product_data_new', $products_checkout);
-			
-			$this->redirect('paypal_pro');
 		}					
 		else
 		{
@@ -2982,8 +3033,110 @@ App::uses('AppController', 'Controller');
 	}
 	
 	//This is the place order functionality.
+	public function changed_quantity() 
+	{
+		$discounted_price = $_REQUEST['discounted_price'];
+		
+		$product_id = $_REQUEST['product_id'];
+		
+		$quantity_data = $_REQUEST['quantity_data'];
+		
+		echo $final_price = ($discounted_price * $quantity_data);
+		
+		if($this->Auth->user())
+		{
+			$userdata = $this->Auth->user();
+			
+			$cart_data = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.user_id'=>$userdata['id'], 'Cart_master.del_status'=>0, 'Cart_master.product_id'=>$product_id)));
+			
+			$cart_data_new['Cart_master']['id'] = $cart_data['Cart_master']['id'];
+			$cart_data_new['Cart_master']['quantity'] = $quantity_data;
+			
+			$this->Cart_master->save($cart_data_new);
+		}
+		
+		if($this->Session->check('cart_data'))
+		{
+			$cart_data = $this->Session->read('cart_data');
+			
+			foreach($cart_data as $key_first=>$data)
+			{
+				if($key_first == $product_id)
+				{
+					foreach($data as $key=>$data_first)
+					{
+						if(($key == "Quantity") || ($key == "quantity"))
+						{
+							$data_second['attid'] = $quantity_data;
+							$data_second['prodid'] = $data_first['prodid'];
+							$data_second['key'] = $data_first['key'];
+							
+							$cart_data[$key_first][$key] = $data_second;
+						}
+					}
+				}				
+			}
+			
+			$this->Session->write('cart_data', $cart_data);
+		}
+		
+		die();
+	}
+	
+	//This is the place order functionality.
 	public function place_order($original_price=null, $discounted_price=null, $coupon_info=null) 
-	{		
+	{
+		if ($this->request->is('post'))
+		{
+			$this->User_address->set($this->request->data);
+			if ($this->User_address->validates()) 
+			{			
+				$addr_data = $this->User_address->find('first', array('conditions'=>array('User_address.addr1'=>$this->request->data['User_address']['addr1'])));
+
+				if(!empty($addr_data))
+					$this->request->data['User_address']['id'] = $addr_data['User_address']['id'];
+				else
+				{
+					$this->request->data['User_address']['is_main'] = 0;										
+					
+					$this->User_address->save($this->request->data);
+					
+					$id = $this->User_address->getLastInsertId();
+					
+					$this->request->data['User_address']['id'] = $id;										
+				}
+				
+				$this->Session->write('place_order_data', $this->request->data);
+				
+				//$this->Session->write('place_order_data', $_REQUEST);
+				//$this->redirect('payment_page');
+				
+				$this->Session->write('requested_place_order', $this->request->data);
+				
+				$this->redirect('payment_page');
+			}
+			/*
+			else 
+			{
+				$errors = $this->User_address->validationErrors;
+				
+				echo "Errors<pre>";
+				print_r($errors);
+				echo "<pre>";
+				
+				//die();
+			}
+			*/			
+		}
+		
+		$action_info = $this->request->params['action'];
+		
+		 if(($action_info !='login') && ($action_info !='register') && ($action_info !='address'))
+			$this->Session->write('redirect_page_first', $this->referer()); 
+		
+		if(!$this->Auth->user())
+			$this->redirect('login');
+			
 		if($this->Session->check('place_order_info') == 1)
 		{
 			$req_data = $this->Session->read('place_order_info');
@@ -3005,373 +3158,179 @@ App::uses('AppController', 'Controller');
 			$place_order_address['Place_Order'] = $_REQUEST;
 			
 			$this->Session->write('place_order_data', $_REQUEST);
-				$this->redirect('payment_page');
+				//$this->redirect('payment_page');
 		}
 		
+		//For multiple product(checkout page)
+		if(!empty($coupon_info))
+			$this->set('coupon_info', $coupon_info);
 		
-		//For single product
-		if($this->Session->check('single_product') == 1)
+		$redirect_page = $this->request->params['action'];
+	
+		$this->Session->write('redirect_page', $redirect_page);
+		
+		$user_data = $this->Auth->user();
+		
+		$user_address_data = $this->User_address->find('first', array('conditions'=>array('User_address.usrid'=>$user_data['id'], 'User_address.del_status'=>0, 'User_address.ismain'=>1)));
+		
+		if(empty($user_address_data))
+			$user_address_data = $this->User_address->find('first', array('conditions'=>array('User_address.usrid'=>$user_data['id'], 'User_address.del_status'=>0)));
+		
+		if(empty($user_address_data))
+			$user_address_data = $this->User_address->find('first', array('conditions'=>array('User_address.usrid'=>$user_data['id'])));
+		
+		$user_data['Addresses'] = $user_address_data;
+		
+		$this->set('userdata', $user_data);
+		
+		if(isset($original_price))
 		{
-			echo "shashikant is in the single product function";
-			
-			$single_data = $this->Session->read('single_data');
-			
-			if(!empty($single_data['coupon_info']))
-			{
-				$this->set('coupon_info', $single_data['coupon_info']);
-			}
-			
-			if(!empty($single_data['quantity_data']))
-			{
-				$this->Session->write('quantity_data', $single_data['quantity_data']);						
-			}
-			if(!empty($single_data['original_price']))
-			{
-				$this->Session->write('original_price', $single_data['original_price']);						
-				$this->set('original_price', $single_data['original_price']);
-			}
-				
-			if(!empty($single_data['discounted_price']))
-			{
-				$this->Session->write('discounted_price', $single_data['discounted_price']);						
-				$this->set('discounted_price', $single_data['discounted_price']);
-			}
-				
-			if(!empty($single_data['coupon_discounted_price']))
-			{
-				$this->Session->write('coupon_discounted_price', $single_data['coupon_discounted_price']);						
-				$this->set('coupon_discounted_price', $single_data['coupon_discounted_price']);
-			}
-				
-			if(isset($single_data['prodid']))
-				$this->Session->write('single_prodid', $single_data['prodid']);						
-			
-			$single_product_data = $this->Session->read('single_product');
-			
-			$redirect_page = $this->request->params['action'];
-		
-			$this->Session->write('redirect_page', $redirect_page);
-			
-			$user_data = $this->Auth->user();
-			
-			$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'], 'User_address.del_status'=>0)));
-			
-			$user_data['Addresses'] = $user_address_data;
-			
-			$this->set('userdata', $user_data);
-			
-			if($this->Auth->user())
-			{
-				$product = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.product_id'=>$single_product_data['Produc_master']['id'], 'Cart_master.del_status'=>0)));
-				
-				if(!empty($product))
-				{
-					if(isset($product['Cart_master']['quantity']))
-						$data['quantity'] = $product['Cart_master']['quantity'];	
-					else
-						$data['quantity'] = 1;
-						
-					$product = $product['Cart_master'];
-					
-					$data['prodid'] = $product['product_id'];
-					
-					$data['attvid'] = $product['attvid'];
-					
-					$product_data[$product['product_id']] = $data;
-				}
-				
-				/*
-				if(isset($all_products))
-				foreach($all_products as $product)
-				{
-					echo "product<pre>";
-					print_r($product);
-					echo "<pre>";
-					
-					die();
-					
-					if(isset($product['Cart_master']['quantity']))
-						$data['quantity'] = $product['Cart_master']['quantity'];	
-					else
-						$data['quantity'] = 1;
-					
-					$product = $product['Cart_master'];
-					
-					$data['prodid'] = $product['product_id'];
-					
-					$data['attvid'] = $product['attvid'];
-					
-					$product_data[] = $data;
-				}
-				
-				if($this->Session->check('add_cart_session') == 1)
-				{
-					$add_cart_session = $this->Session->read('add_cart_session');						
-					
-					$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.product_id'=>$single_product_data['Produc_master']['id'],'Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
-			
-					foreach($all_products as $product)
-					{
-						$product = $product['Cart_master'];
-						
-						$data['prodid'] = $product['product_id'];
-						
-						$data['attvid'] = $product['attvid'];
-						
-						$product_dataa[$product['product_id']] = $data;
-					}
-				}
-				*/
-			}
-			
-			//$this->Session->delete('cart_data');
-
-			if($this->Session->check('cart_data') == 1)
-				$att_add_cart_session = $this->Session->read('cart_data');						
-			
-			$si=0;
-			foreach($att_add_cart_session as $data_ses)
-			{
-				$i=1;
-				$data_count_ses = count($data_ses)-1;
-				foreach($data_ses as $key_ses=>$ses)
-				{
-					if($ses['prodid'] == $single_product_data['Produc_master']['id'])
-					{
-						if($key_ses == 'Quantity')
-						{
-							$data_second[$ses['prodid']]['quantity'] = $ses['attvid'];									
-							//$data_one = $ses['attvid'];
-						}							
-						else
-						{						
-							if($i==1)
-							{
-								if($i == $data_count_ses)
-									$data_one = $ses['attvid'];
-								else
-									$data_one = $ses['attvid'].',';						
-							}					
-							else
-							{
-								if($i == $data_count_ses)
-									$data_one = $data_one.$ses['attvid'];
-								else
-									$data_one = $data_one.$ses['attvid'].',';
-							}					
-						$i++;
-						}						
-					}
-				}
-				
-				if(isset($data_one) || isset($data_second))
-				{
-					if(isset($ses['prodid']))
-					$data_second[$ses['prodid']]['prodid'] = $ses['prodid'];
-					
-					if(isset($data_one))
-					$data_second[$ses['prodid']]['attvid'] = $data_one;
-					
-					if($si==0)
-						$data_third = $data_second;
-					else
-						$data_third = ($data_third+$data_second);
-					
-					$si++;
-				}			
-
-				unset($data_second);
-				unset($data_one);
-			}
-			
-			if(isset($product_data) && isset($data_third))
-				$data_final = $product_data + $data_third;
-			elseif((isset($product_data)) && (!isset($data_third)))
-				$data_final = $product_data;
-			elseif((!isset($product_data)) && (isset($data_third)))
-				$data_final = $data_third;
-			
-			if(isset($data_final))
-				$this->Session->write('product_data_final', $data_final);
-			
-			$product_data_final = $this->Session->read('product_data_final');
-			
-			if(isset($data_final))
-				$this->set('data_final', $data_final);
-			
-			if($this->Session->check('single_product') == 1)
-				$this->Session->delete('single_product');			
-			
-			if($this->Session->check('single_data') == 1)
-				$this->Session->delete('single_data');			
+			$this->Session->write('original_price', $original_price);						
+			$this->set('original_price', $original_price);
 		}
-		else
+						
+		if(isset($discounted_price))
 		{
-			//For multiple product(checkout page)
-			if(!empty($coupon_info))
-				$this->set('coupon_info', $coupon_info);
-			
-			$redirect_page = $this->request->params['action'];
+			$this->Session->write('discounted_price', $discounted_price);						
+			$this->set('discounted_price', $discounted_price);
+		}				
 		
-			$this->Session->write('redirect_page', $redirect_page);
+		if($this->Session->check('add_cart_session') == 1)
+		{
+			$add_cart_session = $this->Session->read('add_cart_session');						
+			$this->set('add_cart_session', $add_cart_session);
+		}				
+		
+		if($this->Auth->user())
+		{
+			$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
 			
-			$user_data = $this->Auth->user();
-			
-			$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$user_data['id'], 'User_address.del_status'=>0)));
-			
-			$user_data['Addresses'] = $user_address_data;
-			
-			$this->set('userdata', $user_data);
-			
-			if(isset($original_price))
+			foreach($all_products as $product)
 			{
-				$this->Session->write('original_price', $original_price);						
-				$this->set('original_price', $original_price);
-			}
-							
-			if(isset($discounted_price))
-			{
-				$this->Session->write('discounted_price', $discounted_price);						
-				$this->set('discounted_price', $discounted_price);
-			}				
-			
-			if($this->Session->check('add_cart_session') == 1)
-			{
-				$add_cart_session = $this->Session->read('add_cart_session');						
-				$this->set('add_cart_session', $add_cart_session);
-			}				
-			
-			if($this->Auth->user())
-			{
-				$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+				if(isset($product['Cart_master']['quantity']))
+					$data['quantity'] = $product['Cart_master']['quantity'];	
+				else
+					$data['quantity'] = 1;
 				
-				foreach($all_products as $product)
-				{
-					if(isset($product['Cart_master']['quantity']))
-						$data['quantity'] = $product['Cart_master']['quantity'];	
-					else
-						$data['quantity'] = 1;
-					
-					$product = $product['Cart_master'];
-					
-					$data['prodid'] = $product['product_id'];
-					
-					if(isset($product['attvid']))
-					$data['attvid'] = $product['attvid'];
-					
-					$product_data[$product['product_id']] = $data;
-				}
+				$product = $product['Cart_master'];
 				
-				/*
-				if($this->Session->check('add_cart_session') == 1)
-				{
-					$add_cart_session = $this->Session->read('add_cart_session');						
-					
-					$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
-			
-					foreach($all_products as $product)
-					{
-						$product = $product['Cart_master'];
-						
-						$data['prodid'] = $product['product_id'];
-						
-						$data['attvid'] = $product['attvid'];
-						
-						$product_dataa[$product['product_id']] = $data;
-					}
-				}
-				*/
+				$data['prodid'] = $product['product_id'];
+				
+				if(isset($product['attvid']))
+				$data['attvid'] = $product['attvid'];
+				
+				$product_data[$product['product_id']] = $data;
 			}
-
-			//$product_data_new = $product_dataa + $product_data;
-			
-			if($this->Session->check('cart_data') == 1)
-				$att_add_cart_session = $this->Session->read('cart_data');						
-			
-			if($this->Session->check('add_cart_session') == 1)
-				$add_cart_session = $this->Session->read('add_cart_session');						
 			
 			/*
 			if($this->Session->check('add_cart_session') == 1)
+			{
 				$add_cart_session = $this->Session->read('add_cart_session');						
-			*/
-			
-			if($this->Session->check('products_check') == 1)
-				$products_check = $this->Session->read('products_check');						
-			
-			if(isset($products_check))
-			foreach($att_add_cart_session as $data_ses)
-			{
-				$i=1;
-				$data_count_ses = count($data_ses)-1;
-				foreach($data_ses as $key_ses=>$ses)
+				
+				$all_products = $this->Cart_master->find('all', array('conditions'=>array('Cart_master.user_id'=>$user_data['id'], 'Cart_master.del_status'=>0)));
+		
+				foreach($all_products as $product)
 				{
-					if(in_array($ses['prodid'], $products_check))
-						$shashi[$ses['prodid']] = $data_ses;																	
+					$product = $product['Cart_master'];
+					
+					$data['prodid'] = $product['product_id'];
+					
+					$data['attvid'] = $product['attvid'];
+					
+					$product_dataa[$product['product_id']] = $data;
 				}
 			}
-			
-			$si=0;			
-			if(isset($add_cart_session))
-			foreach($shashi as $data_ses)
+			*/
+		}
+
+		//$product_data_new = $product_dataa + $product_data;
+		
+		if($this->Session->check('cart_data') == 1)
+			$att_add_cart_session = $this->Session->read('cart_data');						
+		
+		if($this->Session->check('add_cart_session') == 1)
+			$add_cart_session = $this->Session->read('add_cart_session');						
+		
+		/*
+		if($this->Session->check('add_cart_session') == 1)
+			$add_cart_session = $this->Session->read('add_cart_session');						
+		*/
+		
+		if($this->Session->check('products_check') == 1)
+			$products_check = $this->Session->read('products_check');						
+		
+		if(isset($att_add_cart_session))
+		foreach($att_add_cart_session as $data_ses)
+		{
+			$i=1;
+			$data_count_ses = count($data_ses)-1;
+			foreach($data_ses as $key_ses=>$ses)
 			{
-				$i=1;
-				$data_count_ses = count($data_ses)-1;
-				foreach($data_ses as $key_ses=>$ses)
-				{					
-					if($key_ses== 'Quantity')
-					{
-						$data_second[$ses['prodid']]['quantity'] = $ses['attvid'];									
-					}
-					else
-					{
-						if($i==1)
-						{
-							if($i == $data_count_ses)
-								$data_one = $ses['attvid'];
-							else
-								$data_one = $ses['attvid'].',';						
-							$i++;					
-						}					
-						else
-						{
-							if($i == $data_count_ses)
-								$data_one = $data_one.$ses['attvid'];								
-							else
-								$data_one = $data_one.$ses['attvid'].',';								
-							
-							$i++;																
-						}						
-					}						
-				}
-				
-				$data_second[$ses['prodid']]['prodid'] = $ses['prodid'];
-				$data_second[$ses['prodid']]['attvid'] = $data_one;
-				
-				unset($data_one);				
-				
-				if($si==0)
-					$data_third = $data_second;
-				else
-					$data_third = $data_third + $data_second;
-				
-				$si++;				
+				if(in_array($ses['prodid'], $products_check))
+					$shashi[$ses['prodid']] = $data_ses;																	
 			}
-			
-			if(isset($product_data) && isset($data_third)) //$data_final = $product_data + $data_third;
-				$data_final = ($product_data + $data_third); //array_merge($product_data, $data_third);
-			elseif((isset($product_data)) && (!isset($data_third)))
-				$data_final = $product_data;
-			elseif((!isset($product_data)) && (isset($data_third)))
-				$data_final = $data_third;
-			
-			if(isset($data_final))
-				$this->Session->write('product_data_final', $data_final);
-			
-			if(isset($data_final))
-			$this->set('data_final', $data_final);
 		}
 		
+		$si=0;			
+		if(isset($add_cart_session))
+		foreach($shashi as $data_ses)
+		{
+			$i=1;
+			$data_count_ses = count($data_ses)-1;
+			foreach($data_ses as $key_ses=>$ses)
+			{					
+				if($key_ses== 'Quantity')
+				{
+					$data_second[$ses['prodid']]['quantity'] = $ses['attid'];									
+				}
+				else
+				{
+					if($i==1)
+					{
+						if($i == $data_count_ses)
+							$data_one = $ses['attvid'];
+						else
+							$data_one = $ses['attvid'].',';						
+						$i++;					
+					}					
+					else
+					{
+						if($i == $data_count_ses)
+							$data_one = $data_one.$ses['attvid'];								
+						else
+							$data_one = $data_one.$ses['attvid'].',';								
+						
+						$i++;																
+					}						
+				}						
+			}
+			
+			$data_second[$ses['prodid']]['prodid'] = $ses['prodid'];
+			$data_second[$ses['prodid']]['attvid'] = $data_one;
+			
+			unset($data_one);				
+			
+			if($si==0)
+				$data_third = $data_second;
+			else
+				$data_third = $data_third + $data_second;
+			
+			$si++;				
+		}
+		
+		if(isset($product_data) && isset($data_third)) //$data_final = $product_data + $data_third;
+			$data_final = ($product_data + $data_third); //array_merge($product_data, $data_third);
+		elseif((isset($product_data)) && (!isset($data_third)))
+			$data_final = $product_data;
+		elseif((!isset($product_data)) && (isset($data_third)))
+			$data_final = $data_third;
+		
+		if(isset($data_final))
+			$this->Session->write('product_data_final', $data_final);
+		
+		if(isset($data_final))
+		$this->set('data_final', $data_final);
+	
 		$payment_data = $this->Payment_master->find('first');
 		
 		$this->set('payment_master', $payment_data);
@@ -3379,6 +3338,7 @@ App::uses('AppController', 'Controller');
 		$shipping_data = $this->Shipping_master->find('first');
 		
 		$this->set('shipping_master', $shipping_data);
+	
 	}
 	
 	//This is the functionality after the paypal payment is not successed.
@@ -3739,6 +3699,11 @@ App::uses('AppController', 'Controller');
 			unset($final_max_discount);
 		}
 		
+		if($this->Auth->user())
+		{
+			$user_data = $this->Auth->user();
+			$product['Produc_master']['user_data'] = $user_data;
+		}
 		
 		if(isset($product['Produc_master']))		
 		$this->set('product', $product['Produc_master']);					
@@ -3747,11 +3712,13 @@ App::uses('AppController', 'Controller');
 	//This is the price change functionality call from the product details page(attributes).
 	public function price_changed() 
 	{
+		/*
 		if(!$this->Auth->user())
 		{
 			echo "not_logged";
 			die();
 		}
+		*/
 		
 		if(isset($_REQUEST['checkid']))
 			$_REQUEST['checked'] = $_REQUEST['checkid'];			
@@ -3801,170 +3768,85 @@ App::uses('AppController', 'Controller');
 		
 			$data = $_REQUEST;
 			
-			$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => $_REQUEST['prodid'], 'Produc_quantity.attvid' => $attvid_arr)));
+			$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id' => $_REQUEST['prodid'])));
+	
+			$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
 			
-			//$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => $_REQUEST['prodid'], 'Produc_quantity.attvid' => $_REQUEST['attvid'])));
-			
-			//$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => 33, 'Produc_quantity.attvid' => 21)));
-			
-			//$product_qty_data['Produc_quantity']['qty'] = 0;
-			
-			$product_qty_data['Produc_quantity']['qty'] = 100;
-			
-			if((isset($product_qty_data['Produc_quantity']['qty'])) || ($product_qty_data['Produc_quantity']['qty'] == 0))
-			{				
-				if(!isset($product_qty_data['Produc_quantity']['qty']))
-					$product_qty_data['Produc_quantity']['qty'] = 0;
-				
-				$product_qty_data['Produc_quantity']['qty'] = 100;
-				
-				if($product_qty_data['Produc_quantity']['qty'] == 0)
+			if(!empty($offer_master_cat_data))
+			{
+				foreach($offer_master_cat_data as $lowest_price_cat)
 				{
-					if($this->Auth->user())
-					{
-						$user_data = $this->Auth->user();
-						
-						$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$data['prodid'])));
-						
-						$data['userdata'] = $user_data;
-						
-						$data['product'] = $product_data;
-						
-						$att_vdata = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data['attvid'])));
-						
-						$att_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$att_vdata['Attribute_value']['attid'])));
-						
-						$data['product'] = $product_data['Produc_master'];
-						
-						$data['attribute_value'] = $att_vdata['Attribute_value'];
-						
-						$data['attribute_master'] = $att_data['Attribute_master'];
-						
-						$site_setting_data = $this->Site_setting->find('first');
-						
-						$notify_prod_email['Notify_prod_email']['attid'] = $data['attribute_master']['id'];
-						
-						$notify_prod_email['Notify_prod_email']['attvid'] = $data['attribute_value']['id'];
-						
-						$notify_prod_email['Notify_prod_email']['prodid'] = $data['product']['id'];
-						
-						$notify_prod_email['Notify_prod_email']['usrid'] = $user_data['id'];
-						
-						$user_data['email'] = "shashikant.chobhe@sibzsolutions.com";
-						
-						if($this->Notify_prod_email->save($notify_prod_email))
-						{
-							//Send email at the time of registration
-							$Email = new CakeEmail();
-							$Email->template('Order_product_unavailable');
-							$Email->emailFormat('html');
-							$Email->to($user_data['email']);
-							$Email->from($site_setting_data['Site_setting']['orderemail']);
-							$Email->viewVars(array('email_unavailable_product' => $data));
-							$Email->subject('Order Unavailable');
-							$Email->send();		
-							
-							echo "N/A";
-							die();
-							
-						}
-						else
-						{
-							echo "N/A";
-							die();						
-						}						
-					}
-					else
-					{
-						echo "Please Logged in First";
-						die();
-					}					
+					$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
 				}
+				
+				if(count($low_cat)>1)
+				$max_discount_cat = max($low_cat);
 				else
-				{
-					$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id' => $_REQUEST['prodid'])));
-			
-					$offer_master_cat_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['catid'] .'\',Offer_master.offercat)')));
-					
-					if(!empty($offer_master_cat_data))
-					{
-						foreach($offer_master_cat_data as $lowest_price_cat)
-						{
-							$low_cat[] = $lowest_price_cat['Offer_master']['discount'];
-						}
-						
-						if(count($low_cat)>1)
-						$max_discount_cat = max($low_cat);
-						else
-						$max_discount_cat = $low_cat[0];	
-						unset($low_cat);				
-					}
-					
-					$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
-					
-					if($offer_master_data !='')
-					{
-						foreach($offer_master_data as $lowest_price)
-						{
-							$low[] = $lowest_price['Offer_master']['discount'];
-						}
-						
-						if(isset($low))
-						$max_discount = max($low);
-						
-						unset($low);
-					}
-					
-					if(isset($max_discount_cat) && isset($max_discount))
-						$final_max_discount = max($max_discount_cat, $max_discount);
-					elseif(isset($max_discount_cat))
-						$final_max_discount = $max_discount_cat;
-					elseif(isset($max_discount))
-						$final_max_discount = $max_discount;
-					else
-						$final_max_discount = 0;
-					
-					unset($max_discount_cat);	 
-					unset($max_discount);
-					
-					if(isset($final_max_discount))
-					{
-						$product_data['Produc_master']['discount'] = $final_max_discount; 		
-					
-						$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
-						
-						$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
-						
-						unset($final_max_discount);
-					}
-					
-					$product_price = $product_data['Produc_master']['discounted_price'];
-					
-					if(!empty($attvid_arr))
-					{
-						$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $_REQUEST['prodid'], 'Produc_attribute.attvid' => $attvid_arr)));
-						
-						foreach($product_att_data as $data_patt)
-						{
-							if(!(empty($data_patt['Produc_attribute']['add_cost'])))
-							{
-								$additional_cost = $data_patt['Produc_attribute']['add_cost'];
-								
-								$product_price = $product_price + $additional_cost;
-							}
-							else
-							{
-								$less_cost = $data_patt['Produc_attribute']['less_cost'];
-								
-								$product_price = $product_price - $less_cost;
-							}
-						}
-					}					
-					echo $product_price;				
-				}				
+				$max_discount_cat = $low_cat[0];	
+				unset($low_cat);				
 			}
+			
+			$offer_master_data = $this->Offer_master->find('all', array('conditions'=>array('FIND_IN_SET(\''. $product_data['Produc_master']['id'] .'\',Offer_master.offerprod)')));
+			
+			if($offer_master_data !='')
+			{
+				foreach($offer_master_data as $lowest_price)
+				{
+					$low[] = $lowest_price['Offer_master']['discount'];
+				}
+				
+				if(isset($low))
+				$max_discount = max($low);
+				
+				unset($low);
+			}
+			
+			if(isset($max_discount_cat) && isset($max_discount))
+				$final_max_discount = max($max_discount_cat, $max_discount);
+			elseif(isset($max_discount_cat))
+				$final_max_discount = $max_discount_cat;
+			elseif(isset($max_discount))
+				$final_max_discount = $max_discount;
 			else
-				echo "N/A";
+				$final_max_discount = 0;
+			
+			unset($max_discount_cat);	 
+			unset($max_discount);
+			
+			if(isset($final_max_discount))
+			{
+				$product_data['Produc_master']['discount'] = $final_max_discount; 		
+			
+				$discounted_price = ($product_data['Produc_master']['prodprice']-(($final_max_discount/100)*$product_data['Produc_master']['prodprice']));
+				
+				$product_data['Produc_master']['discounted_price'] = $discounted_price; 		
+				
+				unset($final_max_discount);
+			}
+			
+			$product_price = $product_data['Produc_master']['discounted_price'];
+			
+			if(!empty($attvid_arr))
+			{
+				$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $_REQUEST['prodid'], 'Produc_attribute.attvid' => $attvid_arr)));
+				
+				foreach($product_att_data as $data_patt)
+				{
+					if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+					{
+						$additional_cost = $data_patt['Produc_attribute']['add_cost'];
+						
+						$product_price = $product_price + $additional_cost;
+					}
+					else
+					{
+						$less_cost = $data_patt['Produc_attribute']['less_cost'];
+						
+						$product_price = $product_price - $less_cost;
+					}
+				}
+			}					
+			echo $product_price;				
 		}		
 		else
 			echo "no_data";
@@ -4176,7 +4058,8 @@ App::uses('AppController', 'Controller');
 					}					
 				}
 				
-				$shashi_cart = $mayur_cart;
+				if(isset($mayur_cart))
+					$shashi_cart = $mayur_cart;
 				
 				if(isset($shashi_cart))
 				$cart_data[$key_cart_first]['attvid_set'] = $shashi_cart;
@@ -4184,6 +4067,40 @@ App::uses('AppController', 'Controller');
 				unset($shashi_cart);
 			}		
 		}
+		
+		foreach($cart_data as $key=>$data_car)
+		{			
+			if($key == $_REQUEST['product_id'])
+			{				
+				foreach($data_car as $key_car=>$one_cart)
+				{
+					if(($key_car == 'color') || ($key_car == 'Color'))
+					{
+						$prod_qty = $one_cart['attvid'];
+					}
+				}
+			}
+		}
+		
+		if(isset($prod_qty))
+		{
+			$this->Session->write('notify_email_prod', $prod_qty);
+			$qty = $prod_qty;
+			
+			$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => $_REQUEST['product_id'], 'Produc_quantity.attvid' => $qty)));
+		}
+		
+		
+		
+		//$data_qty_prod = explode(',', $prod_qty['attvid_set']);
+		
+		if(count($product_qty_data)<=0)
+		{
+			echo "N/A";
+			die();
+		}
+		
+		//$product_qty_data = $this->Produc_quantity->find('first', array('conditions'=>array('Produc_quantity.prodid' => $_REQUEST['prodid'], 'Produc_quantity.attvid' => $attvid_arr)));
 		
 		$product_checkout[$product_data['product_id']] = $product_data['product_id'];
 		
@@ -4251,6 +4168,7 @@ App::uses('AppController', 'Controller');
 			
 			$add_to_cart['Cart_master']['quantity'] = $quantity;
 			
+			$add_to_cart['Cart_master']['del_status'] = 0;
 			
 			$this->Cart_master->save($add_to_cart);		
 			
@@ -4284,6 +4202,124 @@ App::uses('AppController', 'Controller');
 		die();
 	}
 	
+	public function quantity() 
+	{
+		//echo "shashikant is in the quantity function";
+		//die();
+		
+		$notify_email_prod_details = $this->Session->read('notify_email_prod');		
+		
+		$notify_email_prod[] = $notify_email_prod_details;
+		
+		foreach($notify_email_prod as $key=>$dataa)
+		{
+			/*
+			if($key =='Quantity')
+			{
+				$info_prod[$key] = $dataa;
+			}
+			*/
+			
+			if(($key == "Color") || (($key == "color")))
+			{
+				$info_color_attvid = $dataa;
+				
+				$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$dataa)));
+				
+				$att_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$attvid_data['Attribute_value']['attid'])));
+				
+				$info_color_attid = $att_data['Attribute_master']['id'];				
+				
+				$info_prod['Color'] = $attvid_data['Attribute_value']['attvalue'];
+				$info_product = $info_prod;
+			}
+			
+			/*
+			if(($key !='Quantity') && ($key !='attvid_set'))
+			{
+				$attvid_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$dataa)));
+				
+				//$att_data = $this->Attribute_master->find('first', array('conditions'=>array('Attribute_master.id'=>$attvi_data['Attribute_value']['attid'])))
+				
+				$info_prod[$key] = $attvid_data['Attribute_value']['attvalue'];
+				$info_product = $info_prod;
+			}
+			*/
+		}
+		
+		$product_data = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$_REQUEST['prod_id'])));
+							
+		$notify_prod_email['Notify_prod_email']['prodid'] = $product_data['Produc_master']['id'];
+		
+		$user_data['email'] = $_REQUEST['email_addr'];
+		
+		$user_data['email'] = "shashikant.chobhe@sibzsolutions.com";
+		
+		$notify_prod_email['Notify_prod_email']['usremail'] = $_REQUEST['email_addr'];
+		
+		$data['product'] = $product_data['Produc_master'];
+		
+		$data['usrdata'] = $_REQUEST['email_addr'];
+		
+		if(!empty($info_product))
+			$data['info'] = $info_product;
+				
+		$site_setting_data = $this->Site_setting->find('first');
+		
+		//$notify_prod_email['Notify_prod_email']['attvid'] = $notify_email_prod['attvid_set'];
+		$notify_prod_email['Notify_prod_email']['attvid'] = $info_color_attvid;
+		
+		$notify_prod_email['Notify_prod_email']['attid'] = $info_color_attid;
+		
+		if($this->Auth->user())
+		{
+			$userdata = $this->Auth->user();
+			
+			//, 'Notify_prod_email.attid'=>$notify_prod_email['Notify_prod_email']['attid'],
+			
+			$notify_prod_email_data = $this->Notify_prod_email->find('first', array('conditions'=>array('Notify_prod_email.prodid'=>$notify_prod_email['Notify_prod_email']['prodid'], 'Notify_prod_email.attvid'=>$notify_prod_email['Notify_prod_email']['attvid'], 'Notify_prod_email.usrid'=>$userdata['email']), 'order' => array(
+                'id' => 'DESC'
+				)));
+			
+			if(isset($notify_prod_email_data['Notify_prod_email']['id']))			
+				$id = $notify_prod_email_data['Notify_prod_email']['id'];	
+		}
+		else
+		{
+			$userdata['email'] = $_REQUEST['email_addr'];
+			
+			//, 'Notify_prod_email.attid'=>$notify_prod_email['Notify_prod_email']['attid'],
+			
+			$notify_prod_email_data = $this->Notify_prod_email->find('first', array('conditions'=>array('Notify_prod_email.prodid'=>$notify_prod_email['Notify_prod_email']['prodid'], 'Notify_prod_email.attvid'=>$notify_prod_email['Notify_prod_email']['attvid'], 'Notify_prod_email.usremail'=>$userdata['email']), 'order' => array(
+                'id' => 'DESC'
+				)));
+			
+			if(isset($notify_prod_email_data['Notify_prod_email']['id']))
+				$id = $notify_prod_email_data['Notify_prod_email']['id'];
+		}
+		
+		if(!empty($id))
+			$notify_prod_email['Notify_prod_email']['id'] = $id;
+				
+		if($this->Notify_prod_email->save($notify_prod_email))
+		{
+			//Send email at the time of registration
+			$Email = new CakeEmail();
+			$Email->template('Order_product_unavailable');
+			$Email->emailFormat('html');
+			$Email->to($user_data['email']);
+			$Email->from($site_setting_data['Site_setting']['orderemail']);
+			$Email->viewVars(array('email_unavailable_product' => $data));
+			$Email->subject('Order Unavailable');
+			$Email->send();		
+			
+			echo "yes";
+			die();
+		}
+			echo "no";
+			die();
+	}
+		
 	//This is the registration process
 	public function register() 
 	{
@@ -4296,6 +4332,22 @@ App::uses('AppController', 'Controller');
 			
 			$this->request->data['User']['last_login']=date('Y-m-d H:i:s',time());
 			
+			
+			$this->User->set($this->request->data);
+			if ($this->User->validates()) {
+				
+				$this->Session->write('usrdata_register', $this->request->data);
+				
+				//$usrid = $this->User->getLastInsertId();
+				
+				//$this->Session->write('usrid', $usrid);
+			
+				$this->redirect('address');
+				
+				//$this->User->save();
+			} 
+			
+			/*
 			if($this->User->save($this->request->data))
 			{
 				$usrid = $this->User->getLastInsertId();
@@ -4304,57 +4356,105 @@ App::uses('AppController', 'Controller');
 			
 				$this->redirect('address');
 			}
+			*/
+			
 		}
 	}
+	
+	//This is the address functionality(My account page)
+	public function add_address() {	
+	
+		if($this->request->is('post'))
+		{			
+			$this->User_address->set($this->request->data);
+			if ($this->User_address->validates()) 
+			{
+				$userdata = $this->Auth->user();
+						
+				$this->request->data['User_address']['usrid'] = $userdata['id'];
+				
+				$this->User_address->save($this->request->data);
+				
+				$this->Session->setFlash('Thanx.. You Successfully added the address');
+				
+				$this->redirect('myaccount');
+			}
+		}	
+	}
+	
 	
 	//This is the address functionality(My account page)
 	public function address() {	
 		
 		if($this->request->is('post'))
 		{
-			if($this->Session->check('usrid') == 1)
+			
+			$this->User_address->set($this->request->data);
+			if ($this->User_address->validates()) 
 			{
-				$usrid = $this->Session->read('usrid');
-				
-				$this->Session->delete('usrid');
-				
-				$usrdata['id'] = $usrid;
-				$usrdata['del_staus'] = 0;
-				
-				$this->request->data['User_address']['usrid'] = $usrid;
-				
-				if($this->User_address->save($this->request->data))
+				if($this->Session->check('usrdata_register') == 1)
 				{
+					$usrdata_register = $this->Session->read('usrdata_register');
+					
+					$this->User->save($usrdata_register);
+				
+					$usrid = $this->User->getLastInsertId();
+					
+					//$this->Session->delete('usrdata_register');
+					
 					$usrdata['id'] = $usrid;
 					$usrdata['del_staus'] = 0;
 					
-					$this->User->save($usrdata);
+					$this->request->data['User_address']['usrid'] = $usrid;
 					
-					$this->Session->setFlash('Thanx.. You Successfully completed the registration process');
-					$this->redirect('login');
+					if($this->User_address->save($this->request->data))
+					{
+						$usrdata['id'] = $usrid;
+						$usrdata['del_staus'] = 0;
+						
+						$this->Session->setFlash('Thanx.. You Successfully completed the registration process');						
+						
+						$this->Session->delete('usrdata_register');
+						
+						$this->redirect('login');						
+					}
+					else
+					{
+						$user['User']['id'] = $usrid;
+						
+						$this->User->delete($user['User']['id']);
+						
+						$this->Session->setFlash('Sorry registration is not completed.. Something went wrong');
+						$this->redirect('register');					
+					}
+					
+					$this->Session->delete('usrdata_register');
+					
+					
 				}
 				else
 				{
-					$user['User']['id'] = $usrid;
+					$userdata = $this->Auth->user();
+						
+					$this->request->data['User_address']['usrid'] = $userdata['id'];
 					
-					$this->User->delete($user['User']['id']);
-					
-					$this->Session->setFlash('Sorry registration is not completed.. Something went wrong');
-					$this->redirect('register');					
+					if($this->User_address->save($this->request->data))
+					{
+						$this->Session->setFlash('Thanx.. You Successfully added the address');
+						$this->redirect('myaccount');
+					}
 				}
 			}
 			else
 			{
-				$userdata = $this->Auth->user();
-					
-				$this->request->data['User_address']['usrid'] = $userdata['id'];
+				$errors = $this->User_address->validationErrors;
 				
-				if($this->User_address->save($this->request->data))
-				{
-					$this->Session->setFlash('Thanx.. You Successfully completed the registration process');
-					$this->redirect('myaccount');
-				}
-			}
+				echo "errors<pre>";
+				print_r($errors);
+				echo "<pre>";
+				
+				die();
+			}			
 		}		
 	}
 	
@@ -4374,19 +4474,19 @@ App::uses('AppController', 'Controller');
 			 }
 			 else
 			 {
-				 /*
-				 if($this->Session->check('redirect_page')==1)
+				 //$this->redirect($this->referer());
+				 
+				 if($this->Session->check('redirect_page_first')==1)
 				 {
-					$redirect_page = $this->Session->read('redirect_page');
+					echo $redirect_page = $this->Session->read('redirect_page_first');
 					
-					$this->Session->delete('redirect_page');
+					
+					//$this->Session->delete('redirect_page_first');
 					
 					$this->redirect($redirect_page);			  
 				 }
-				 else
-				 */
-				 
-				 $this->redirect('myaccount');			  
+				 else				 
+					$this->redirect('myaccount');			  
 			 }			 
 		}
 	}
@@ -4451,9 +4551,8 @@ App::uses('AppController', 'Controller');
 					$products_checkout[$key]['images']['all'] = $image;				
 				}
 			}
-
-			$i=1;
 			
+			$i=1;			
 			if(isset($products_checkout))
 			foreach($products_checkout as $key=>$product)
 			{
@@ -4522,12 +4621,13 @@ App::uses('AppController', 'Controller');
 			foreach($att_add_cart_session as $key_prod=>$session_cart_att)
 			{
 				if($key_prod == $products['id'])
-				{
+				{					
 					foreach($session_cart_att as $key_att=>$session_one)
 					{
 						if($key_att == 'Quantity')
 						{
-							$products_checkout[$key]['att'][$key_att] = $session_one['attvid'];
+							if(isset($session_one['attid']))
+								$products_checkout[$key]['att'][$key_att] = $session_one['attid'];
 						}
 						else
 						{
@@ -4564,31 +4664,43 @@ App::uses('AppController', 'Controller');
 				{
 					if($keya !='Quantity')
 						$attvid_arr[] = $att_one['id'];
+					
+					if($keya =='Quantity')
+						$quantity = $att_one;
+					
 				}
 				
 				$product_price = $products['discounted_price'];
 			
-				$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $products['id'], 'Produc_attribute.attvid' => $attvid_arr)));
-				
-				unset($attvid_arr);
-				
-				foreach($product_att_data as $data_patt)
+				if(isset($attvid_arr))
 				{
-					if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+					$product_att_data = $this->Produc_attribute->find('all', array('conditions'=>array('Produc_attribute.prodid' => $products['id'], 'Produc_attribute.attvid' => $attvid_arr)));
+					
+					unset($attvid_arr);
+					
+					foreach($product_att_data as $data_patt)
 					{
-						$additional_cost = $data_patt['Produc_attribute']['add_cost'];
-						
-						$product_price = $product_price + $additional_cost;
-					}
-					else
-					{
-						$less_cost = $data_patt['Produc_attribute']['less_cost'];
-						
-						$product_price = $product_price - $less_cost;
-					}
+						if(!(empty($data_patt['Produc_attribute']['add_cost'])))
+						{
+							$additional_cost = $data_patt['Produc_attribute']['add_cost'];
+							
+							$product_price = $product_price + $additional_cost;
+						}
+						else
+						{
+							$less_cost = $data_patt['Produc_attribute']['less_cost'];
+							
+							$product_price = $product_price - $less_cost;
+						}
+					}					
 				}
 				
-				$products_checkout[$key]['discounted_price'] = $product_price;
+				if(!empty($quantity))
+					$products_checkout[$key]['discounted_price'] = ($product_price * $quantity);
+				else
+					$products_checkout[$key]['discounted_price'] = $product_price;
+				
+				//$products_checkout[$key]['discounted_price'] = $product_price;
 			}
 			
 			/*
@@ -4629,9 +4741,11 @@ App::uses('AppController', 'Controller');
 			
 			if($this->Auth->user())
 			{
-				if(!isset($products['att']))
+				if(!empty($products['att']))
 				{
 					$attvid_data = $this->Cart_master->find('first', array('conditions'=>array('Cart_master.product_id' => $products['id'], 'Cart_master.user_id' => $user_data['id'])));
+					
+					$attvid_data_first = $attvid_data;
 					
 					$attvid_data = explode(',', $attvid_data['Cart_master']['attvid']);
 					
@@ -4659,7 +4773,12 @@ App::uses('AppController', 'Controller');
 						$i++;
 					}
 					
+					$data_second_shashi['Quantity'] = $attvid_data_first['Cart_master']['quantity'];				
+					
 					$products_checkout[$key]['att'] = $data_second_shashi;				
+					
+					if(isset($products['att']['quantity']))
+						$products_checkout[$key]['att'] = $products['att']['quantity'];				
 					
 					unset($data_second_shashi);					
 				}					
@@ -4681,15 +4800,66 @@ App::uses('AppController', 'Controller');
 			*/
 		}
 		
+		if(!empty($products_checkout))
 		foreach($products_checkout as $data)
 			$products_check[] = $data['id'];
 		
+		if(!empty($products_check))
 		$this->Session->write('products_check', $products_check);
+		
+		/*
+		foreach($products_checkout as $key=>$check)
+		{
+			$one_count = 1;
+			foreach($check['att'] as $attvid)
+			{				
+				if(!empty($attvid['id']))
+				{
+					$attvid_txt_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid['id'])));
+					
+					$prod_att_data = $this->Produc_attribute->find('first', array('conditions'=>array('Produc_attribute.attvid'=>$attvid_txt_data['Attribute_value']['id'], 'Produc_attribute.prodid'=>$check['id'])));
+					
+					if(!empty($prod_att_data['Produc_attribute']['add_cost']))
+					{
+						$cost_change = $prod_att_data['Produc_attribute']['add_cost'];
+						$products_checkout[$key]['discounted_price'] = ($check['discounted_price'] + $cost_change);
+					}
+					
+					if(!empty($prod_att_data['Produc_attribute']['less_cost']))
+					{
+						$cost_change = $prod_att_data['Produc_attribute']['less_cost'];
+						$products_checkout[$key]['discounted_price'] = ($check['discounted_price'] - $cost_change);
+					}					
+				}
+			}			
+		}
+		
+		
+					
+		$one_count = 1;
+		foreach($attvid_data as $attvid)
+		{
+			$attvid_txt_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$attvid)));
+			
+			$prod_att_data = $this->Produc_attribute->find('first', array('conditions'=>array('Produc_attribute.attvid'=>$attvid_txt_data['Attribute_value']['id'], 'Produc_attribute.prodid'=>$data['prodid'])));
+			
+			if(!empty($prod_att_data['Produc_attribute']['add_cost']))
+			{
+				$cost_change = $prod_att_data['Produc_attribute']['add_cost'];
+				$data['Produc_master']['discounted_price'] = ($data['Produc_master']['discounted_price'] + $cost_change);
+			}
+			else
+			{
+				$cost_change = $prod_att_data['Produc_attribute']['less_cost'];
+				$data['Produc_master']['discounted_price'] = ($data['Produc_master']['discounted_price'] - $cost_change);
+			}
+		}
+		*/
 		
 		if(isset($products_checkout))
 		$this->set('products_checkout', $products_checkout);		
 
-		}
+		}		
 	}
 	
 	//This is the remove wishlist functionality.
@@ -4832,13 +5002,11 @@ App::uses('AppController', 'Controller');
 	
 	//This is the contact us functionality.
 	public function contact_us() 
-	{ 
-		$contact_us_data['Contact_us'] = $_REQUEST;
-			
+	{ 		
 		if(!empty($contact_us_data['Contact_us']))
 		{
 			if($this->Contact_us->save($contact_us_data))
-			{
+			{	
 				$this->Session->setFlash(__('Thanx For contact us... '));
 				
 				$site_setting_data = $this->Site_setting->find('first');
@@ -4852,8 +5020,13 @@ App::uses('AppController', 'Controller');
 				$Email->viewVars(array('contact_us_data' => $contact_us_data));
 				$Email->subject('Contact_us');
 				$Email->send();		
+				
+				$this->redirect('contact_us');
 			}
 		}
+		
+		if(isset($_REQUEST))
+		$contact_us_data['Contact_us'] = $_REQUEST;
 	}	
 	
 	//This is the order details functionality.
@@ -4861,31 +5034,107 @@ App::uses('AppController', 'Controller');
 	{
 		$this->Session->Write('id', $id);
 		
-		$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>33)));
+		$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>$id)));
 		
 		foreach($order_details as $key=>$detail)
-		{
+		{			
+			$offer_details = $this->Offer_master->find('first', array('conditions'=>array('Offer_master.id'=>$detail['Order_detail']['offer'])));
+			
+			if(isset($offer_details['Offer_master']['offername']))
+				$order_details[$key]['Order_detail']['offername'] = $offer_details['Offer_master']['offername'];
+			
 			$product_details = $this->Produc_master->find('first', array('conditions'=>array('Produc_master.id'=>$detail['Order_detail']['prodid'])));
+			
+			$prod_images = $this->Produc_image->find('all', array('conditions'=>array('Produc_image.prodid'=>$product_details['Produc_master']['id'])));
+			
+			foreach($prod_images as $image)
+			{
+				$image = $image['Produc_image'];		
+				
+				if($image['isdefault']==1)
+				$product_details['Produc_master']['images']['Default'] = $image;
+				else
+				$product_details['Produc_master']['images']['all'] = $image;				
+			}			
 			
 			$order_details[$key]['Product_details'] = $product_details;
 		}
+		
+		
 		
 		$this->set('order_details', $order_details);
 	}
 	
 	//This is the my account functionality.
+	public function profile() 
+	{
+		$userdata = $this->Auth->user();	
+		
+		if($this->request->is('post')) {
+			
+			if(!empty($this->request->data['User']['password_new']))
+				$this->request->data['User']['password'] = $this->request->data['User']['password_new'];
+			
+			if(empty($this->request->data['User']['password']))
+				unset($this->request->data['User']['password']);
+			
+			$this->User->set($this->request->data);
+			if($this->User->validates()) {
+				
+				$this->User->save($this->request->data);	
+				
+				$this->Session->setFlash('Thanx.. You Successfully edited profile');
+				
+				$this->redirect('myaccount');
+			}
+			/*
+			else
+			{
+				$errors = $this->ModelName->validationErrors;
+				 
+				echo "Errors<pre>";
+				print_r($errors);
+				echo "<pre>";
+				
+				die();
+			}
+			*/
+		}		
+	}
+	
+	//This is the my account functionality.
 	public function myaccount() 
-	{ 
+	{ 		
 		$redirect_page = $this->request->params['action'];
 		
 		$this->Session->write('redirect_page', $redirect_page);
 		
 		$userdata = $this->Auth->user();	
 		
-		$orders = $this->Order_master->find('all', array('conditions'=>array('Order_master.del_status'=>0, 'Order_master.usrid'=>$userdata['id'])));
+		//$user_address_data = $this->User_address->find('all', array('conditions'=>array('User_address.usrid'=>$userdata['id'])));
+		
+		$this->paginate = array(
+					
+		 'limit' => 4,
+		 'conditions'=>array('User_address.usrid'=>$userdata['id'])
+		);		
+		
+		$user_address_data = $this->paginate('User_address');
+		
+		$this->set('user_address_data', $user_address_data);
+		
+		$orders = $this->Order_master->find('all', array('conditions'=>array('Order_master.del_status'=>0, 'Order_master.usrid'=>$userdata['id']), 'order' => array(
+                'id' => 'DESC'
+        )));
 		
 		foreach($orders as $key=>$order)
 		{
+			$payment_data = $this->Payment_master->find('first');
+			$orders[$key]['Order_master']['payment'] = $payment_data['Payment_master']['name'];
+			
+			$shipping_data = $this->Shipping_master->find('first');
+			$orders[$key]['Order_master']['shipping'] = $shipping_data['Shipping_master']['name'];
+			
 			$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>$order['Order_master']['id'])));
 			
 			$orders[$key]['Order_detail'] = $order_details;			
@@ -4907,15 +5156,21 @@ App::uses('AppController', 'Controller');
 			
 			$myPassword = $this->request->data['User']['password'];
 			
+			$confirm_password = $this->request->data['User']['confirm_password'];
+			
+			$new_password = $this->request->data['User']['new_password'];
+			
 			$hashedPassword = Security::hash($myPassword, null, true); //Password Hashing/Encryption
 			
 			if($password != $hashedPassword)
 			{
+				$show_div = 0;
 				$this->Session->setFlash(__('please enter the correct present password... '));
-				
-				$this->redirect(array(
-				'action' => 'myaccount'
-				));
+			}
+			elseif($confirm_password == $new_password)
+			{
+				$show_div = 0;
+				$this->Session->setFlash(__('Sorry, Your password doesnt matched... '));
 			}
 			else
 			{
@@ -4925,7 +5180,9 @@ App::uses('AppController', 'Controller');
 				$this->User->set($this->request->data);
 				if ($this->User->validates()) {
 					
-					$this->User->save();
+					$this->User->save($this->request->data);
+					
+					$this->redirect('myaccount');
 				}
 			}
 		}		
@@ -5107,7 +5364,7 @@ App::uses('AppController', 'Controller');
 								$product_master['Produc_master']['add_to_cart'] = 0;
 						}
 						else
-							$product_master['Produc_master']['add_to_cart'] = 1;								
+							$product_master['Produc_master']['add_to_cart'] = 0;								
 						
 					}				
 				}
@@ -5191,10 +5448,46 @@ App::uses('AppController', 'Controller');
 			$i++;
 		}
 		
+		foreach($wishlist_all as $key_wish=>$all)
+		{
+			
+			$pvid_data = explode(',', $all['Wishlist_detail']['pattvid']);
+			
+			foreach($pvid_data as $data_attv)
+			{
+				$attvid_txt_data = $this->Attribute_value->find('first', array('conditions'=>array('Attribute_value.id'=>$data_attv)));
+					
+				$prod_att_data = $this->Produc_attribute->find('first', array('conditions'=>array('Produc_attribute.attvid'=>$attvid_txt_data['Attribute_value']['id'], 'Produc_attribute.prodid'=>$all['Wishlist_detail']['prodid'])));
+				
+				if(!empty($prod_att_data['Produc_attribute']['add_cost']))
+				{
+					$cost_change = $prod_att_data['Produc_attribute']['add_cost'];
+					$all['Wishlist_detail']['prod_details']['discounted_price'] = ($all['Wishlist_detail']['prod_details']['discounted_price'] + $cost_change);
+				}
+				else
+				{
+					$cost_change = $prod_att_data['Produc_attribute']['less_cost'];
+					$all['Wishlist_detail']['prod_details']['discounted_price'] = ($all['Wishlist_detail']['prod_details']['discounted_price'] - $cost_change);
+				}
+			}
+			
+			if(!empty($all['Wishlist_detail']['prodqty']))
+				$all['Wishlist_detail']['prod_details']['discounted_price'] = ($all['Wishlist_detail']['prod_details']['discounted_price'] * $all['Wishlist_detail']['prodqty']);
+			
+			$one[] = $all;
+		}
+		//$wishlist_all[$key_wish]
+		
+		unset($wishlist_all);
+		
+		if(isset($one))
+		{
+			$wishlist_all = $one;
+			$this->set('wishlist', $wishlist_all);			
+		}
+			
 		
 		
-		
-		$this->set('wishlist', $wishlist_all);			
 	}
 	
 	//This is the coupon management.
@@ -5412,16 +5705,55 @@ App::uses('AppController', 'Controller');
 		
 		if($this->request->data)
 		{
-			$userdata = $this->Auth->user();
-			
-			$this->request->data['User_address']['usrid'] = $userdata['id'];
-		
-			$this->User_address->save($this->request->data);
-			
-			$this->redirect('myaccount');
+			$this->User_address->set($this->request->data);
+			if ($this->User_address->validates()) 
+			{
+				$userdata = $this->Auth->user();
+				
+				$user_addresses = $this->User_address->find('list', array('conditions'=>array('User_address.usrid'=>$userdata['id'])));
+				
+				foreach($user_addresses as $add)
+				{
+					$add_data['User_address']['ismain'] = 0;
+					$add_data['User_address']['id'] = $add;
+					
+					$this->User_address->create();
+					$this->User_address->save($add_data);
+				}
+				
+				$this->request->data['User_address']['usrid'] = $userdata['id'];
+				
+				$this->User_address->set($this->request->data);
+				if ($this->User_address->validates()) {
+					
+					$this->User_address->save($this->request->data);
+				} 
+				/*
+				else 
+				{
+					$errors = $this->User_address->validationErrors;
+					// handle errors
+					
+					echo "errors<pre>";
+					print_r($errors);
+					echo "<pre>";
+					
+					die();
+				}
+				die();
+				*/
+				
+				$this->redirect('myaccount');
+			}
 		}
+		/*
 		else
 		$this->request->data = $this->User_address->findById($id);
+		*/
+		
+		$user_add_data = $this->User_address->find('first', array('conditions'=>array('User_address.id'=>$id)));
+		
+		$this->set('user_add_data', $user_add_data['User_address']);
 	}
 	
 	//This is the address change status functionality

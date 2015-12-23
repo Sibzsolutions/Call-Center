@@ -27,7 +27,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				
 			<?php
 			
-			if(isset($wishlist))
+			if(!empty($wishlist))
 			{
 				foreach($wishlist as $product)
 				{
@@ -38,22 +38,27 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							
 							$("#close_<?php echo $product['Wishlist_master']['id']; ?>").on('click', function(c){
 								
-								var wishlist_master_id = '<?php echo $product['Wishlist_master']['id']; ?>';
-								
-								$(location).attr('href', '<?php echo $this->webroot.'buyshops/remove_from_wishlist/'.$product['Wishlist_master']['id']; ?>')
-								
-								/*
-								$.post("<?=$this->webroot?>buyshops/remove_from_wishlist", {wishlist_master_id: wishlist_master_id}, function(result){
+								if(confirm("Are you sure?"))
+								{
+									var wishlist_master_id = '<?php echo $product['Wishlist_master']['id']; ?>';
 									
-									//alert(result);
+									$(location).attr('href', '<?php echo $this->webroot.'buyshops/remove_from_wishlist/'.$product['Wishlist_master']['id']; ?>')
 									
-									//$("#cart").html(result);
-								});
-								*/
-								
-								$('.cart-header_rmv<?php echo $product['Wishlist_master']['id']; ?>').fadeOut('slow', function(c){
-									//$('.cart-header_rmv<?php echo $product['Wishlist_master']['id']; ?>').remove();
-								});
+									/*
+									$.post("<?=$this->webroot?>buyshops/remove_from_wishlist", {wishlist_master_id: wishlist_master_id}, function(result){
+										
+										//alert(result);
+										
+										//$("#cart").html(result);
+									});
+									*/
+									
+									$('.cart-header_rmv<?php echo $product['Wishlist_master']['id']; ?>').fadeOut('slow', function(c){
+										//$('.cart-header_rmv<?php echo $product['Wishlist_master']['id']; ?>').remove();
+									});
+								}
+								else
+									return false;
 							});	  
 						});
 						
@@ -85,7 +90,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<?php
 								
 								if(isset($product['Wishlist_detail']['prod_details']['prodname']))
-								echo $product['Wishlist_detail']['prod_details']['prodname'];//['prodname'] //Mountain Hopper(XS R034) 
+									echo $product['Wishlist_detail']['prod_details']['prodname'];//['prodname'] //Mountain Hopper(XS R034) 
 								
 								?>
 								<span>Model No: 3578</span></div>
@@ -109,21 +114,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								</ul>
 								<div class="delivery">
 								
-									 <p>Service Charges : Rs.
+									 <!--<p>Service Charges : Rs.
 									 <?php 
-									 if(isset($product['Wishlist_detail']['prod_details']['prodprice']))
-									 echo $product['Wishlist_detail']['prod_details']['prodprice'];//['prodprice'];
+									 //if(isset($product['Wishlist_detail']['prod_details']['prodprice']))
+										//echo $product['Wishlist_detail']['prod_details']['prodprice'];//['prodprice'];
 									 ?>
 									 </p>
 									 
 									<br>
-									<br>
+									<br>-->
 									<p><?php echo 'Discount '.$product['Wishlist_detail']['prod_details']['discount'].'%'; // $187.95 ?></p>
 									<br>
 									<br>
 									<p><?php echo 'Discounted Price $'.$product['Wishlist_detail']['prod_details']['discounted_price']; // $187.95 ?></p>
 									 
-									 <span>Delivered in 2-3 bussiness days</span>
+									 <!--<span>Delivered in 2-3 bussiness days</span>-->
 									 <div class="clearfix"></div>
 								</div>	
 								<?php
@@ -215,6 +220,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		-->
 		<?php
 		}
+		else
+				echo "<br><br><div class='width100' style='border: 2px solid #f0f0f0; color: #ff0000; font-size: 21px; margin: 10px 0; padding: 10px 0; text-align: center;'>Sorry no item found in your wishlist</div>";					
 		?>
 		</div>
 	 </div>

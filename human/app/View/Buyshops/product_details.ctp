@@ -124,6 +124,8 @@ html {
 						
 						$(document).ready(function(){
 							
+							$('#one_msg').hide();
+							
 							$('#add_to_wishlist').click(function(){
 								
 								var product_id = '<?php echo $product['id']; ?>';
@@ -150,6 +152,7 @@ html {
 									//key == 'Material' || 
 									if(!(key == 'Brand'))
 									{
+										/*
 										if($('.<?php echo $key; ?>').is(":checked"))
 										{
 											
@@ -159,6 +162,20 @@ html {
 											$('#one_msg').show();
 											var mm=1;
 											$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+											return false;
+										}
+										*/
+										if($('.a<?php echo $key; ?>').is(":checked"))
+										{
+											$(".aa<?php echo $key; ?>").hide();
+										}
+										else
+										{
+											$(".aa<?php echo $key; ?>").show();
+											//$('#one_msg').show();
+											var mm=1;
+											//$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+											$(".a<?php echo $key; ?>").html('<div class="details_error">Please select the <?php echo $key; ?></div>');								    									
 											return false;
 										}
 									}
@@ -183,8 +200,12 @@ html {
 										if(result == "yes")
 											$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Added to wishlist</button></div>');	
 										else
-											$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Please login first..!!!</button></div>');																		
-										
+										{
+											//$("#results_wishlist_replace").html('<div class="size_2-right added_wishlist"><button class="add_cart_btm">Please login first..!!!</button></div>');																		
+											//$("#discounted_price_msg").show();								    
+											//$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected attribute. New price is " +result+"</div>");																		
+											$("#discounted_price_msg").html("<div style='padding:10px;'>Please Logged in first..!!<br><a class='button' style='margin:10px 0' href='<?php echo $this->webroot.'buyshops/login'; ?>'>Click here to login</a></div>");								    													
+										}
 									});
 								}						
 							});
@@ -204,7 +225,7 @@ html {
 					<p><?php echo $product['proddesc']; //Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum ?></p>
 				     <div class="dropdown_top" style="margin:10px 0px;">
 				       
-					   <div id="one_msg" class="error_mess">Please Insert the all attributes</div>
+					   <!--<div id="one_msg" class="error_mess">Please Insert the all attributes</div>-->
 					   
 					   <?php
 					   
@@ -234,7 +255,7 @@ html {
 											{
 												*/
 												?>
-												<input class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>"/>&nbsp;&nbsp;
+												<input class="a<?php echo $key; ?> <?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>" />&nbsp;&nbsp;
 												<?php
 											//}											
 										?>
@@ -243,7 +264,9 @@ html {
 										
 											$(document).ready(function(){
 											
+											
 											$('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').click(function(){
+											
 											
 											var attvid = '<?php echo $att_element['att_value_id']; ?>';
 											
@@ -255,6 +278,11 @@ html {
 											
 											if($(this).is(":checked"))
 											{
+												$(".aa<?php echo $key ?>").hide();
+												
+												//$(".a<?php echo $key ?>").css{("display:block")};
+												
+												$("#discounted_price_msg").show();
 														
 													$.post("<?=$this->webroot?>buyshops/price_changed", {attvid: attvid, prodid: prodid, checkid: 1, attid: attid}, function(result){
 													
@@ -262,15 +290,16 @@ html {
 													
 													//alert(result);
 													
-													//$("#shashi").html(result);								    
-													//return false;
-													
+													/*
+													$("#shashi").html(result);								    
+													return false;
+													*/
 													
 													//$("#product_image_data").html(result);								    													
 													
 													$("#discounted_price").val(result);								    
 													
-													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is change as per product color. New price is " +result+"</div>");								    													
+													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected element. New price is " +result+"</div>");								    													
 													
 													$("#discounted_price_msg").show();
 													
@@ -319,7 +348,7 @@ html {
 													
 													$("#discounted_price").val(result);								    
 													
-													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is change as per product color. New price is " +result+"</div>");								    													
+													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected element. New price is " +result+"</div>");								    													
 													
 													//alert(result);
 													
@@ -365,9 +394,13 @@ html {
 													//$("#product_image_data").html(result);								    
 												});								
 												*/
+												
 											}
 												if($(this).is(":checked"))
 												{
+													
+													//$(".a<?php echo $key ?>").hide();
+													
 													var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id');
 													
 													var key = '<?php echo $key; ?>';
@@ -398,7 +431,7 @@ html {
 													});
 													//return false;
 												}
-													
+												
 												});
 											});
 										
@@ -410,6 +443,8 @@ html {
 									
 									?>
 								</div>
+								<div class="aa<?php echo $key; ?>"><div class="a<?php echo $key; ?>"></div></div>
+								
 								<?php
 							}
 							
@@ -443,7 +478,7 @@ html {
 										*/
 										
 										?>
-										<input value="<?php echo $att_element['att_val_name']; ?>" class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" />
+										<input value="<?php echo $att_element['att_val_name']; ?>" class="a<?php echo $key; ?> <?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" />
 										<?php
 									//}
 									
@@ -471,6 +506,8 @@ html {
 											
 											if($(this).is(":checked"))
 											{
+												$(".aa<?php echo $key ?>").hide();
+												
 												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
 												
 												var key = '<?php echo $key; ?>';
@@ -490,6 +527,9 @@ html {
 											}
 											else
 											{
+												$('.notify_email_one').hide();
+												$('#add_to_cart').show();
+												
 												var val = $('#<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>').attr('id')
 												
 												var key = '<?php echo $key; ?>';
@@ -515,12 +555,10 @@ html {
 											var attid = '<?php echo $att_element['attid']; ?>';
 											
 											if($(this).is(":checked"))
-											{
-												
+											{												
 													
 												$.post("<?=$this->webroot?>buyshops/price_changed", {attvid: attvid, prodid: prodid, checkid: 1, attid: attid}, function(result){
-													
-													
+																										
 													//alert("result_if"+result);
 													
 													//$("#discounted_price_msg").show();								    
@@ -535,7 +573,7 @@ html {
 													
 													$("#discounted_price").val(result);								    
 													
-								$("#discounted_price_msg").html("<div style='padding:10px;'>Price is change as per product color. New price is " +result+"</div>");								    													
+													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected element. New price is " +result+"</div>");								    													
 													
 													$("#discounted_price_msg").show();													
 													
@@ -566,8 +604,6 @@ html {
 											{
 												$.post("<?=$this->webroot?>buyshops/price_changed", {attvid: attvid, prodid: prodid, checkid: 0, attid: attid}, function(result){
 													
-													
-													
 													if(result == "no_data")
 													{
 														$("#discounted_price_msg").hide();
@@ -578,9 +614,7 @@ html {
 													
 													$("#discounted_price").val(result);								    
 													
-													
-													
-													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is change as per product color. New price is " +result+"</div>");								    													
+													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected element. New price is " +result+"</div>");								    													
 													
 													//alert(result);
 													
@@ -604,8 +638,6 @@ html {
 													//$("#discounted_price").val('<?php echo $product['prodprice']; ?>');								    
 												
 												});
-												
-												
 												
 												//$("#discounted_price_msg").hide();	
 												//return false;												
@@ -631,13 +663,14 @@ html {
 											
 											if($(this).is(":checked"))
 											{
+												
 												$.post("<?=$this->webroot?>buyshops/color_change_imgs", {attvid: attvid, prodid: prodid, checkid: 1}, function(result){
 													
 													//$("#shashi").html(result);								    
 													
 													if(result)
 													
-													$("#product_image_data").html("PRICE IS CHANGE AS PER PRODUCT COLOR. NEW PRICE IS "+result);								    
+													$("#product_image_data").html("Price is changed as per selected element. New price is "+result);								    
 												});								
 												
 												$( ".check_class_<?php echo $att_element['Attribute_master']; ?>" ).prop( "checked", false );
@@ -651,10 +684,9 @@ html {
 													//$("#discounted_price").val('<?php echo $product['prodprice']; ?>');								    
 													
 													//$("#shashi").html(result);								    
-													$("#product_image_data").html("PRICE IS CHANGE AS PER PRODUCT COLOR. NEW PRICE IS "+result);								    
+													$("#product_image_data").html("Price is changed as per selected element. New price is "+result);								    
 												});								
 											}
-											
 											
 										});																				
 									});
@@ -664,7 +696,13 @@ html {
 									<?php
 								}		
 								
-								echo '</ul>';								
+								echo '</ul>';		
+
+							?>
+							
+							<div class="aa<?php echo $key; ?>"><div class="a<?php echo $key; ?>"></div></div>
+							
+							<?php								
 							}
 							
 							if($key == 'Material')
@@ -691,7 +729,8 @@ html {
 											{
 												*/
 												?>
-												<input class="<?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>"/>&nbsp;&nbsp;
+												<?php //echo $key; ?>
+												<input class="a<?php echo $key; ?> <?php echo $key; ?> check_class_<?php echo $att_element['Attribute_master']; ?>" id="<?php echo $att_element['att_value_id'].'_'.$att_element['prodid']; ?>" id="check_box" type="checkbox" value="<?php echo $att_element['att_val_name']; ?>"/>&nbsp;&nbsp;
 												<?php
 											//}											
 										?>
@@ -712,51 +751,49 @@ html {
 											
 											if($(this).is(":checked"))
 											{
+													$(".aa<?php echo $key ?>").hide();
+													
 													$.post("<?=$this->webroot?>buyshops/price_changed", {attvid: attvid, prodid: prodid, checkid: 1, attid: attid}, function(result){
-													
-													//$("#discounted_price_msg").show();								    
-													
-													//alert(result);
-													
-													//$("#shashi").html(result);								    
-													//return false;
-													
-													
-													//$("#product_image_data").html(result);								    													
-													
-													$("#discounted_price").val(result);								    
-													
-													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is change as per product color. New price is " +result+"</div>");								    													
-													
-													$("#discounted_price_msg").show();
-													
-													//alert(result);
-													
-													if(result == "not_logged")
-													{
-														//$('#shashi').html(result);														
-														//$("#discounted_price_msg").html("Please Logged in first..!!");								    													
-														$("#discounted_price_msg").html("<div style='padding:10px;'>Please Logged in first..!!<br><a class='button' style='margin:10px 0' href='<?php echo $this->webroot.'buyshops/login'; ?>'>Click here to login</a></div>");								    													
-														$('#place_order').hide();														
-														$('#coupon_btn').hide();																												
-													}
-													
-													if(result == "N/A")
-													{
-														//$('#shashi').html(result);														
-														$("#discounted_price_msg").html("Sorry, this product is unavailable. whenever available we will contact you..!!");								    													
-														$('#place_order').hide();														
-														$('#coupon_btn').hide();																												
-													}													
-												});								
+														
+														//$("#discounted_price_msg").show();								    
+														
+														//$("#shashi").html(result);								    
+														//return false;
+														
+														//$("#product_image_data").html(result);								    													
+														
+														$("#discounted_price").val(result);								    
+														
+														$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected element. New price is " +result+"</div>");								    													
+														
+														$("#discounted_price_msg").show();
+														
+														//alert(result);
+														
+														if(result == "not_logged")
+														{
+															//$('#shashi').html(result);														
+															//$("#discounted_price_msg").html("Please Logged in first..!!");								    													
+															$("#discounted_price_msg").html("<div style='padding:10px;'>Please Logged in first..!!<br><a class='button' style='margin:10px 0' href='<?php echo $this->webroot.'buyshops/login'; ?>'>Click here to login</a></div>");								    													
+															$('#place_order').hide();														
+															$('#coupon_btn').hide();																												
+														}
+														
+														if(result == "N/A")
+														{
+															//$('#shashi').html(result);														
+															$("#discounted_price_msg").html("Sorry, this product is unavailable. whenever available we will contact you..!!");								    													
+															$('#place_order').hide();														
+															$('#coupon_btn').hide();																												
+														}													
+													});								
 												
 												$( ".check_class_<?php echo $att_element['Attribute_master']; ?>" ).prop( "checked", false );
 												
 												$(this).prop( "checked", true );
 											}
 											else
-											{
-												
+											{												
 												$.post("<?=$this->webroot?>buyshops/price_changed", {attvid: attvid, prodid: prodid, checkid: 1, attid: attid}, function(result){
 													
 													if(result == "no_data")
@@ -765,7 +802,6 @@ html {
 														$("#discounted_price_msg").hide();
 													}
 														
-													
 													//$("#discounted_price_msg").show();								    
 													
 													//alert(result);
@@ -773,12 +809,11 @@ html {
 													//$("#shashi").html(result);								    
 													//return false;
 													
-													
 													//$("#product_image_data").html(result);								    													
 													
 													$("#discounted_price").val(result);								    
 													
-													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is change as per product color. New price is " +result+"</div>");								    													
+													$("#discounted_price_msg").html("<div style='padding:10px;'>Price is changed as per selected element. New price is " +result+"</div>");								    													
 													
 													//alert(result);
 													
@@ -867,6 +902,10 @@ html {
 									
 									?>
 								</div>
+								
+							<div class="aa<?php echo $key; ?>"><div class="a<?php echo $key; ?>"></div></div>
+							
+							
 								<?php
 							}
 							
@@ -1054,7 +1093,9 @@ html {
 					       <div class="clearfix"></div>
 					     </div>
 						 
-						 <div id="added_cart_1">
+						 <div id="discounted_price_msg"  class="apply_btn" style="padding: 0px; margin:0 0 10px 0"></div>
+						 
+						 <div id="added_cart_1" style="clear:both">
 						 <div class="size_2-right">	
 							
 							<div id="msg_cart_one">
@@ -1121,11 +1162,12 @@ html {
 						$paypal_id = 'shashikant.chobhe-seller@sibzsolutions.com';  // sriniv_1293527277_biz@inbox.com
 
 						?>
+						
+						<div id="discounted_price_msg"  class="apply_btn" style="padding: 0px; margin:0 0 10px 0"></div>
 						<!--  border: 1px solid #ccc; -->
 						<div class="apply_box">
 						
                         <br />
-						<input type="hidden" id="original_price" value="<?php echo $product['prodprice']; ?>">
 						
 						<input type="hidden" id="original_price" value="<?php echo $product['prodprice']; ?>">
 						
@@ -1133,25 +1175,75 @@ html {
 						
 						<input type="hidden" id="coupon_info" value="">
 						
-						<div id="discounted_price_msg"  class="apply_btn" style="padding: 0px; margin:0 0 10px 0"></div>
+						
 						<!--<button id="discounted_price_msg"  class="apply_btn" style="padding: 0px"></button>-->
                         <div style="background-color: #fefefe; clear:both; float: left; padding:0px; width:auto; margin:0 0 20px 0">
-						<div  class="size_2-right" style="margin:0px;"><a id="coupon_btn" class="first_apply add_cart_btm" style="background-color: #3a3a3a; float: left; font-size: 14px; margin: 0 10px 0 0; padding: 11px 20px 6px; text-transform: uppercase;">Apply Coupon</a></div>
+						<!--<div  class="size_2-right" style="margin:0px;"><a id="coupon_btn" class="first_apply add_cart_btm" style="background-color: #3a3a3a; float: left; font-size: 14px; margin: 0 10px 0 0; padding: 11px 20px 6px; text-transform: uppercase;">Apply Coupon</a></div>-->
 						
-						<div style="float: left; margin: 0px 10px 0px 0px;">
-                          <input id="coupon_txt" type="text" name="coupon_number" class="apply_input">
-	  					  <button id="coupon_apply_btn"  class="apply_btn" style="padding:8px 20px 6px 20px;">Apply</button>
-						</div>
+						
+						<!--<div style="float: left; margin: 0px 10px 0px 0px;">
+							<input id="coupon_txt" type="text" name="coupon_number" class="apply_input">
+							<button id="coupon_apply_btn"  class="apply_btn" style="padding:8px 20px 6px 20px;">Apply</button>
+							</div>-->
                         </div>
-                        <button class="add_cart_btm" id="place_order" style="float: left; font-size: 14px; text-transform: uppercase;">Buy</button>
+                        <!--<button class="add_cart_btm" id="place_order" style="float: left; font-size: 14px; text-transform: uppercase;">Buy</button>-->
                         
-						</div>
 						
-					    <script>
+						
+						Enter email to notify whenever available it.
+						<div class="notify_email_one" style="float: left; margin: 0px 10px 0px 0px;">
+							
+							<div id="one_notify_msg"  class="apply_btn" style="padding: 0px; margin:0 0 10px 0"></div>
+							<br>
+							<?php
+								
+								if(isset($product['user_data']['email']))
+								{
+									?>
+									<input id="notify_email_address" type="text" name="email_address" class="apply_input" value="<?php echo $product['user_data']['email']; ?>" placeholder="Please enter the email address here">
+									<?php
+								}
+								else
+								{
+									?>
+									<input id="notify_email_address" type="text" name="email_address" class="apply_input" placeholder="Please enter the email address here">
+									<?php
+								}
+							?>
+							
+							<button class="notify_apply_btn"  style="font-size:14px; padding:8px 20px 6px 20px;">Notify</button>
+						</div>
+						</div>
+						<script>
 						
 						$(document).ready(function(){
 							
+							$('.notify_email_one').hide();
+							
 							$('#one_msg').hide();
+							
+							$('.notify_apply_btn').click(function(){
+								
+								var email_addr = $('#notify_email_address').val();
+								
+								var prod_id = '<?php echo $product['id']?>';
+								
+								$.post("<?=$this->webroot?>buyshops/quantity", {prod_id: prod_id, email_addr: email_addr}, function(result){
+									
+									
+									//$("#shashi").html(result);
+									//return false;	
+									
+									if(result == 'yes')
+									{
+										$("#add_to_cart").hide();
+										$(".notify_email_one").hide();
+										$("#one_notify_msg").html("Thanx for your support. whenever product is available we will inform you..!!");								    																					
+									}
+									else
+										$("#one_notify_msg").html("Sorry, Something went wrong");								    																					
+								});								
+							});
 							
 							$('.first_apply').click(function(){
 								
@@ -1189,7 +1281,7 @@ html {
 										else
 										{
 											var mm=1;
-											$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+											$("#one_msg").html('Please select the <?php echo $key; ?>');								    									
 											return false;
 										}
 									}
@@ -1216,7 +1308,7 @@ html {
 								
 								$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key}, function(result){
 									
-									$("#shashi").html(result);								    		
+									//$("#shashi").html(result);								    		
 								});
 								
 								var mm=0;
@@ -1291,7 +1383,7 @@ html {
 									
 									$("#discounted_price").val(result);								    
 									
-									$("#shashi").html(result);								    
+									//$("#shashi").html(result);								    
 									
 									//$("#discounted_price").html(result);								    
 									
@@ -1359,7 +1451,7 @@ html {
 							
 							$.post("<?=$this->webroot?>buyshops/att_cart", {val: val, checked: checked, key: key, discounted_price:discounted_price}, function(result){
 								
-								$("#shashi").html(result);								    		
+								//$("#shashi").html(result);								    		
 							});
 							
 							var mm=0;
@@ -1373,15 +1465,17 @@ html {
 								//key == 'Material' || 
 								if(!(key == 'Brand'))
 								{
-									if($('.<?php echo $key; ?>').is(":checked"))
+									if($('.a<?php echo $key; ?>').is(":checked"))
 									{
-										
+										$(".aa<?php echo $key; ?>").hide();
 									}
 									else
 									{
-										$('#one_msg').show();
+										$(".aa<?php echo $key; ?>").show();
+										//$('#one_msg').show();
 										var mm=1;
-										$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+										//$("#one_msg").html('Please fill up the field <?php echo $key; ?>');								    									
+										$(".a<?php echo $key; ?>").html('<div class="details_error">Please fill up the field <?php echo $key; ?></div>');								    									
 										return false;
 									}
 								}
@@ -1399,9 +1493,21 @@ html {
 								
 								//, page_id: page_id
 								
-								
 								$('#msg_cart_one').html('<img src="http://propelle.co/images/loading_small.gif">');
 								$.post("<?=$this->webroot?>buyshops/add_to_cart", {product_id: product_id, quantity_data: quantity_data, discounted_price: discounted_price}, function(result){
+									
+									//alert(result);
+									
+									//$("#shashi").html(result);
+									//return false;
+									
+									if(result == "N/A")
+									{
+										$("#add_to_cart").hide();
+										$("#one_notify_msg").html("Sorry, Product is unavailable. <br>Please fill up below text we will notify whenever the product is available.");								    																					
+										$('.notify_email_one').show();
+										return false;
+									}
 									
 									/*
 									$("#shashi").html(result);								    

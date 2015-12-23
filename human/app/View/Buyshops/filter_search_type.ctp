@@ -1,4 +1,4 @@
-<div id="result_sort" class="col-md-9 w_content">						
+<div id="result_sort" class="">						
 <?php 	
 			
 	$i=1;
@@ -261,6 +261,7 @@
 	
 	?>
 	
+	</div>
 	</div>
 	
 	<?php

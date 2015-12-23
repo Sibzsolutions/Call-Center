@@ -388,6 +388,17 @@ nav{
     text-indent: 10px;
     width: 100%;
 }
+.input_box input[type="email"]{
+    border: 1px solid #cccccc;
+    color: #000;
+    float: left;
+    font-family: arial;
+    font-size: 12px;
+    height: auto;
+    padding:7px 0;
+    text-indent: 10px;
+    width: 100%;
+}
 .input_box select{
     border: 1px solid #cccccc;
     color: #000;
@@ -997,7 +1008,31 @@ p{
     text-align: center;
     width: 100%;
 }
-
+.error_box .message{
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    float: left;
+    font-size: 13px;
+    margin: 5px 0;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+.success_box .message{
+    border: 1px solid green;
+    color: green;
+    float: left;
+    font-size: 13px;
+    margin: 5px 0;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+.contact_box .error_box .message{
+    border: 2px solid #64d90e;
+    color: #4bb101;
+    font-size: 16px;
+}
 #coupon_txt{
     float: left;
     height: 36px;
@@ -1071,13 +1106,143 @@ p{
 .placeorder_box #addr_div{
 	color:#ff0000;
 }
-
+.details_error{
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    float: left;
+    line-height: normal;
+    padding: 6px 10px;
+}
+#msg_cart_one{
+	display:block !important;
+	float:right;
+}
+.list_box{
+    float: left;
+    margin: 0 20px 20px 0;
+    width: 47%;
+}
+.list_box span{
+	color:#707070;
+	font-size:14px;
+}
+.payment_option_box .list_box{
+	width:45%;
+}
+.payment_option_box .list_box span{
+    float: left;
+    padding: 0 0 10px;
+    width: 100%;
+}
+.placeorder_box .error-message{
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    font-size: 14px;
+    margin: 2px 0;
+    padding: 6px 0;
+    text-align: center;
+}
+.register .error-message{
+	font-size:14px;
+	color:#ff0000;
+	width:100%;
+}
+.address_edit_box .form-control{
+	width:96%;
+}
+.myaccount_list{
+    border: 1px solid #dddddd;
+    color: #0f0f0f;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    min-height: 430px;
+    padding: 1px;
+    width: 20%;
+    margin: 0 40px 20px 0;
+}
+.phone_box{
+    background-color: #ececec;
+    float: left;
+    height: auto;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    color: #0866e4;
+    font-weight: bold;
+}
+.country_list{
+	float:left;
+	width:100%;
+	height:auto;
+	padding:15px 0px;
+}
+.country_list .list1{
+    float: left;
+    height: auto;
+    padding: 3px 0 3px 12px;
+    width: 35%;
+	clear:both;
+}
+.country_list .list2{
+    float: left;
+    height: auto;
+    padding: 3px 5px;
+    width: 60%;
+}
+.add_box{
+	background-image:url(css_only_human_userside_imgs/address_bg.jpg);
+	background-position:left top;
+	background-repeat:repeat-x;
+    float: left;
+    height: auto;
+    min-height: 165px;
+    padding: 13px;
+    width: 100%;
+}
+.action_box{
+	float:left;
+	width:100%;
+	height:auto;
+	padding:13px;
+}
+.action_box a{
+	float:left;
+	padding:0 5px 0 0;
+}
+.action_box .active_butn{
+    background-color: #69be05;
+    color: #fff;
+    float: left;
+    font-weight: bold;
+    padding: 9px 16px;
+    text-transform: uppercase;
+	font-size:12px;
+}
+.action_box .inactive_butn{
+    background-color: #ff6630;
+    color: #fff;
+    float: left;
+    font-weight: bold;
+    padding: 9px 13px;
+    text-transform: uppercase;
+	font-size:12px;
+}
+.product_right{
+	float:right;
+	width:76%;
+	height:auto;
+}
+.product_right .content_text{
+	text-align:center;
+}
 }
 
 @media screen and (max-width: 1024px) {
 .main_menu ul li a{
 	padding:21px 9px 20px;
 }
+
 }
 @media screen and (max-width: 950px) {
 .logo{
@@ -1198,6 +1363,9 @@ nav{
 .payment_option_inner{
 	width:50%;
 }
+.myaccount_list{
+	width:40%;
+}
 }
 
 @media screen and (max-width: 600px) {
@@ -1303,6 +1471,30 @@ nav ul li a{
 .address_box{
 	width:100%;
 }
+.list_box{
+	width:100%;
+	margin:0px 0px 20px 0px;
+}
+.payment_option_box .list_box{
+	width:100%;
+}
+.myaccount_list{
+	width:100%;
+}
+.product_right{
+	width:100%;
+}
+.product_right .grid1_of_4{
+	width:100%;
+}
+.product_right .product_box .view{
+	text-align:center;
+}
+.product_right .product_cart_box .size_2-right{
+	margin:0px auto;
+	float:none;
+	width:15%;
+}
 
 
 }
@@ -1325,5 +1517,4 @@ nav ul li a{
 .pro_img img{
 	max-width:100%;
 }
-
 }

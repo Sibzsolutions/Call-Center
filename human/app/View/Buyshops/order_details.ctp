@@ -11,6 +11,8 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
+<br /><br />
+<div class="width1220">
 <div class="row">
             <div class="col-xs-12">
               
@@ -22,24 +24,25 @@
                 
                 <!--<a class="login_button" href="<?php //echo $this->webroot.'superadmin/add_user' ?>">Add User</a>-->
 
-				<a class="login_button" href="<?php echo $this->webroot.'buyshops/myaccount' ?>">Back</a>
+				<a class="button" href="<?php echo $this->webroot.'buyshops/myaccount' ?>" style="float: right; margin: 20px 0px;">Back</a>
 				
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Order Id</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Product Name</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Product Attributes</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Product Price</th>
-						<th bgcolor="#00bcd4" class="text14_white"><div style="width:70px">Product Quantity</div></th>
-                        <th bgcolor="#00bcd4" class="text14_white">Sub Total</th>
-						<th bgcolor="#00bcd4" class="text14_white">Order Date</th>
-						<th bgcolor="#00bcd4" class="text14_white">Offer</th>
-						<th bgcolor="#00bcd4" class="text14_white">Comments</th>
-						<th bgcolor="#00bcd4" class="text14_white">Status</th>       
+                        <!--<th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Order Id</th>-->
+                        <th width="17%" bgcolor="#00bcd4" class="text12_white">Product Name</th>
+						<th width="17%" bgcolor="#00bcd4" class="text12_white">Product Image</th>						
+                        <!--<th bgcolor="#00bcd4" class="text14_white">Product Attributes</th>-->
+                        <th width="16%" bgcolor="#00bcd4" class="text12_white">Product Price</th>
+						<th width="20%" bgcolor="#00bcd4" class="text12_white">Product Quantity</th>
+                        <!--<th bgcolor="#00bcd4" class="text14_white">Sub Total</th>-->
+						<th width="11%" bgcolor="#00bcd4" class="text12_white">Order Date</th>
+						<!--<th bgcolor="#00bcd4" class="text14_white">Offer</th>-->
+						<!--<th width="17%" bgcolor="#00bcd4" class="text12_white" style="width:20%">Comments</th>-->
+						<!--<th bgcolor="#00bcd4" class="text14_white">Status</th>-->
 						
                         <!--<th bgcolor="#00bcd4" class="text14_white">Action</th>-->                        
 
@@ -53,23 +56,41 @@
 						  
 						  $product_details = $order_detail['Product_details']['Produc_master'];						   
                       ?>
-                        <tr>
-                        <td><?php echo $order_data['id']; ?></td>
-                        <td><?php echo $order_data['orderid']; ?></td>
+                        
+						<tr class="text14_black">
                         <td><?php echo $product_details['prodname']; ?></td>
-                        <td><?php echo $order_data['pattid']; ?></td>
-                        <td><?php echo $order_data['prodprice']; ?></td>
-                        <td><?php echo $order_data['prodqty']; ?></td>
-                        <td><?php echo $order_data['subtotal']; ?></td>
-						<td><?php echo $order_data['orderdate']; ?></td>
-						<td><?php echo $order_data['offer']; ?></td>
-						<td><?php echo $order_data['comments']; ?></td>
+						<!--<td><?php //echo $order_data['id']; ?></td>
+                        <td><?php //echo $order_data['orderid']; ?></td>-->
+						<?php
+							
+							if(isset($product_details['images']['Default']))
+							{
+								?>
+								<td><img style="max-width:100px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product_details['images']['Default']['imagepath']; ?>"/></td>
+								<?php
+							}
+							else
+							{
+								?>
+								<td><img style="max-width:100px;" src="<?php echo $this->webroot.'img/product/thumb/small_images/'.$product_details['images']['all']['imagepath']; ?>"/></td>
+								<?php
+							}
 						
-						<td><?php if($order_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
+						?>
+						
+                        <!--<td><?php //echo $order_data['pattid']; ?></td>-->
+                        <!--<td><?php //echo $order_data['prodprice']; ?></td>-->
+						<td><?php echo $order_data['subtotal']; ?></td>
+                        <td><?php echo $order_data['prodqty']; ?></td>
+                        <!--<td><?php //echo $order_data['subtotal']; ?></td>-->
+						<td><?php echo $order_data['orderdate']; ?></td>
+						<!--<td><?php //if(isset($order_data['offername'])) echo $order_data['offername']; else echo "N/A";?></td>-->
+						<!--<td width="2%"><?php //echo $order_data['comments']; ?></td>-->
+						
+						<!--<td><?php //if($order_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>-->
                         <!--<td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php //echo $this->webroot.'superadmin/order_details/'.$order_data['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/order_status_change/'.$user_data['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
                         <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php //echo $this->webroot.'superadmin/user_delete/'.$order_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
-                        </td>
                         </tr>
                       
 					  <?php
@@ -82,6 +103,7 @@
               </div><!-- /.box -->
             </div><!-- /.col -->
           </div>
+</div>
           
 <script src="<?php echo $this->webroot.'plugins/jQuery/jQuery-2.1.4.min.js';?>"></script>
 <!-- Bootstrap 3.3.5 -->

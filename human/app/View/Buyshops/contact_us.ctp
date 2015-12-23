@@ -16,7 +16,7 @@
 <script type="text/javascript" src="<?php echo $this->webroot.'js/buy_shop/jquery.jscrollpane.min.js';?>"></script>
 <script type="text/javascript" id="sourcecode">
 	$(function()
-	{
+	{      
 		$('.scroll-pane').jScrollPane();
 	});
 </script>
@@ -29,10 +29,12 @@
 </div>
 <div class="inner_banner"><img src="<?php echo $this->webroot.'img/only_human_userside/map.jpg';?>" style="max-width: 100%" /></div>
 </div>
+
 <div class="middle_content">
 <div class="width1220">
   <div class="left_col">
 	<div class="contact_box">
+	  <div class="error_box"><?=$this->Session->flash();?></div>
 	  <div class="contact_heading"><strong>Send</strong> a Message</div>
 	  
 	  <form name="contact_us" method="post">
@@ -41,7 +43,7 @@
 		<input type="text" id="textfield2" placeholder="Your Name" name="name" required="required" />
 	  </div>
 	  <div class="input_box">
-		<input type="text" id="textfield2" placeholder="Your Email" name="email" required="required"/>
+		<input type="email" id="textfield2" placeholder="Your Email" name="email" required="required"/>
 	  </div>
 	  <div class="input_box">
 		<input type="text" id="textfield2" placeholder="Your Website" name="website"required="required"/>

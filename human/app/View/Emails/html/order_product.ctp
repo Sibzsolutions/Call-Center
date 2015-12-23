@@ -1,3 +1,4 @@
+<?php //die(); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -92,15 +93,31 @@
       <tr>
         <td align="left" valign="top">&nbsp;<?php echo "<br>Product Description:- ".$data['product_data']['proddesc']; ?></td>
       </tr>
-      <tr>
-        <td align="left" valign="top">&nbsp;<?php echo "<br>Product Price:- ".$data['product_data']['original_price']; ?></td>
-      </tr>
-      <tr>
-        <td align="left" valign="top">&nbsp;<?php echo "<br>Dicounted Price:- ".$data['product_data']['discounted_price']; ?></td>
-      </tr>
-      <tr>
+	  <?php
+		
+		foreach($data['attributes'] as $attribute)
+		{
+			foreach($attribute as $key=>$data_att)
+			{
+				?>
+				<tr>
+				<td align="left" valign="top">&nbsp;<?php echo "<br>".$key.':- '.$data_att; ?></td>
+			    </tr>	  
+			  <?php
+			}
+		}
+		
+	  ?>
+	  <tr>
         <td align="left" valign="top">&nbsp;<?php echo "<br>Discount:- ".$data['product_data']['discount']; ?></td>
       </tr>
+
+	  <tr>
+        <td align="left" valign="top">&nbsp;<?php echo "<br>Dicounted Price:- ".$data['product_data']['discounted_price']; ?></td>
+      </tr>
+      <!--<tr>
+        <td align="left" valign="top">&nbsp;<?php //echo "<br>Product Price:- ".$data['product_data']['original_price']; ?></td>
+      </tr>-->
 	  
 	  <?php
 	  
@@ -124,18 +141,6 @@
 		  </tr>	  
 		  <?php
 	  }
-		
-		foreach($data['attributes'] as $attribute)
-		{
-			foreach($attribute as $key=>$data_att)
-			{
-				?>
-				<tr>
-				<td align="left" valign="top">&nbsp;<?php echo "<br>".$key.':- '.$data_att; ?></td>
-			    </tr>	  
-			  <?php
-			}
-		}
 			
 		$i++;
 	}	  
@@ -226,4 +231,5 @@ Please note that this e-mail only acknowledges that we have received a request f
 	
 	*/
 	
+	die();
 ?>

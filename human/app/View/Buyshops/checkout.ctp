@@ -1,3 +1,4 @@
+<div id="shashi"></div>
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -30,28 +31,34 @@
 						
 						$("#close_<?php echo $product['id']; ?>").on('click', function(c){
 							
-							var product_id = '<?php echo $product['id']; ?>';
+							if(confirm("Are you sure?"))
+							{
+								var product_id = '<?php echo $product['id']; ?>';
 							
-							$(location).attr('href', '<?php echo $this->webroot.'buyshops/remove_from_cart/'.$product['id']; ?>')
-							
-							/*
-							$.post("<?=$this->webroot?>buyshops/remove_from_cart", {product_id: product_id}, function(result){
+								$(location).attr('href', '<?php echo $this->webroot.'buyshops/remove_from_cart/'.$product['id']; ?>')
 								
-								//alert(result);
+								/*
+								$.post("<?=$this->webroot?>buyshops/remove_from_cart", {product_id: product_id}, function(result){
+									
+									//alert(result);
+									
+									$("#cart").html(result);
+								});
+								*/
 								
-								$("#cart").html(result);
-							});
-							*/
-							
-							$('.cart-header_rmv<?php echo $product['id']; ?>').fadeOut('slow', function(c){
-								$('.cart-header_rmv<?php echo $product['id']; ?>').remove();
-							});
+								$('.cart-header_rmv<?php echo $product['id']; ?>').fadeOut('slow', function(c){
+									$('.cart-header_rmv<?php echo $product['id']; ?>').remove();
+								});
+							}
+							else
+								return false;
 							});	  							
+							
 						});
 					
 					</script>
-					 <div class="cart-header cart-header_rmv<?php echo $product['id']; ?>" >
-						 <div class="close1" id="close_<?php echo $product['id']; ?>"> </div>
+					 <div class="cart-header cart-header_rmv<?php echo $product['id']; ?>" ><!-- onclick="return(confirm('Are You sure?')); -->
+						 <div class="close1" id="close_<?php echo $product['id']; ?>" > </div>
 						 <div class="cart-sec simpleCart_shelfItem">
 							<div class="cart-item cyc">
 								
@@ -77,13 +84,18 @@
 								
 								<?php 
 									
+									$one_qty = 0;
+									
+									$data_count = count($product['att']);
+									$i=1;
 									if(isset($product['att']))
 									foreach($product['att'] as $key=>$pro_att)
 									{
 										if($key == 'Quantity')
 										{
+											$one_qty =1;
 											?>
-											<li><p><?php echo $key.' : '.$pro_att; ?></p></li>
+											<li><p><?php echo $key.' : ';?><input class="<?php echo $product['id']; ?>" type="text" value="<?php echo $pro_att; ?>"><input class="<?php echo $product['id']; ?>_save_qty" type="button" value="save"></button></p></li>
 											<?php
 										}
 										else
@@ -92,6 +104,61 @@
 											<li><p><?php echo $key.' : '.$pro_att['attvalue']; ?></p></li>
 											<?php
 										}
+										
+										if($i == $data_count)
+										{
+											if($one_qty == 0)
+											{
+												?>
+												<li><p><?php echo 'Quantity : '; ?><input type="text" class="<?php echo $product['id']; ?>" value="1" /><input  class="<?php echo $product['id']; ?>_save_qty" type="button" value="save">save</button></p></li>
+												<button class="save_qty">save</button>
+												<?php										
+											}
+										}
+										
+										$i++;
+										
+										?>
+										
+									<script>
+						
+									$(document).ready(function(){
+										
+										$('.<?php echo $product['id']; ?>_save_qty').hide();
+										
+										$('.<?php echo $product['id']; ?>').click(function(){
+											
+											$('.<?php echo $product['id']; ?>_save_qty').show();
+											
+										});
+										
+										$('.<?php echo $product['id']; ?>_save_qty').click(function(){
+									
+										var product_id = '<?php echo $product['id']; ?>';
+										
+										<!--var discounted_price = '<?php echo $product['discounted_price']; ?>';-->
+										
+										var quantity_data = $('.<?php echo $product['id']; ?>').val();
+										
+										//, discounted_price: discounted_price
+										
+										$.post("<?=$this->webroot?>buyshops/changed_quantity", {product_id: product_id, quantity_data: quantity_data}, function(result){
+											
+												//$("#shashi").html(result);								    		
+												
+												//$(".discounted_price").html(result);								    		
+
+												location.reload();
+												
+												//return false;
+											});										
+										});
+									});
+									
+									</script>
+										
+									<?php
+										
 									}
 								?>
 								
@@ -99,16 +166,15 @@
 							</ul>
 							<div class="delivery">
 								<!--<p>Service Charges : Rs.<?php //echo $product['prodprice'];?></p>-->
-								 
+								 								
+								<!--<p><?php //echo 'Discount '.$product['discount'].'%'; // $187.95 ?></p>-->
 								<br>
 								<br>
-								<p><?php echo 'Discount '.$product['discount'].'%'; // $187.95 ?></p>
-								<br>
-								<br>
-								<p><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></p>
+								
+								<p><div class="discounted_price"><?php echo 'Discounted Price $'.$product['discounted_price']; // $187.95 ?></div></p>
 								
 								 </p>
-								 <span>Delivered in 2-3 bussiness days</span>
+								 <!--<span>Delivered in 2-3 bussiness days</span>-->
 								 <div class="clearfix"></div>
 							</div>	
 						   </div>
@@ -187,13 +253,17 @@
 						
 					<div  class="size_2-right"><a id="coupon_btn" class="add_cart_btm" style="float:left; margin-bottom:10px;background-color:#3a3a3a">Apply Coupon</a></div>
 					
+					<div  class="size_2-right"><a id="coupon_btn_hide" class="add_cart_btm" style="float:left; margin-bottom:10px;background-color:#3a3a3a">Hide Coupon</a></div>
+					
 					<input id="coupon_txt" type="text" name="coupon_number" class="apply_input" style="clear:both; width:190px; height:39px;">
 					
-					<div id="coupon_msg"> </div>
+					
 					
 					<button id="coupon_apply_btn"  class="apply_btn">Apply</button>
 					
 					<!--<input type="text" value="<?php //echo $total_price; //6350.00  ?>" name="final_price">-->
+					
+					<div id="coupon_msg"> </div>
 					
 					<button id="discounted_price"  class="apply_btn"></button>
 					
@@ -213,6 +283,8 @@
 						
 					$(document).ready(function(){
 						
+						$('#coupon_btn_hide').hide();
+						
 						$('#place_order').click(function(){
 							
 							var total_price_id = $('#total_price_id').val();
@@ -229,20 +301,20 @@
 								}
 							});						
 							
-							//$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>/'+total_price_id+'/'+coupon_price_id+'/'+coupon_info);
-							
-							
+							//$(location).attr('href','<?php echo $this->webroot.'buyshops/place_order'; ?>/'+total_price_id+'/'+coupon_price_id+'/'+coupon_info);							
 						});
 						
 						$('#discounted_price').hide();
 						
 						$('#coupon_apply_btn').click(function(){
 							
+							
+							
 							$('#discounted_price').show();
 							
 							if($('#coupon_txt').val() == '' )
 							{
-								$('#coupon_msg').html("Please enter the coupon number");
+								$('#discounted_price').html("Please enter the coupon number");
 								return false;
 							}	
 							
@@ -255,7 +327,11 @@
 								$("#coupon_price_id").val(result);
 								
 								if(result == 'Please Logged in first')
-									$("#discounted_price").html(result);								    
+								{	
+									//$("#discounted_price").html(result);								    
+									$("#discounted_price").html("<div style='padding:10px;'>Please Logged in first..!!<br><a class='button' style='margin:10px 0' href='<?php echo $this->webroot.'buyshops/login'; ?>'>Click here to login</a></div>");								    													
+								}	
+								
 								else if(result == 0)
 									$("#discounted_price").html("Sorry, you entered wrong coupon number/ Already used this coupon.");								    
 								else
@@ -271,7 +347,24 @@
 						$('#coupon_apply_btn').hide();
 							$('#coupon_txt').hide();
 							
+							$('#coupon_btn_hide').click(function(){
+								
+								$('#coupon_btn').show();
+								
+								$('#discounted_price').hide();
+								
+								$('#coupon_txt').hide();
+								
+								$('#coupon_btn_hide').hide();
+								
+								$('#coupon_apply_btn').hide();
+							});
+							
 							$('#coupon_btn').click(function(){
+								
+								$('#coupon_btn').hide();
+								
+								$('#coupon_btn_hide').show();
 								
 								//alert("Coupon_button_click");
 								

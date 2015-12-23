@@ -29,10 +29,10 @@
                   <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Order Id</th>
+                        <!--<th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Order Id</th>-->
                         <th bgcolor="#00bcd4" class="text14_white">Product Name</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Product Attributes</th>
+                        <!--<th bgcolor="#00bcd4" class="text14_white">Product Attributes</th>-->
                         <th bgcolor="#00bcd4" class="text14_white">Product Price</th>
 						<th bgcolor="#00bcd4" class="text14_white"><div style="width:70px">Product Quantity</div></th>
                         <th bgcolor="#00bcd4" class="text14_white">Sub Total</th>
@@ -54,10 +54,10 @@
 						  $product_details = $order_detail['Product_details']['Produc_master'];						   
                       ?>
                         <tr>
-                        <td><?php echo $order_data['id']; ?></td>
-                        <td><?php echo $order_data['orderid']; ?></td>
+                        <!--<td><?php //echo $order_data['id']; ?></td>
+                        <td><?php //echo $order_data['orderid']; ?></td>-->
                         <td><?php echo $product_details['prodname']; ?></td>
-                        <td><?php echo $order_data['pattid']; ?></td>
+                        <!--<td><?php //echo $order_data['pattid']; ?></td>-->
                         <td><?php echo $order_data['prodprice']; ?></td>
                         <td><?php echo $order_data['prodqty']; ?></td>
                         <td><?php echo $order_data['subtotal']; ?></td>

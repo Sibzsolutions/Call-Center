@@ -33,7 +33,7 @@
                         <th bgcolor="#00bcd4" class="text12_white">Name</th>
                         <th bgcolor="#00bcd4" class="text12_white">Description</th>
                         <th bgcolor="#00bcd4" class="text12_white">Image</th>
-                        <th bgcolor="#00bcd4" class="text12_white">Parent_id</th>
+                        <th bgcolor="#00bcd4" class="text12_white">Parent</th>
                         <th bgcolor="#00bcd4" class="text12_white"><div style="width:84px">Url Aliase</div></th>
                         <th bgcolor="#00bcd4" class="text12_white"><div style="width:63px">Meta Title</div></th>
                         <th bgcolor="#00bcd4" class="text12_white"><div style="width:109px">Meta Description</div></th>

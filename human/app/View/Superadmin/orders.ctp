@@ -27,8 +27,9 @@
                   <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="example1">
                     <thead>
                       <tr>
-                        <th bgcolor="#00bcd4" class="text14_white">Id</th>
-                        <th bgcolor="#00bcd4" class="text14_white">Session Id</th>
+                        
+						<!--<th bgcolor="#00bcd4" class="text14_white">Id</th>
+                        <th bgcolor="#00bcd4" class="text14_white">Session Id</th>-->
                         <th bgcolor="#00bcd4" class="text14_white">User Name</th>
                         <th bgcolor="#00bcd4" class="text14_white">Order Start Date</th>
                         <th bgcolor="#00bcd4" class="text14_white">Order End Date</th>
@@ -53,14 +54,15 @@
 						  $user_data = $order['User_detail']['User'];
                       ?>
                         <tr>
-                        <td><?php echo $order_data['id']; ?></td>
-                        <td><?php echo $order_data['session_id']; ?></td>
+						
+                        <!--<td><?php //echo $order_data['id']; ?></td>
+                        <td><?php //echo $order_data['session_id']; ?></td>-->
                         <td><?php echo $user_data['usrfname'].' '.$user_data['usrlname']; ?></td>
                         <td><?php echo $order_data['orderstartdate']; ?></td>
                         <td><?php echo $order_data['orderenddate']; ?></td>
                         <td><?php echo $order_data['ordervalue']; ?></td>
-                        <td><?php echo $order_data['paymentid']; ?></td>
-						<td><?php echo $order_data['shippingid']; ?></td>
+                        <td><?php echo $order_data['payment']; ?></td>
+						<td><?php echo $order_data['shipping']; ?></td>
 						
 						<td>						
 						<select onchange=change_status(<?php echo $order_data['id'];?>,this.value)>
@@ -119,7 +121,7 @@
 
 						
 						<td><?php if($order_data['del_status'] == 0) echo "Active"; else echo "Inactive"; ?></td>
-                        <td>&nbsp;&nbsp;&nbsp;<a title="Edit" href="<?php echo $this->webroot.'superadmin/order_details/'.$order_data['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/order_status_change/'.$order_data['id']; ?>"><i class="fa fa-exchange"></i></a>
+                        <td>&nbsp;&nbsp;&nbsp;<a title="View Products" href="<?php echo $this->webroot.'superadmin/order_details/'.$order_data['id']; ?>"><i class="fa fa-database"></i></a>&nbsp;&nbsp;&nbsp;<a title="Status Change" href="<?php echo $this->webroot.'superadmin/order_status_change/'.$order_data['id']; ?>"><i class="fa fa-exchange"></i></a>
                         
                         <!--&nbsp;&nbsp;&nbsp;<a title="Delete" href="<?php echo $this->webroot.'superadmin/user_delete/'.$order_data['id']; ?>"><i class="fa  fa-trash"></i></a>-->
                         </td>

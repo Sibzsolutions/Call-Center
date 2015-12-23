@@ -40,7 +40,7 @@ App::uses('AppController', 'Controller');
  *
  * @var array
  */
-	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address', 'Produc_quantity', 'Notify_prod_email');
+	public $uses = array('User', 'Site_setting', 'Dynamic_page', 'Category', 'Produc_master', 'Produc_image', 'Offer_master', 'Attribute_master', 'Attribute_category', 'Attribute_value', 'Produc_attribute', 'Slider_image', 'Home_page_box', 'Review_master', 'Coupon_master', 'Produc_color_image', 'Order_master', 'Order_detail', 'Order_status', 'User_address', 'Produc_quantity', 'Notify_prod_email', 'Payment_master', 'Shipping_master');
 
 /**
  * Displays a view
@@ -973,6 +973,12 @@ App::uses('AppController', 'Controller');
 				
 		if ($this->request->is('post')) {
 			
+			/*
+			echo "Requested_data<pre>";
+			print_r($this->request->data);
+			echo "<pre>";
+			*/
+			
 			$prodid_one = $this->request->data['Produc_master']['id'];
 			
 			$this->Produc_master->save($this->request->data);
@@ -1069,25 +1075,46 @@ App::uses('AppController', 'Controller');
 										$data['attribute_value'] = $att_vdata['Attribute_value'];
 											
 										$data['attribute_master'] = $att_data['Attribute_master'];
+
+										$data_not = $this->Notify_prod_email->find('all', array('conditions'=>array('Notify_prod_email.prodid'=>$prodid_one, 'Notify_prod_email.attvid'=>$attvid)));
 										
-										$notify_data = $this->Notify_prod_email->find('first', array('conditions'=>array('Notify_prod_email.prodid'=>$prodid_one, 'Notify_prod_email.attvid'=>$attvid)));
-										
-										if(!empty($notify_data))
-										{
-											$userdata = $this->User->find('first', array('conditions'=>array('User.id'=>$notify_data['Notify_prod_email']['usrid'])));
-										
-											$site_setting_data = $this->Site_setting->find('first');
-											
-											//Send email at the time of registration
-											$Email = new CakeEmail();
-											$Email->template('notify_prod_email');
-											$Email->emailFormat('html');
-											$Email->to($userdata['User']['email']);
-											$Email->from($site_setting_data['Site_setting']['orderemail']);
-											$Email->viewVars(array('email_unavailable_product' => $data));
-											$Email->subject('Login details');
-											$Email->send();																			
-										}										
+										foreach($data_not as $notify_data)
+										{			
+											if(!empty($notify_data))
+											{
+												if(!empty($notify_data['Notify_prod_email']['usrid']))
+												{
+													$userdata = $this->User->find('first', array('conditions'=>array('User.id'=>$notify_data['Notify_prod_email']['usrid'])));
+												}
+												else
+												{
+													//$userdata = $notify_data['Notify_prod_email']['usremail'])));												
+													$userdata['User']['email'] = $notify_data['Notify_prod_email']['usremail'];
+												}
+												
+												$userdata['User']['email'] = "shashikant.chobhe@sibzsolutions.com";
+												
+												$site_setting_data = $this->Site_setting->find('first');
+												
+												/*
+												echo "data<pre>";
+												print_r($data);
+												echo "<pre>";
+												
+												die();
+												*/
+												
+												//Send email at the time of registration
+												$Email = new CakeEmail();
+												$Email->template('notify_prod_email');
+												$Email->emailFormat('html');
+												$Email->to($userdata['User']['email']);
+												$Email->from($site_setting_data['Site_setting']['orderemail']);
+												$Email->viewVars(array('email_unavailable_product' => $data));
+												$Email->subject('Login details');
+												$Email->send();																			
+											}										
+										}
 									}
 									
 									$this->Produc_quantity->create();
@@ -1112,7 +1139,40 @@ App::uses('AppController', 'Controller');
 										$data['attribute_value'] = $att_vdata['Attribute_value'];
 											
 										$data['attribute_master'] = $att_data['Attribute_master'];
+																				
+										$data_not = $this->Notify_prod_email->find('all', array('conditions'=>array('Notify_prod_email.prodid'=>$prodid_one, 'Notify_prod_email.attvid'=>$attvid)));
 										
+										foreach($data_not as $notify_data)
+										{			
+											if(!empty($notify_data))
+											{
+												if(!empty($notify_data['Notify_prod_email']['usrid']))
+												{
+													$userdata = $this->User->find('first', array('conditions'=>array('User.id'=>$notify_data['Notify_prod_email']['usrid'])));
+												}
+												else
+												{
+													//$userdata = $notify_data['Notify_prod_email']['usremail'])));												
+													$userdata['User']['email'] = $notify_data['Notify_prod_email']['usremail'];
+												}
+												
+												$userdata['User']['email'] = "shashikant.chobhe@sibzsolutions.com";
+												
+												$site_setting_data = $this->Site_setting->find('first');
+												
+												//Send email at the time of registration
+												$Email = new CakeEmail();
+												$Email->template('notify_prod_email');
+												$Email->emailFormat('html');
+												$Email->to($userdata['User']['email']);
+												$Email->from($site_setting_data['Site_setting']['orderemail']);
+												$Email->viewVars(array('email_unavailable_product' => $data));
+												$Email->subject('Login details');
+												$Email->send();																			
+											}										
+										}
+										
+										/*
 										$notify_data = $this->Notify_prod_email->find('first', array('conditions'=>array('Notify_prod_email.prodid'=>$prodid_one, 'Notify_prod_email.attvid'=>$attvid)));
 										
 										if(!empty($notify_data))
@@ -1131,6 +1191,7 @@ App::uses('AppController', 'Controller');
 											$Email->subject('Login details');
 											$Email->send();																			
 										}
+										*/
 									}
 									
 									$this->Produc_quantity->create();
@@ -2469,10 +2530,18 @@ App::uses('AppController', 'Controller');
 	
 	public function orders() 
 	{
-		$orders = $this->Order_master->find('all');
+		$orders = $this->Order_master->find('all', array('order' => array(
+                'id' => 'DESC'
+            )));
 		
 		foreach($orders as $key=>$order)
 		{
+			$payment_data = $this->Payment_master->find('first');
+			$orders[$key]['Order_master']['payment'] = $payment_data['Payment_master']['name'];
+			
+			$shipping_data = $this->Shipping_master->find('first');
+			$orders[$key]['Order_master']['shipping'] = $shipping_data['Shipping_master']['name'];
+			
 			$order_details = $this->Order_detail->find('all', array('conditions'=>array('Order_detail.orderid'=>$order['Order_master']['id'])));
 			
 			$orders[$key]['Order_detail'] = $order_details;			

@@ -25,6 +25,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </head>
 <body>
 
+<?php
+	
+	error_reporting(0);
+
+?>
 <div class="middle_content">
 	 <div class="width1220"> 
 	     <div class="register">
@@ -33,46 +38,40 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<?=$this->Form->create('User_address');?>
 					 <div>
 						<span>First Address<label>*</label></span>
-						<?=$this->Form->input('addr1',array('type'=>'textarea', 'style'=>'width:500px', 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the First Address'));?>
-						
-						<!--<input type="text"> -->
-					 </div>
+						<?=$this->Form->input('addr1',array('type'=>'textarea', 'style'=>'width:500px', 'class'=>'form-control','label'=>'','div'=>false,'Placeholder'=>'Enter the First Address'));?>
+					</div>
 					 <div>
-						<span>Second Address<label>*</label></span>
-						<?=$this->Form->input('addr2',array('type'=>'textarea', 'style'=>'width:500px','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Second Address'));?>
-						<!--<input type="text"> -->
+						<span>Second Address<label>&nbsp;</label></span>
+						<?=$this->Form->input('addr2',array('type'=>'textarea', 'style'=>'width:500px','class'=>'form-control','label'=>'','div'=>false,'Placeholder'=>'Enter the Second Address'));?>
 					 </div>
 					 
 					 <div>
-						<span>Country<label>*</label></span>
-						<?=$this->Form->input('usrcountry',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Country'));?>
-						
+						<span>Zip Code<label>*</label></span>
+						<?=$this->Form->input('usrzip',array('type'=>'text','class'=>'form-control','maxlength'=>'14','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Zip Code'));?>
+					 </div>			
+					<div>
+						 <span>Phone Number<label>*</label></span>
+						 <?=$this->Form->input('usrphones',array('type'=>'text', 'style'=>'width:560px','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Phone Number'));?>
+						 <?php echo "<div class='xxx_div'>E.g. ( xxx ) xxx - xxxx  </div>"; ?>
+					 </div>					 
+					  <div>
+						<span>City<label>*</label></span>
+						<?=$this->Form->input('usrcity',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the City'));?>
 						<!--<input type="text"> -->
 					 </div>
-					 
 					 <div>
 						<span>State<label>*</label></span>
 						<?=$this->Form->input('usrstate',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the State'));?>
 						<!--<input type="text"> -->
 					 </div>
-                     
-					 <div>
-						<span>City<label>*</label></span>
-						<?=$this->Form->input('usrcity',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the City'));?>
-						<!--<input type="text"> -->
-					 </div>
-								
-					 <div>
-						<span>Zip Code<label>*</label></span>
-						<?=$this->Form->input('usrzip',array('type'=>'text','class'=>'form-control','maxlength'=>'14','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Zip Code'));?>
+                     <div>
+						<span>Country<label>*</label></span>
+						<?=$this->Form->input('usrcountry',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Country'));?>
 						
 						<!--<input type="text"> -->
-					 </div>			
-					<div>
-						 <span>Phone Number<label>*</label></span>
-						 <?=$this->Form->input('usrphones',array('type'=>'number', 'style'=>'width:560px','maxlength'=>'10','class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Enter the Phone Number'));?>
-						 <!--<input type="text"> -->
-					 </div>
+					  </div>
+								
+					 
 					 
 					 <div>
 						 <span>Is Main<label>*</label></span>
@@ -80,11 +79,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						 <!--<input type="text"> -->
 					 </div>
 					 
-					 <div>
+					 <!--<div>
 						 <span>Status<label>*</label></span>
-						 <?=$this->Form->input('del_status',array('type'=>'select', 'style'=>'width:560px','options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Select the Is Main'));?>
-						 <!--<input type="text"> -->
-					 </div>
+						 <?php //echo $this->Form->input('del_status',array('type'=>'select', 'style'=>'width:560px','options'=>array(0=>'Yes', 1=>'No'), 'class'=>'form-control','required'=>'required','label'=>'','div'=>false,'Placeholder'=>'Select the Is Main'));?>						 
+					 </div>-->
 
 					 
 					 <div class="clearfix"> </div>
@@ -117,4 +115,67 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				</div>
 		   </div>
      </div>
-</div>      
+</div>   
+   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+function validateForm() {
+	
+	var phone = document.forms["myForm"]["usrphones"].value;
+	var phoneNum = phone.replace(/[^\d]/g, '');
+	if(phoneNum.length > 6 && phoneNum.length < 11) 
+	{  
+		return true;  
+	}
+	else
+	{
+		$('#phone_id').html("Please Enter a valid phone number.");
+		return false;
+	}
+	
+    var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	var x = document.forms["myForm"]["fname"].value;
+    if (x == null || x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+	
+	
+}
+</script>

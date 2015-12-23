@@ -48,7 +48,7 @@
   
   <tr>
 	  <tr>
-        <td height="41" align="left" valign="top" class="text18_blue"><strong>Dear <?php echo $email_unavailable_product['userdata']['usrfname']." ".$email_unavailable_product['userdata']['usrlname'].".<br><br> Sorry, This Product is not available. <br>Whenever it should be available we will contact you."; ?></strong></td>
+        <td height="41" align="left" valign="top" class="text18_blue"><strong>Dear Customer<br><br> Sorry, This Product is not available. <br>Whenever it should be available we will contact you.</strong></td>
       </tr>
 	  <tr>
         <td align="left" valign="top">&nbsp;<?php echo "<br><h4>Product Details:- </h4>"; ?></td>
@@ -62,9 +62,25 @@
       <tr>
         <td align="left" valign="top">&nbsp;<?php echo "<br>Description:- ".$email_unavailable_product['product']['proddesc'];?></td>
       </tr>
-      <tr>
-        <td align="left" valign="top">&nbsp;<?php echo "<br>".$email_unavailable_product['attribute_master']['attname']." -  ".$email_unavailable_product['attribute_value']['attvalue']; ?></td>
-      </tr>
+	  
+	  <?php
+		
+		if(isset($email_unavailable_product['info']))
+		foreach($email_unavailable_product['info'] as $key=>$one)
+		{
+			if($key != 'Quantity' )
+			{
+			?>
+		      <tr>
+				<td align="left" valign="top">&nbsp;<?php echo "<br>".$key." -  ".$one; ?></td>
+			  </tr>
+			<?php
+			}
+		}
+	  ?>
+      <!--<tr>
+        <td align="left" valign="top">&nbsp;<?php //echo "<br>".$email_unavailable_product['attribute_master']['attname']." -  ".$email_unavailable_product['attribute_value']['attvalue']; ?></td>
+      </tr>-->
 	  <tr>
 		<td align="left" valign="top">&nbsp;</td>
       </tr>

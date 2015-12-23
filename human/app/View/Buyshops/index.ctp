@@ -384,7 +384,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		});
 	</script>
 	
-	<div id="slider1">
+	<div id="slider1" class="">
+        <div class="women" style="float:left; width:100%; margin:10px 0 10px 0">
+			<a href="#"><h4>Featured Product<span></span> </h4></a>
+			
+		     	
+		</div>
 		<a class="buttons prev" href="#">&#60;</a>
 		<div class="viewport">
 			<ul class="overview">

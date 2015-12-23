@@ -32,30 +32,30 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<?=$this->Form->create('User');?>
 					 <div>
 						<span>First Name<label>*</label></span>
-						<?=$this->Form->input('usrfname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+						<?=$this->Form->input('usrfname',array('type'=>'text','class'=>'form-control', 'placeholder'=>'Please enter the first name', 'required'=>'required','label'=>'','div'=>false));?>
 						
 						<!--<input type="text"> -->
 					 </div>
 					 <div>
 						<span>Last Name<label>*</label></span>
-						<?=$this->Form->input('usrlname',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+						<?=$this->Form->input('usrlname',array('type'=>'text','class'=>'form-control', 'placeholder'=>'Please enter the last name','required'=>'required','label'=>'','div'=>false));?>
 						<!--<input type="text"> -->
 					 </div>
 					<div>
 						<span>Username<label>*</label></span>
-						<?=$this->Form->input('username',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+						<?=$this->Form->input('username',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'', 'placeholder'=>'Please enter the username', 'div'=>false));?>
 						
 						<!--<input type="text"> -->
 					 </div>			
 					 <div>
 						<span>Password<label>*</label></span>
-						<?=$this->Form->input('password',array('type'=>'text','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+						<?=$this->Form->input('password',array('type'=>'password','class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'placeholder'=>'Please enter the password'));?>
 						
 						<!--<input type="text"> -->
 					 </div>			
 					<div>
 						 <span>Email Address<label>*</label></span>
-						 <?=$this->Form->input('email',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>'','div'=>false));?>
+						 <?=$this->Form->input('email',array('type'=>'email','class'=>'form-control','required'=>'required','label'=>'','div'=>false, 'placeholder'=>'Please enter the email',));?>
 						 <!--<input type="text"> -->
 					 </div>
 					 <div class="clearfix"> </div>
